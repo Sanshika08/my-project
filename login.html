@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authority Login</title>
+
+    <style>
+        body {
+      font-family:'arial';
+            background: linear-gradient(to right, #4c4eaf, #2E7D32);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            background:beige;
+            padding: 100px;
+            width: 200px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .logo {
+            width: 120px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #2E7D32;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #FF7043;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #E64A19;
+        }
+
+        #message {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <img src="SARRS_circle_logo.png" class="logo">
+
+    <h2>Authority Login</h2>
+
+    <input type="email" id="email" placeholder="Enter Email">
+    <input type="password" id="password" placeholder="Enter Password">
+
+    <br>
+    <button onclick="checkLogin()">Login</button>
+
+    <p id="message"></p>
+</div>
+
+<script>
+function checkLogin() {
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var message = document.getElementById("message");
+
+    if(email === "" || password === "") {
+        message.innerHTML = "Please fill all fields 🐾";
+        message.style.color = "red";
+    }
+    else if(email === "dogadmin@gmail.com" && password === "1234") {
+        message.innerHTML = "Login Successful 🐶";
+        message.style.color = "green";
+        setTimeout(function(){
+            window.location.href = "dashboard.html";
+        }, 1000);
+    }
+    else {
+        message.innerHTML = "Invalid Email or Password 🐕";
+        message.style.color = "red";
+    }
+}
+</script>
+
+</body>
+</html>
