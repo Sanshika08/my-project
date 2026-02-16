@@ -1,0 +1,147 @@
+<<!DOCTYPE html>
+<html>
+<head>
+    <title>Dog Rescue Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            text-align: center;
+        }
+
+        .navbar {
+            background: #333;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navbar button {
+            background: red;
+            border: none;
+            padding: 8px 12px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .card {
+            background: white;
+            width: 260px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #45a049;
+        }
+
+        footer {
+            background: #222;
+            color: white;
+            padding: 15px;
+            margin-top: 30px;
+        }
+
+        #statusMsg {
+            margin-top: 20px;
+            font-weight: bold;
+            color: darkblue;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h2>🐶 Dog Rescue System</h2>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h3>Total Rescues</h3>
+            <p id="total">10</p>
+            <button class="btn" onclick="addRescue()">➕ Add Rescue</button>
+        </div>
+
+        <div class="card">
+            <h3>Pending Cases</h3>
+            <p id="pending">5</p>
+        </div>
+
+        <div class="card">
+            <h3>Resolved Cases</h3>
+            <p id="resolved">5</p>
+            <button class="btn" onclick="resolveCase()">✔ Resolve</button>
+        </div>
+
+    </div>
+
+    <p id="statusMsg"></p>
+
+    <footer>
+        <p>© 2026 Dog Rescue System🐾</p>
+    </footer>
+
+<script>
+
+let total = 10;
+let pending = 5;
+let resolved = 5;
+
+function addRescue(){
+    total++;
+    pending++;
+    updateUI();
+    document.getElementById("statusMsg").innerText = "🐶 New rescue case added!";
+}
+
+function resolveCase(){
+    if(pending > 0){
+        pending--;
+        resolved++;
+        updateUI();
+        document.getElementById("statusMsg").innerText = "✅ A case has been resolved!";
+    } else {
+        document.getElementById("statusMsg").innerText = "No pending cases!";
+    }
+}
+
+function updateUI(){
+    document.getElementById("total").innerText = total;
+    document.getElementById("pending").innerText = pending;
+    document.getElementById("resolved").innerText = resolved;
+}
+
+function logout(){
+    alert("Logged out successfully!");
+}
+
+</script>
+
+</body>
+</html>
