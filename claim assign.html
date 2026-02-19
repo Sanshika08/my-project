@@ -1,0 +1,128 @@
+<<!DOCTYPE html>
+<html>
+<head>
+    <title>Dog Rescue Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            padding: 30px;
+        }
+
+        .card {
+            background: white;
+            width: 450px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        h2 {
+            color: #ff6600;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: #ff6600;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #e65c00;
+        }
+
+        .status {
+            margin-top: 15px;
+            padding: 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .pending { background: #ffe0e0; color: red; }
+        .assigned { background: #fff4cc; color: orange; }
+        .rescued { background: #d4edda; color: green; }
+
+        .timeline {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>🐶 Dog Rescue Report</h2>
+
+    <p><strong>Report ID:</strong> DR101</p>
+    <p><strong>Issue:</strong> Injured Dog</p>
+    <p><strong>Location:</strong> Indira Nagar</p>
+
+    <div id="statusBox" class="status pending">
+        Status: Pending
+    </div>
+
+    <label><strong>Assign Rescuer:</strong></label>
+    <select id="rescuer">
+        <option value="">Select Rescue Member</option>
+        <option value="Rahul">Rahul</option>
+        <option value="Anjali">Anjali</option>
+        <option value="Amit">Amit</option>
+    </select>
+
+    <button onclick="assignRescue()">Assign</button>
+    <button onclick="markRescued()">Mark as Rescued</button>
+
+    <div class="timeline" id="timeline">
+        🕒 Report Created
+    </div>
+</div>
+
+<script>
+
+function assignRescue() {
+
+    let rescuerName = document.getElementById("rescuer").value;
+
+    if(rescuerName === "") {
+        alert("Please select a rescuer!");
+        return;
+    }
+
+    let statusBox = document.getElementById("statusBox");
+    statusBox.className = "status assigned";
+    statusBox.innerText = "Status: Assigned to " + rescuerName;
+
+    document.getElementById("timeline").innerHTML += 
+        "<br>🚑 Assigned to " + rescuerName;
+}
+
+function markRescued() {
+
+    let statusBox = document.getElementById("statusBox");
+    statusBox.className = "status rescued";
+    statusBox.innerText = "Status: Rescued ✅";
+
+    document.getElementById("timeline").innerHTML += 
+        "<br>🐾 Dog Successfully Rescued";
+}
+
+</script>
+
+</body>
+</html>

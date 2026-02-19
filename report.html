@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rescue Reports</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f4f4f4;
+            text-align: center;
+        }
+
+        h1 {
+            background: #333;
+            color: white;
+            padding: 15px;
+        }
+
+        table {
+            width: 80%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+
+        button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .resolve {
+            background: green;
+            color: white;
+        }
+
+        .delete {
+            background: red;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🐶 Dog Rescue Reports</h1>
+
+<table id="reportTable">
+    <tr>
+        <th>Dog Name</th>
+        <th>Location</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+</table>
+
+<script>
+
+let reports = [
+    {name: "Tommy", location: "Delhi", status: "Pending"},
+    {name: "Rocky", location: "Noida", status: "Resolved"},
+    {name: "Bruno", location: "Lucknow", status: "Pending"}
+];
+
+function displayReports(){
+    let table = document.getElementById("reportTable");
+
+    reports.forEach((report, index) => {
+
+        let row = table.insertRow();
+
+        row.insertCell(0).innerText = report.name;
+        row.insertCell(1).innerText = report.location;
+        row.insertCell(2).innerText = report.status;
+
+        let actionCell = row.insertCell(3);
+
+        if(report.status === "Pending"){
+            actionCell.innerHTML =
+            `<button class="resolve" onclick="resolveCase(${index})">Resolve</button>
+             <button class="delete" onclick="deleteCase(${index})">Delete</button>`;
+        } else {
+            actionCell.innerHTML =
+            `<button class="delete" onclick="deleteCase(${index})">Delete</button>`;
+        }
+    });
+}
+
+function resolveCase(index){
+    reports[index].status = "Resolved";
+    refreshTable();
+}
+
+function deleteCase(index){
+    reports.splice(index,1);
+    refreshTable();
+}
+
+function refreshTable(){
+    document.getElementById("reportTable").innerHTML =
+    `<tr>
+        <th>Dog Name</th>
+        <th>Location</th>
+        <th>Status</th>
+        <th>Action</th>
+     </tr>`;
+    displayReports();
+}
+
+displayReports();
+
+</script>
+
+</body>
+</html>

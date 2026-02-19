@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Details</title>
+
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    padding: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+        }
+        <select id="reportSelect" onchange="loadReport()">
+    <option value="">Select Report ID</option>
+    <option value="101">101</option>
+    <option value="102">102</option>
+</select>
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 500px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .detail {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        img {
+            width: 200px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 8px 15px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .claim-btn {
+            background-color: orange;
+            color: white;
+        }
+
+        .save-btn {
+            background-color: green;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Report Details</h2>
+
+    <div class="detail"><strong>ID:</strong> <span id="reportId"></span></div>
+    <div class="detail"><strong>Type:</strong> <span id="reportType"></span></div>
+    <div class="detail"><strong>Description:</strong> <span id="reportDesc"></span></div>
+    <div class="detail"><strong>Location:</strong> <span id="reportLocation"></span></div>
+    <div class="detail"><strong>Status:</strong> <span id="reportStatus"></span></div>
+
+    <div class="detail">
+        <strong>Image:</strong><br>
+        <img id="reportImage" src="">
+    </div>
+
+    <button class="claim-btn" onclick="claimReport()">Claim Report</button>
+
+    <br><br>
+
+    <select id="statusSelect">
+        <option value="Pending">Pending</option>
+        <option value="Claimed">Claimed</option>
+        <option value="Resolved">Resolved</option>
+    </select>
+
+    <button class="save-btn" onclick="updateStatus()">Update Status</button>
+
+</div>
+
+<script>
+
+    const reports = [
+        {
+            id: "101",
+            type: "Road Issue",
+            description: "Road is damaged near market.",
+            location: "Lucknow",
+            status: "Pending",
+            image: "https://via.placeholder.com/200"
+        },
+        {
+            id: "102",
+            type: "Garbage Issue",
+            description: "Garbage not cleaned.",
+            location: "Gorakhpur",
+            status: "Claimed",
+            image: "https://via.placeholder.com/200"
+        }
+    ];
+
+function loadReport() {
+    const selectedId = document.getElementById("reportSelect").value;
+    const report = reports.find(r => r.id === selectedId);
+
+    if (report) {
+        document.getElementById("reportId").innerText = report.id;
+        document.getElementById("reportType").innerText = report.type;
+        document.getElementById("reportDesc").innerText = report.description;
+        document.getElementById("reportLocation").innerText = report.location;
+        document.getElementById("reportStatus").innerText = report.status;
+        document.getElementById("reportImage").src = report.image;
+
+        document.getElementById("statusSelect").value = report.status;
+    }
+}
+
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const reportId = urlParams.get('id');
+
+    const report = reports.find(r => r.id === reportId);
+
+    if (report) {
+        document.getElementById("reportId").innerText = report.id;
+        document.getElementById("reportType").innerText = report.type;
+        document.getElementById("reportDesc").innerText = report.description;
+        document.getElementById("reportLocation").innerText = report.location;
+        document.getElementById("reportStatus").innerText = report.status;
+        document.getElementById("reportImage").src = report.image;
+
+        document.getElementById("statusSelect").value = report.status;
+    }
+
+    function claimReport() {
+        document.getElementById("reportStatus").innerText = "Claimed";
+        document.getElementById("statusSelect").value = "Claimed";
+        alert("Report Claimed Successfully!");
+    }
+
+    function updateStatus() {
+        const newStatus = document.getElementById("statusSelect").value;
+        document.getElementById("reportStatus").innerText = newStatus;
+        alert("Status Updated to " + newStatus);
+    }
+
+</script>
+
+</body>
+</html>
