@@ -1,36 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>SARSS Welcome</title>
-    <style>
-        body {
-    margin: 0;
-    height: 100vh;
-    font-family: Arial;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SARRS Splash</title>
 
-    background-image: url(SARRS_circle_logo.png);
-    background-size: 1000px;
-    background-position: center;
-    background-repeat: no-repeat;
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
- 
 
-        img {
-            width: 150px;
-            margin-bottom: 15px;
-        }
-    </style>
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg,#1abc9c,#2ecc71);
+    overflow:hidden;
+}
+
+
+/* Animation */
+@keyframes zoom{
+    from{ transform:scale(1); }
+    to{ transform:scale(1.1); }
+}
+</style>
 </head>
 
 <body>
 
+<img src="SARRS_circle_logo.png" alt="SARRS Logo">
 
-    <script>
-        setTimeout(function(){
-            window.location.href = "login.html";
-        }, 3000);
-    </script>
+<script>
+setTimeout(function(){
+    window.location.href = "login.html";
+},3000);
+</script>
 
 </body>
 </html>
-
