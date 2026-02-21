@@ -1,165 +1,232 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Report Details</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dog Rescue - View Report</title>
 
-    <style>
-        body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f9;
-    padding: 20px;
+<style>
+  /* Navbar Styling */
+.navbar {
+  width: 100%;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.logo {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
 
-        }
-        <select id="reportSelect" onchange="loadReport()">
-    <option value="">Select Report ID</option>
-    <option value="101">101</option>
-    <option value="102">102</option>
-</select>
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
 
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 500px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-        }
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  transition: 0.3s;
+}
 
-        h2 {
-            text-align: center;
-            color: #333;
-        }
+.nav-links a:hover {
+  color: #ffd369;
+}
 
-        .detail {
-            margin: 10px 0;
-            font-size: 16px;
-        }
+body {
+  padding-top: 80px;
+}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
 
-        img {
-            width: 200px;
-            margin-top: 10px;
-        }
+body{
+  min-height:100vh;
+  background: linear-gradient(135deg,#1e3c72,#2a5298);
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-        button {
-            padding: 8px 15px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+/* 🐾 Paw Animation */
+.paw{
+  position:absolute;
+  font-size:30px;
+  animation: floatPaw 12s linear infinite;
+  opacity:0.2;
+}
 
-        .claim-btn {
-            background-color: orange;
-            color: white;
-        }
+@keyframes floatPaw{
+  0%{ transform:translateY(100vh) rotate(0deg); }
+  100%{ transform:translateY(-10vh) rotate(360deg); }
+}
 
-        .save-btn {
-            background-color: green;
-            color: white;
-        }
-    </style>
+/* Glass Container */
+.container{
+  position:relative;
+  z-index:2;
+  width:95%;
+  max-width:1100px;
+  background:rgba(255,255,255,0.95);
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.4);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.report-card{
+  display:flex;
+  flex-wrap:wrap;
+  gap:30px;
+}
+
+.image-section{
+  flex:1;
+  text-align:center;
+}
+
+.image-section img{
+  width:100%;
+  max-width:420px;
+  height:280px;
+  object-fit:cover;
+  border-radius:15px;
+}
+
+.thumbnail{
+  margin-top:15px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
+.thumbnail img{
+  width:90px;
+  height:60px;
+  object-fit:cover;
+  border-radius:8px;
+  cursor:pointer;
+  opacity:0.7;
+}
+
+.thumbnail img:hover{
+  opacity:1;
+}
+
+.info-section{
+  flex:1;
+}
+
+.info-box{
+  background:#f8f9fa;
+  padding:15px;
+  margin-bottom:12px;
+  border-radius:10px;
+}
+
+.status{
+  display:inline-block;
+  padding:8px 15px;
+  border-radius:25px;
+  font-weight:bold;
+  color:white;
+  background:#e74c3c;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  0%{ box-shadow:0 0 0 0 rgba(231,76,60,0.7); }
+  70%{ box-shadow:0 0 0 15px rgba(231,76,60,0); }
+  100%{ box-shadow:0 0 0 0 rgba(231,76,60,0); }
+}
+
+@media(max-width:768px){
+  .report-card{
+    flex-direction:column;
+  }
+}
+</style>
 </head>
 
 <body>
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="logo">🐶 Dog Rescue</div>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="report.html">Report</a></li>
+    <li><a href="view.html">View</a></li>
+    <li><a href="claimassign.html">Claim Assign</a></li>
+  </ul>
+</nav>
+<!-- 🐾 Paw Background -->
+<div class="paw" style="left:10%; animation-delay:0s;">🐾</div>
+<div class="paw" style="left:30%; animation-delay:3s;">🐾</div>
+<div class="paw" style="left:60%; animation-delay:6s;">🐾</div>
+<div class="paw" style="left:85%; animation-delay:2s;">🐾</div>
 
 <div class="container">
-    <h2>Report Details</h2>
 
-    <div class="detail"><strong>ID:</strong> <span id="reportId"></span></div>
-    <div class="detail"><strong>Type:</strong> <span id="reportType"></span></div>
-    <div class="detail"><strong>Description:</strong> <span id="reportDesc"></span></div>
-    <div class="detail"><strong>Location:</strong> <span id="reportLocation"></span></div>
-    <div class="detail"><strong>Status:</strong> <span id="reportStatus"></span></div>
+<h2>🐶 Injured Indian Street Dog Report</h2>
 
-    <div class="detail">
-        <strong>Image:</strong><br>
-        <img id="reportImage" src="">
-    </div>
+<div class="report-card">
+ <div class="image-section">
+  <img id="mainImage" src="dog1.jpg">
 
-    <button class="claim-btn" onclick="claimReport()">Claim Report</button>
+  <div class="thumbnail">
+<img src="dog1.jpg" onclick="changeImage(this)">
+  </div>
+</div>
 
-    <br><br>
+<div class="info-section">
 
-    <select id="statusSelect">
-        <option value="Pending">Pending</option>
-        <option value="Claimed">Claimed</option>
-        <option value="Resolved">Resolved</option>
-    </select>
+<div class="info-box"><strong>Report ID:</strong> DR305</div>
 
-    <button class="save-btn" onclick="updateStatus()">Update Status</button>
+<div class="info-box">
+<strong>Location:</strong> gorakhpur
+</div>
+
+<div class="info-box">
+<strong>Description:</strong> Injured Indian street dog found near roadside. Rescue assistance required urgently.
+</div>
+
+<div class="info-box">
+<strong>Date & Time:</strong> 20 Feb 2026 | 11:15 AM
+</div>
+
+<div class="info-box">
+<strong>Status:</strong> 
+<span class="status">Pending</span>
+</div>
 
 </div>
 
+</div>
+</div>
+
 <script>
-
-    const reports = [
-        {
-            id: "101",
-            type: "Road Issue",
-            description: "Road is damaged near market.",
-            location: "Lucknow",
-            status: "Pending",
-            image: "https://via.placeholder.com/200"
-        },
-        {
-            id: "102",
-            type: "Garbage Issue",
-            description: "Garbage not cleaned.",
-            location: "Gorakhpur",
-            status: "Claimed",
-            image: "https://via.placeholder.com/200"
-        }
-    ];
-
-function loadReport() {
-    const selectedId = document.getElementById("reportSelect").value;
-    const report = reports.find(r => r.id === selectedId);
-
-    if (report) {
-        document.getElementById("reportId").innerText = report.id;
-        document.getElementById("reportType").innerText = report.type;
-        document.getElementById("reportDesc").innerText = report.description;
-        document.getElementById("reportLocation").innerText = report.location;
-        document.getElementById("reportStatus").innerText = report.status;
-        document.getElementById("reportImage").src = report.image;
-
-        document.getElementById("statusSelect").value = report.status;
-    }
+function changeImage(element){
+  document.getElementById("mainImage").src = element.src;
 }
-
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const reportId = urlParams.get('id');
-
-    const report = reports.find(r => r.id === reportId);
-
-    if (report) {
-        document.getElementById("reportId").innerText = report.id;
-        document.getElementById("reportType").innerText = report.type;
-        document.getElementById("reportDesc").innerText = report.description;
-        document.getElementById("reportLocation").innerText = report.location;
-        document.getElementById("reportStatus").innerText = report.status;
-        document.getElementById("reportImage").src = report.image;
-
-        document.getElementById("statusSelect").value = report.status;
-    }
-
-    function claimReport() {
-        document.getElementById("reportStatus").innerText = "Claimed";
-        document.getElementById("statusSelect").value = "Claimed";
-        alert("Report Claimed Successfully!");
-    }
-
-    function updateStatus() {
-        const newStatus = document.getElementById("statusSelect").value;
-        document.getElementById("reportStatus").innerText = newStatus;
-        alert("Status Updated to " + newStatus);
-    }
-
 </script>
 
 </body>
