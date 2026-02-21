@@ -1,106 +1,186 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Authority Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Authority Login</title>
 
-    <style>
-        body {
-      font-family:'arial';
-            background: linear-gradient(to right, #4c4eaf, #2E7D32);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
 
-        .login-box {
-            background:beige;
-            padding: 100px;
-            width: 200px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            text-align: center;
-        }
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b') no-repeat center center/cover;
+}
 
-        .logo {
-            width: 120px;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
 
-        h2 {
-            margin-bottom: 15px;
-            color: #2E7D32;
-        }
+.container{
+  display:flex;
+  width:850px;
+  min-height:600px;  
+  border-radius:25px;
+  overflow:hidden;
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.1);
+  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+  animation: fadeIn 1s ease-in-out;
+}
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
+/* Image Side */
+.image-section{
+  width:50%;
+  background:url('dog2.jpg') no-repeat center;
+  background-size:cover;
+}
 
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #FF7043;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+/* Form Side */
+.form-section{
+  width:50%;
+  padding:60px 40px;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
 
-        button:hover {
-            background: #E64A19;
-        }
+.form-section h2{
+  text-align:center;
+  margin-bottom:35px;
+  font-size:28px;
+}
 
-        #message {
-            margin-top: 10px;
-            font-size: 14px;
-        }
-    </style>
+.input-group{
+  margin-bottom:25px;
+}
+
+.input-group label{
+  font-size:14px;
+}
+
+.input-group input{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:10px;
+  border:none;
+  outline:none;
+}
+
+.password-wrapper{
+  position:relative;
+}
+
+.toggle-password{
+  position:absolute;
+  right:10px;
+  top:40px;
+  cursor:pointer;
+  font-size:14px;
+  color:#00c6ff;
+}
+
+.login-btn{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(45deg,#00c6ff,#0072ff);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.4s;
+}
+
+.login-btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 5px 15px rgba(0,0,0,0.4);
+}
+
+.extra-links{
+  text-align:center;
+  margin-top:25px;
+  font-size:14px;
+}
+
+.extra-links a{
+  color:#00c6ff;
+  text-decoration:none;
+}
+
+.extra-links a:hover{
+  text-decoration:underline;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(30px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .container{
+    flex-direction:column;
+    width:90%;
+  }
+  .image-section{
+    height:250px;
+    width:100%;
+  }
+  .form-section{
+    width:100%;
+  }
+}
+</style>
 </head>
 
 <body>
 
-<div class="login-box">
+<div class="container">
 
-    <img src="SARRS_circle_logo.png" class="logo">
+  <div class="image-section"></div>
 
-    <h2>Authority Login</h2>
+  <div class="form-section">
+    <h2>🐶 Dog Rescue Login</h2>
 
-    <input type="email" id="email" placeholder="Enter Email">
-    <input type="password" id="password" placeholder="Enter Password">
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" placeholder="Enter your email">
+    </div>
 
-    <br>
-    <button onclick="checkLogin()">Login</button>
+    <div class="input-group password-wrapper">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter your password">
+      <span class="toggle-password" onclick="togglePassword()">Show</span>
+    </div>
 
-    <p id="message"></p>
+    <button class="login-btn">Login</button>
+
+    <div class="extra-links">
+      <p>Forgot Password? <a href="#">Click here</a></p>
+      <p>Don't have an account? <a href="#">Sign up</a></p>
+    </div>
+  </div>
+
 </div>
 
 <script>
-function checkLogin() {
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
-    var message = document.getElementById("message");
-
-    if(email === "" || password === "") {
-        message.innerHTML = "Please fill all fields 🐾";
-        message.style.color = "red";
-    }
-    else if(email === "dogadmin@gmail.com" && password === "1234") {
-        message.innerHTML = "Login Successful 🐶";
-        message.style.color = "green";
-        setTimeout(function(){
-            window.location.href = "dashboard.html";
-        }, 1000);
-    }
-    else {
-        message.innerHTML = "Invalid Email or Password 🐕";
-        message.style.color = "red";
-    }
+function togglePassword(){
+  var pass = document.getElementById("password");
+  if(pass.type === "password"){
+    pass.type = "text";
+  } else {
+    pass.type = "password";
+  }
 }
 </script>
 
