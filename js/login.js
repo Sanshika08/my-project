@@ -6,3 +6,7 @@ function togglePassword(){
     pass.type = "password";
   }
 }
+function goToReport() {
+  window.location.href="../html/report.html";
+}
+
