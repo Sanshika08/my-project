@@ -1,0 +1,139 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+html,body{
+  height:100%
+  margin: 0;
+  overflow: hidden;
+}
+
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b') no-repeat center center/cover;
+}
+
+
+.container{
+  display:flex;
+  width:1000px;
+  min-height:800px;  
+  border-radius:20px;
+  overflow:hidden;
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.1);
+  box-shadow:0 40px 60px rgba(0,0,0,0.5);
+  animation: fadeIn 1s ease-in-out;
+}
+
+.image-section{
+  width:60%;
+  background:url('/image/SARRS_circle_logo.png') no-repeat center;
+  background-size:cover;
+}
+
+/* Form Side */
+.form-section{
+  width:60%;
+  padding:60px 40px;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.form-section h2{
+  text-align:center;
+  margin-bottom:70px;
+  font-size:50px;
+}
+
+.input-group{
+  margin-bottom:25px;
+}
+
+.input-group label{
+  font-size:14px;
+}
+
+.input-group input{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:10px;
+  border:none;
+  outline:none;
+}
+
+.password-wrapper{
+  position:relative;
+}
+
+.toggle-password{
+  position:absolute;
+  right:10px;
+  top:40px;
+  cursor:pointer;
+  font-size:14px;
+  color:#00c6ff;
+}
+
+.login-btn{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(45deg,#00c6ff,#0072ff);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.4s;
+}
+
+.login-btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 5px 15px rgba(0,0,0,0.4);
+}
+
+.extra-links{
+  text-align:center;
+  margin-top:25px;
+  font-size:14px;
+}
+
+.extra-links a{
+  color:#00c6ff;
+  text-decoration:none;
+}
+
+.extra-links a:hover{
+  text-decoration:underline;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(30px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .container{
+    flex-direction:column;
+    width:90%;
+  }
+  .image-section{
+    height:250px;
+    width:100%;
+  }
+  .form-section{
+    width:100%;
+  }
+}
+
