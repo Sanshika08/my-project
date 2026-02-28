@@ -3,192 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Advanced Dog Rescue Reports</title>
+<title>Street Animal report</title>
 
-<style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: Arial, sans-serif;
-}
-
-body{
-  background: linear-gradient(135deg,#1e3c72,#2a5298);
-  padding:30px;
-  color:white;
-}
-
-h1{
-  text-align:center;
-  margin-bottom:20px;
-}
-
-.top-bar{
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  margin-bottom:20px;
-  gap:10px;
-}
-
-input,select{
-  padding:8px;
-  border-radius:8px;
-  border:none;
-}
-
-.container{
-  display:flex;
-  flex-wrap:wrap;
-  gap:20px;
-  justify-content:center;
-}
-
-.card{
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
-  border-radius:15px;
-  padding:15px;
-  width:280px;
-  transition:0.3s;
-  box-shadow:0 5px 15px rgba(0,0,0,0.3);
-  animation:fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn{
-  from{opacity:0;transform:scale(0.9);}
-  to{opacity:1;transform:scale(1);}
-}
-
-.card img{
-  width:100%;
-  height:150px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-bottom:10px;
-}
-
-.status{
-  padding:5px 10px;
-  border-radius:20px;
-  font-size:12px;
-  display:inline-block;
-  margin:10px 0;
-}
-
-.pending{ background:#ff9800; }
-.resolved{ background:#4caf50; }
-
-.buttons{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-button{
-  flex:1;
-  padding:7px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:12px;
-  font-weight:bold;
-  transition:0.3s;
-}
-
-.resolve{ background:#4caf50; color:white; }
-.delete{ background:#f44336; color:white; }
-.claim{ background:#2196f3; color:white; }
-
-button:hover{ opacity:0.8; }
-
-</style>
+<link rel="stylesheet" href="/css/report.css">
 </head>
+
 <body>
 
-<h1>🐶 Dog Rescue Reports</h1>
+<header>
+    <h2>Street Animal Rescue report</h2>
+    
+</header>
 
-<div class="top-bar">
-  <input type="text" id="search" placeholder="Search dog name...">
-  <select id="filter">
-    <option value="all">All</option>
-    <option value="pending">Pending</option>
-    <option value="resolved">Resolved</option>
-  </select>
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search by location..." onkeyup="searchTable()">
 </div>
 
-<div class="container" id="reportContainer"></div>
+<button class="add-btn" onclick="redirectToForm()">+ Report Street Animal</button>
 
-<script>
-
-let reports = JSON.parse(localStorage.getItem("reports")) || [
-  {name:"Tommy",location:"Delhi",status:"pending",img:"https://images.unsplash.com/photo-1543466835-00a7907e9de1",date:new Date().toLocaleString()},
-  {name:"Rocky",location:"Noida",status:"pending",img:"https://images.unsplash.com/photo-1558788353-f76d92427f16",date:new Date().toLocaleString()}
-];
-
-function saveData(){
-  localStorage.setItem("reports",JSON.stringify(reports));
-}
-
-function displayReports(){
-  let container=document.getElementById("reportContainer");
-  container.innerHTML="";
-
-  let searchValue=document.getElementById("search").value.toLowerCase();
-  let filterValue=document.getElementById("filter").value;
-
-  reports.forEach((report,index)=>{
-    if(report.name.toLowerCase().includes(searchValue)){
-      if(filterValue==="all" || report.status===filterValue){
-
-        let card=document.createElement("div");
-        card.className="card";
-
-        card.innerHTML=`
-          <img src="${report.img}">
-          <h3>${report.name}</h3>
-          <p>📍 ${report.location}</p>
-          <p>📅 ${report.date}</p>
-          <div class="status ${report.status}">${report.status}</div>
-          <div class="buttons">
-            <button class="resolve">Resolve</button>
-            <button class="claim">Claim</button>
-            <button class="delete">Delete</button>
-          </div>
-        `;
-
-        // Resolve
-        card.querySelector(".resolve").onclick=()=>{
-          report.status="resolved";
-          saveData();
-          displayReports();
-        };
-
-        // Delete
-        card.querySelector(".delete").onclick=()=>{
-          reports.splice(index,1);
-          saveData();
-          displayReports();
-        };
-
-        // Claim
-        card.querySelector(".claim").onclick=()=>{
-          alert("Rescue Team Assigned 🚑");
-        };
-
-        container.appendChild(card);
-      }
-    }
-  });
-}
-
-document.getElementById("search").addEventListener("input",displayReports);
-document.getElementById("filter").addEventListener("change",displayReports);
-
-displayReports();
-
-</script>
-
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Animal Type</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+        <!-- Backend data will load here -->
+    </tbody>
+</table>
+<script src="/js/report.js"></script>
 </body>
 </html>

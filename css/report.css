@@ -1,0 +1,70 @@
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+}
+
+header{
+    background:#2c3e50;
+    color:white;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logout{
+    background:#e74c3c;
+    border:none;
+    padding:8px 15px;
+    color:white;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.search-box{
+    padding:20px;
+}
+
+.search-box input{
+    padding:8px;
+    width:250px;
+}
+
+.add-btn{
+    margin:0 20px 20px 20px;
+    padding:10px 20px;
+    background:#27ae60;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+table{
+    width:95%;
+    margin:20px;
+    border-collapse:collapse;
+    background:white;
+}
+
+th,td{
+    padding:10px;
+    border:1px solid #ddd;
+    text-align:center;
+}
+
+th{
+    background:#34495e;
+    color:white;
+}
+
+.action-btn{
+    padding:5px 10px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.view{ background:#3498db; color:white; }
+.delete{ background:#e74c3c; color:white; }

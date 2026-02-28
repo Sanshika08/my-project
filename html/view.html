@@ -3,231 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dog Rescue - View Report</title>
+<title>View Report</title>
 
-<style>
-  /* Navbar Styling */
-.navbar {
-  width: 100%;
-  padding: 15px 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(0,0,0,0.2);
-  backdrop-filter: blur(10px);
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-}
-
-.logo {
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 25px;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: white;
-  font-weight: 500;
-  transition: 0.3s;
-}
-
-.nav-links a:hover {
-  color: #ffd369;
-}
-
-body {
-  padding-top: 80px;
-}
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-body{
-  min-height:100vh;
-  background: linear-gradient(135deg,#1e3c72,#2a5298);
-  overflow:hidden;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-/* 🐾 Paw Animation */
-.paw{
-  position:absolute;
-  font-size:30px;
-  animation: floatPaw 12s linear infinite;
-  opacity:0.2;
-}
-
-@keyframes floatPaw{
-  0%{ transform:translateY(100vh) rotate(0deg); }
-  100%{ transform:translateY(-10vh) rotate(360deg); }
-}
-
-/* Glass Container */
-.container{
-  position:relative;
-  z-index:2;
-  width:95%;
-  max-width:1100px;
-  background:rgba(255,255,255,0.95);
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 15px 40px rgba(0,0,0,0.4);
-}
-
-h2{
-  text-align:center;
-  margin-bottom:25px;
-}
-
-.report-card{
-  display:flex;
-  flex-wrap:wrap;
-  gap:30px;
-}
-
-.image-section{
-  flex:1;
-  text-align:center;
-}
-
-.image-section img{
-  width:100%;
-  max-width:420px;
-  height:280px;
-  object-fit:cover;
-  border-radius:15px;
-}
-
-.thumbnail{
-  margin-top:15px;
-  display:flex;
-  justify-content:center;
-  gap:10px;
-}
-
-.thumbnail img{
-  width:90px;
-  height:60px;
-  object-fit:cover;
-  border-radius:8px;
-  cursor:pointer;
-  opacity:0.7;
-}
-
-.thumbnail img:hover{
-  opacity:1;
-}
-
-.info-section{
-  flex:1;
-}
-
-.info-box{
-  background:#f8f9fa;
-  padding:15px;
-  margin-bottom:12px;
-  border-radius:10px;
-}
-
-.status{
-  display:inline-block;
-  padding:8px 15px;
-  border-radius:25px;
-  font-weight:bold;
-  color:white;
-  background:#e74c3c;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-  0%{ box-shadow:0 0 0 0 rgba(231,76,60,0.7); }
-  70%{ box-shadow:0 0 0 15px rgba(231,76,60,0); }
-  100%{ box-shadow:0 0 0 0 rgba(231,76,60,0); }
-}
-
-@media(max-width:768px){
-  .report-card{
-    flex-direction:column;
-  }
-}
-</style>
+<link rel="stylesheet" href="/css/view.css">
 </head>
 
 <body>
-<!-- Navigation Bar -->
-<nav class="navbar">
-  <div class="logo">🐶 Dog Rescue</div>
-  <ul class="nav-links">
-    <li><a href="dashboard.html">Dashboard</a></li>
-    <li><a href="report.html">Report</a></li>
-    <li><a href="view.html">View</a></li>
-    <li><a href="claimassign.html">Claim Assign</a></li>
-  </ul>
-</nav>
-<!-- 🐾 Paw Background -->
-<div class="paw" style="left:10%; animation-delay:0s;">🐾</div>
-<div class="paw" style="left:30%; animation-delay:3s;">🐾</div>
-<div class="paw" style="left:60%; animation-delay:6s;">🐾</div>
-<div class="paw" style="left:85%; animation-delay:2s;">🐾</div>
 
-<div class="container">
+<div class="sidebar">
+    <h3>Menu</h3>
+    <button onclick="goBack()">report</button>
+    </div>
 
-<h2>🐶 Injured Indian Street Dog Report</h2>
+<div class="main">
+<div class="card">
 
-<div class="report-card">
- <div class="image-section">
-  <img id="mainImage" src="dog1.jpg">
+<h2>Report Details <span class="status" id="statusBadge">Pending</span></h2>
 
-  <div class="thumbnail">
-<img src="dog1.jpg" onclick="changeImage(this)">
-  </div>
+<div class="details">
+<div class="detail-box">ID: </div>
+<div class="detail-box">Animal: </div>
+<div class="detail-box">Condition:</div>
+<div class="detail-box">Location: </div>
+<div class="detail-box">Date: </div>
+<center>
+<img src="https://via.placeholder.com/250">
+</center>
+
+<div class="actions">
+<button class="action approve" onclick="approve()">Toggle Status</button>
+<button class="action delete" onclick="deleteReport()">Delete</button>
+<button class="action back" onclick="goBack()">Back</button>
 </div>
 
-<div class="info-section">
-
-<div class="info-box"><strong>Report ID:</strong> DR305</div>
-
-<div class="info-box">
-<strong>Location:</strong> gorakhpur
-</div>
-
-<div class="info-box">
-<strong>Description:</strong> Injured Indian street dog found near roadside. Rescue assistance required urgently.
-</div>
-
-<div class="info-box">
-<strong>Date & Time:</strong> 20 Feb 2026 | 11:15 AM
-</div>
-
-<div class="info-box">
-<strong>Status:</strong> 
-<span class="status">Pending</span>
-</div>
-
-</div>
+<div class="spinner" id="spinner"></div>
 
 </div>
 </div>
-
-<script>
-function changeImage(element){
-  document.getElementById("mainImage").src = element.src;
-}
-</script>
-
+<script src="/js/view.js"></script>
 </body>
 </html>
