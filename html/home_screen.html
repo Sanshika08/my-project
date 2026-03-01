@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Street Animal report</title>
+
+<link rel="stylesheet" href="/css/home_screen.css">
+</head>
+<div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+<body>
+<nav class="navbar">
+    <div class="logo">SARRS</div>
+
+    <ul class="nav-links">
+         <li><a href="dashboard.html">Dashboard Page</a></li>
+      
+    </ul>
+
+    <div id="notificationSidebar" class="sidebar">
+    <div class="sidebar-header">
+        <h3>Notifications</h3>
+        <span class="close-btn" onclick="closeSidebar()"></span>
+    </div>
+
+    <ul class="notification-list">
+        <li>New rescue request received</li>
+        <li>Claim approved</li>
+        <li>Report updated</li>
+    </ul>
+</div>
+<a href="#" class="notification" onclick="openSidebar()">
+    🔔
+    <span class="badge">3</span>
+</a>
+</nav>
+<header>
+    <h2>Street Animal Rescue report</h2>
+    
+</header>
+
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search by location..." onkeyup="searchTable()">
+</div>
+
+<button class="add-btn" onclick="redirectToForm()">+ Report Street Animal</button>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Animal Type</th>
+            <th>Case type</th>
+            <th>Description</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+
+    </tbody>
+</table>
+<script src="/js/home_screen.js"></script>
+</body>
+</html>
