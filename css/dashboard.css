@@ -1,0 +1,98 @@
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    display:flex;
+    height:100vh;
+    background:
+    linear-gradient(rgba(0, 70, 160, 0.7), rgba(0, 70, 160, 0.7)),
+    url("dog.jpg") no-repeat center center/cover;
+}
+
+/* Sidebar */
+.sidebar{
+    width:220px;
+    background:#1b2a4e;
+    color:white;
+    padding:20px;
+}
+
+.sidebar h2{
+    margin-bottom:30px;
+}
+
+.sidebar a{
+    display:block;
+    padding:10px;
+    margin:10px 0;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+    transition:0.3s;
+}
+
+.sidebar a:hover{
+    background:rgba(255,255,255,0.2);
+}
+
+/* Main Content */
+.main{
+    flex:1;
+    padding:30px;
+    overflow-y:auto;
+}
+
+/* Cards */
+.cards{
+    display:flex;
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.card{
+    flex:1;
+    background:rgba(255,255,255,0.95);
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+    transition:0.3s;
+    text-align:center;
+}
+
+.card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 15px 30px rgba(0,0,0,0.3);
+}
+
+.card h3{
+    margin-bottom:15px;
+}
+
+.card h2{
+    font-size:32px;
+    color:#1b2a4e;
+}
+
+/* Tips Section */
+.tips{
+    background:rgba(255,255,255,0.95);
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+.tips h3{
+    margin-bottom:10px;
+    color:#0d47a1;
+}
+.top-title { background-color:#1b2a4e; /* blue color */ 
+    color: white; padding: 10px; 
+    font-size: 22px; 
+    font-weight: bold; 
+    text-align: center;
+     border-radius: 8px 8px 0 0; }
