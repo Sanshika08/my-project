@@ -6,8 +6,6 @@
 }
 html,body{
   height:100%
-  margin: 0;
-  overflow: hidden;
 }
 
 body{
@@ -24,7 +22,7 @@ body{
 .container{
   display:flex;
   width:1000px;
-  min-height:800px;  
+  min-height:500px;  
   border-radius:20px;
   overflow:hidden;
   backdrop-filter: blur(12px);
@@ -37,6 +35,7 @@ body{
   width:60%;
   background:url('/image/SARRS_circle_logo.png') no-repeat center;
   background-size:cover;
+
 }
 
 /* Form Side */

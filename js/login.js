@@ -7,6 +7,6 @@ function togglePassword(){
   }
 }
 function goToReport() {
-  window.location.href="../html/report.html";
+  window.location.href="../html/home_screen.html";
 }
 
