@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Report</title>
+
+<link rel="stylesheet" href="/css/report_details.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h3>SARRS</h3>
+     <a href="home_screen.html">Home</a> 
+     <br>
+     <a href="dashboard.html">Dashboard</a>
+    </div>
+
+<div class="main">
+<div class="card">
+
+<h2>Report Details <span class="status" id="statusBadge">Pending</span></h2>
+
+<div class="details">
+<div class="detail-box">ID: </div>
+<div class="detail-box">Animal Type: </div>
+<div class="detail-box">CaseType: </div>
+<div class="detail-box">Condition:</div>
+<div class="detail-box">Location: </div>
+<div class="detail-box">Date: </div>
+<div class="detail-box">Image: </div>
+<div class="detail-box">Status: </div>
+<div class="detail-box">Description: </div>
+
+<div class="actions">
+<button class="action approve" onclick="approve()">Toggle Status</button>
+<button class="action delete" onclick="deleteReport()">Delete</button>
+<button class="action back" onclick="goBack()">Back</button>
+</div>
+
+<div class="spinner" id="spinner"></div>
+
+</div>
+</div>
+<script src="/js/report_details.js"></script>
+</body>
+</html>
