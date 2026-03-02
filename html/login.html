@@ -1,39 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Authority Login</title>
-<link rel="stylesheet" href="/css/login.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authority Login</title>
+  <link rel="stylesheet" href="/css/login.css">
 </head>
+
 <body>
 
-<div class="container">
+  <div class="container">
 
-  <div class="image-section"></div>
+    <div class="image-section"></div>
 
-  <div class="form-section">
-    <h2>Authority Login</h2>
+    <div class="form-section">
+      <h2>Authority Login</h2>
 
-    <div class="input-group">
-      <label>Email</label>
-      <input type="email" placeholder="Enter your email">
-    </div>
-
-    <div class="input-group password-wrapper">
-      <label>Password</label>
-      <input type="password" id="password" placeholder="Enter your password" requried>
-      <span class="toggle-password" onclick="togglePassword()">Show</span>
-    </div>
-
-    <button class="login-btn" onclick="goToReport()">login</button>
-
-    <div class="extra-links">
-      <p>Forgot Password? <a href="#">Click here</a></p>
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
       </div>
+
+      <div class="input-group password-wrapper">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+        <span class="toggle-password" onclick="togglePassword()">Show</span>
+      </div>
+
+      <!-- 🔥 Removed onclick -->
+      <button class="login-btn" id="loginBtn">
+        <span id="btnText">Login</span>
+        <span id="btnLoader" class="loader" style="display:none;"></span>
+      </button>
+
+      <div class="extra-links">
+        <p>Forgot Password? <a href="#">Click here</a></p>
+      </div>
+
+    </div>
+
   </div>
 
-</div>
-<script src="../js/login.js"></script>
+  <script type="module" src="../js/login.js"></script>
+
 </body>
+
 </html>

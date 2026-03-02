@@ -136,3 +136,18 @@ body{
   }
 }
 
+
+.loader {
+  border: 3px solid #ffffff40;
+  border-top: 3px solid #ffffff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
