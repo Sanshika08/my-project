@@ -39,9 +39,17 @@ loginBtn.addEventListener("click", async () => {
     }
 
     // ⏳ Keep loader for 2 seconds
-    setTimeout(() => {
-      window.location.replace("../html/home_screen.html");
-    }, 2000);
+   setTimeout(() => {
+
+  // Fade out page
+  document.body.classList.add("fade-out");
+
+  // Wait for fade animation
+  setTimeout(() => {
+    window.location.replace("../html/home_screen.html");
+  }, 600);
+
+}, 1500);
 
   } catch (error) {
 
