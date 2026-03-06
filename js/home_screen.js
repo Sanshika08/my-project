@@ -1,62 +1,65 @@
-// Logout
-function logout(){
-    window.location.href = "login.html";
-}
+import { db } from "./firebase_config.js";
+import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-// Redirect to form page
-function redirectToForm(){
-    window.location.href = "add-report.html";
-}
+const tableBody = document.getElementById("tableBody");
 
-// Fetch Reports from Backend
-async function fetchReports(){
-    try{
-        const response = await fetch("http://localhost:8080/api/reports");
-        const data = await response.json();
+// 🔥 Listen to Firestore reports collection
+onSnapshot(collection(db, "reports"), (snapshot) => {
 
-        const tableBody = document.getElementById("tableBody");
-        tableBody.innerHTML = "";
+  tableBody.innerHTML = "";
 
-        data.forEach(report => {
-            const row = `
-                <tr>
-                    <td>${report.id}</td>
-                    <td>${report.animalType}</td>
-                    <td>${report.location}</td>
-                    <td>${report.date}</td>
-                    <td>${report.status}</td>
-                    <td>
-                        <button class="action-btn view">View</button>
-                        <button class="action-btn delete">Delete</button>
-                    </td>
-                </tr>
-            `;
-            tableBody.innerHTML += row;
-        });
+  snapshot.forEach(doc => {
+    const data = doc.data();
 
-    } catch(error){
-        console.error("Error fetching reports:", error);
-    }
-}
+    const row = `
+<tr>
+  <td>${doc.id.substring(0,6)}</td>
+
+  <td>
+    <img src="${data.imageUrl}" 
+         style="width:90px;height:70px;border-radius:10px;object-fit:cover;">
+  </td>
+
+  <td>
+    <strong>${data.animalType}</strong><br>
+    <span style="color:#666;font-size:13px;">
+      ${data.caseType}
+    </span>
+  </td>
+
+  <td>
+    <span class="status-badge ${data.status.toLowerCase()}">
+      ${data.status}
+    </span>
+  </td>
+
+  <td>${data.location?.address || ""}</td>
+
+  <td>
+    <button class="view-btn" onclick="viewReport('${doc.id}')">
+      View
+    </button>
+  </td>
+</tr>
+`;
+
+    tableBody.innerHTML += row;
+  });
+
+});
+
+// 🔍 View report
+window.viewReport = function(id){
+  window.location.href = `report_details.html?id=${id}`;
+};
 
 // Search Function
-function searchTable(){
-    let input = document.getElementById("searchInput").value.toLowerCase();
-    let rows = document.querySelectorAll("#tableBody tr");
+window.searchTable = function(){
+  let input = document.getElementById("searchInput").value.toLowerCase();
+  let rows = document.querySelectorAll("#tableBody tr");
 
-    rows.forEach(row => {
-        let location = row.cells[2].innerText.toLowerCase();
-        row.style.display = location.includes(input) ? "" : "none";
-    });
-}
-
-// Load data when page opens
-function openSidebar() {
-    document.getElementById("notificationSidebar").style.width = "300px";
-    document.getElementById("overlay").style.display = "block";
-}
-
-function closeSidebar() {
-    document.getElementById("notificationSidebar").style.width = "0";
-    document.getElementById("overlay").style.display = "none";
-}
+  rows.forEach(row => {
+    let location = row.cells[4].innerText.toLowerCase();
+    row.style.display = location.includes(input) ? "" : "none";
+  });
+};

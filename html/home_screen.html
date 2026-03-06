@@ -19,20 +19,21 @@ body.fade-in {
 
 </head>
 
-<div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+<body>
+
+ <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
 <script>
 window.addEventListener("load", () => {
   document.body.classList.add("fade-in");
 });
-</script>
 
-<body>
+</script>
 <nav class="navbar">
     <div class="logo">SARRS</div>
 
     <ul class="nav-links">
          <li><a href="dashboard.html">Dashboard</a></li>
-         <li><a href="Report_Details.html">Report Details</a></li>
+         <li><a href="report_details.html">Report Details</a></li>
       
     </ul>
 
@@ -66,18 +67,19 @@ window.addEventListener("load", () => {
 
 <table>
     <thead>
-        <tr>
-            <th>ID</th>
-            <th>Animaltype</th>
-            <th>Status</th>
-            <th>Action</th>
-            <th>Location</th>
-        </tr>
-    </thead>
+  <tr>
+    <th>ID</th>
+    <th>Image</th>
+    <th>Animal Info</th>
+    <th>Status</th>
+    <th>Location</th>
+    <th>Action</th>
+  </tr>
+</thead>
     <tbody id="tableBody">
 
     </tbody>
 </table>
-<script src="/js/home_screen.js"></script>
+<script type="module" src="../js/home_screen.js"></script>
 </body>
 </html>
