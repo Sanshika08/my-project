@@ -1,85 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Street Animal report</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Street Animal report</title>
 
-<link rel="stylesheet" href="/css/home_screen.css">
+    <link rel="stylesheet" href="/css/home_screen.css">
 
-<style>
-body {
-  opacity: 0;
-  transition: opacity 0.6s ease-in-out;
-}
-body.fade-in {
-  opacity: 1;
-}
-</style>
+    <style>
+        body {
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        body.fade-in {
+            opacity: 1;
+        }
+    </style>
 
 </head>
 
 <body>
 
- <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
-<script>
-window.addEventListener("load", () => {
-  document.body.classList.add("fade-in");
-});
+    <div id="drawerOverlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+    <script>
+        window.addEventListener("load", () => {
+            document.body.classList.add("fade-in");
+        });
 
-</script>
-<nav class="navbar">
-    <div class="logo">SARRS</div>
+    </script>
 
-    <ul class="nav-links">
-         <li><a href="dashboard.html">Dashboard</a></li>
-         <li><a href="report_details.html">Report Details</a></li>
-      
-    </ul>
+    <nav class="navbar">
 
-    <div id="notificationSidebar" class="sidebar">
-    <div class="sidebar-header">
-        <h3>Notifications</h3>
-        <span class="close-btn" onclick="closeSidebar()"></span>
+        <div class="menu-logo">
+            <span class="menu-btn" onclick="openDrawer()">☰</span>
+            <div class="logo">Animal Rescue Dashboard</div>
+        </div>
+
+        <a href="#" class="notification" onclick="openSidebar()">
+            🔔
+            <span class="badge">3</span>
+        </a>
+
+    </nav>
+    <!-- Notification Sidebar -->
+    <div id="notificationSidebar" class="notification-sidebar">
+
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            <span class="close-btn" onclick="closeSidebar()">✕</span>
+        </div>
+
+        <ul class="notification-list">
+            <li>🐾 New rescue request received</li>
+            <li>✅ Report approved</li>
+            <li>📍 New report near your area</li>
+        </ul>
+
     </div>
 
-    <ul class="notification-list">
-        <li>New rescue request received</li>
-        <li>Claim approved</li>
-        <li>Report updated</li>
-    </ul>
-</div>
-<a href="#" class="notification" onclick="openSidebar()">
-    🔔
-    <span class="badge">3</span>
-</a>
-</nav>
-<header>
-    <h2>Street Animal Rescue report</h2>
-    
-</header>
 
-<div class="search-box">
-    <input type="text" id="searchInput" placeholder="Search by location..." onkeyup="searchTable()">
-</div>
+    <!-- Drawer -->
+    <div id="drawer" class="drawer">
 
-<button class="add-btn" onclick="redirectToForm()">+ Report Street Animal</button>
+        <div class="drawer-header">
 
-<table>
-    <thead>
-  <tr>
-    <th>ID</th>
-    <th>Image</th>
-    <th>Animal Info</th>
-    <th>Status</th>
-    <th>Location</th>
-    <th>Action</th>
-  </tr>
-</thead>
-    <tbody id="tableBody">
+            <img src="../image/SARRS_circle_logo_removebg.png" class="drawer-logo">
 
-    </tbody>
-</table>
-<script type="module" src="../js/home_screen.js"></script>
+            <span class="close-drawer" onclick="closeDrawer()">✕</span>
+
+        </div>
+
+        <div class="drawer-menu">
+
+             <a href="home_screen.html" class="drawer-item active">
+                <span class="icon">🏠</span>
+                <span>Home</span>
+            </a>
+
+            <a href="dashboard.html" class="drawer-item ">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="report_details.html" class="drawer-item">
+                <span class="icon">📄</span>
+                <span>Report Details</span>
+            </a>
+
+        </div>
+
+        <div class="drawer-footer">
+            <a href="#" onclick="logout()" class="logout-btn">
+                ⏻ Logout
+            </a>
+        </div>
+
+    </div>
+
+    <header>
+        <h2>Street Animal Rescue report</h2>
+
+    </header>
+
+    <div class="stats-container">
+
+        <div class="stat-card total">
+            <h3 id="totalReports">0</h3>
+            <p>Total Reports</p>
+        </div>
+
+        <div class="stat-card pending">
+            <h3 id="pendingReports">0</h3>
+            <p>Pending Cases</p>
+        </div>
+
+        <div class="stat-card resolved">
+            <h3 id="resolvedReports">0</h3>
+            <p>Resolved Cases</p>
+        </div>
+
+        <div class="stat-card critical">
+            <h3 id="criticalReports">0</h3>
+            <p>Critical Cases</p>
+        </div>
+
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search by location..." onkeyup="searchTable()">
+    </div>
+
+    <button class="add-btn" onclick="redirectToForm()">+ Report Street Animal</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Animal Info</th>
+                <th>Status</th>
+                <th>Location</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+
+        </tbody>
+    </table>
+    <script type="module" src="../js/home_screen.js"></script>
 </body>
+
 </html>

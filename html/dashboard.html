@@ -1,48 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SARRS Dashboard</title>
-<link rel="stylesheet" href="/css/dashboard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SARRS Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
+
 <body>
 
-<!-- Sidebar -->
-<div class="sidebar">
-            <a href="home_screen.html">Home</a>
-            <a href="report_details.html">Report</a>
-            
+    <!-- Sidebar -->
+    <div class="sidebar">
+        
+         <!-- LOGO -->
+    <div class="sidebar-logo">
+        <img src="../image/SARRS_circle_logo_removebg.png" alt="SARRS Logo">
+    </div>
+
+        <a href="home_screen.html" class="drawer-item">
+            <span class="icon">🏠</span>
+            <span>Home</span>
+        </a>
+
+        <a href="dashboard.html" class="dashboard-item active">
+            <span class="icon">📊</span>
+            <span>Dashboard</span>
+        </a>
+
+    </div>
+
+    <div class="main">
+        <div class="top-title">SARRS</div>
+
+        <h1 style="color:white; margin-bottom:20px;">SARRS Dashboard</h1>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Total Rescues</h3>
+                <h2 id="rescueCount">0</h2>
+            </div>
+            <div class="card">
+                <h3>Pending Cases</h3>
+                <h2 id="pendingCount">0</h2>
+            </div>
+            <div class="card">
+                <h3>Resolved Cases</h3>
+                <h2 id="resolvedCount">0</h2>
+            </div>
         </div>
 
-<div class="main">
-    <div class="top-title">SARRS</div>
+        <div class="tips">
+            <h3>Emergency Rescue Tips</h3>
+            <p>• Injured animal ko directly touch na karein.</p>
+            <p>• Animal helpline ko turant contact karein.</p>
+            <p>• street animals ko pani aur safe jagah provide karein.</p>
+        </div>
 
-<h1 style="color:white; margin-bottom:20px;">SARRS Dashboard</h1>
-
-<div class="cards">
-    <div class="card">
-        <h3>Total Rescues</h3>
-        <h2 id="rescueCount">0</h2>
     </div>
-    <div class="card">
-        <h3>Pending Cases</h3>
-        <h2 id="pendingCount">0</h2>
-    </div>
-    <div class="card">
-        <h3>Resolved Cases</h3>
-        <h2 id="resolvedCount">0</h2>
-    </div>
-</div>
-
-<div class="tips">
-    <h3>Emergency Rescue Tips</h3>
-    <p>• Injured animal ko directly touch na karein.</p>
-    <p>• Animal helpline ko turant contact karein.</p>
-    <p>• street animals ko pani aur safe jagah provide karein.</p>
-</div>
-
-</div>
-<script type="module" src="../js/dashboard.js"></script>
+    <script type="module" src="../js/dashboard.js"></script>
 </body>
+
 </html>

@@ -40,6 +40,27 @@ body{
     background:rgba(255,255,255,0.2);
 }
 
+.dashboard-item.active{
+background:#334155;
+border-left:4px solid #38bdf8;
+}
+
+.sidebar-logo{
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px 0;
+border-bottom:1px solid rgba(255,255,255,0.1);
+margin-bottom:10px;
+}
+
+.sidebar-logo img{
+height:150px;
+width:auto;
+object-fit:contain;
+}
+
+
 /* Main Content */
 .main{
     flex:1;
