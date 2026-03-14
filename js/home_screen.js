@@ -21,12 +21,16 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
     const data = doc.data();
     total++;
 
-    if(data.status === "Pending") pending++;
-    if(data.status === "Resolved") resolved++;
+    if (data.status === "Pending") pending++;
+    if (data.status === "Resolved") resolved++;
+
+    let statusClass = data.status === "Resolved"
+      ? "status-resolved"
+      : "status-pending";
 
     const row = `
     <tr>
-      <td>${doc.id.substring(0,6)}</td>
+      <td>${doc.id.substring(0, 6)}</td>
 
       <td>
         <img src="${data.imageUrl}" 
@@ -40,11 +44,12 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
         </span>
       </td>
 
-      <td>
-        <span class="status-badge ${data.status.toLowerCase()}">
-        ${data.status}
-        </span>
-      </td>
+       <td>
+    <span class="status-badge ${statusClass}">
+    ${data.status}
+    </span>
+  </td>
+
 
       <td>${data.location?.address || ""}</td>
 
@@ -66,12 +71,12 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
 });
 
 // 🔍 View report
-window.viewReport = function(id){
+window.viewReport = function (id) {
   window.location.href = `report_details.html?id=${id}`;
 };
 
 // Search Function
-window.searchTable = function(){
+window.searchTable = function () {
   let input = document.getElementById("searchInput").value.toLowerCase();
   let rows = document.querySelectorAll("#tableBody tr");
 
@@ -82,28 +87,28 @@ window.searchTable = function(){
 };
 
 //Drawer Menu
-window.openDrawer = function(){
+window.openDrawer = function () {
   document.getElementById("drawer").style.left = "0";
   document.getElementById("drawerOverlay").style.display = "block";
 }
 
-window.closeDrawer = function(){
+window.closeDrawer = function () {
   document.getElementById("drawer").style.left = "-260px";
   document.getElementById("drawerOverlay").style.display = "none";
 }
 
-function logout(){
+function logout() {
   window.location.href = "login.html";
 }
 
 // Notification Sidebar
-window.openSidebar = function(){
+window.openSidebar = function () {
   const sidebar = document.getElementById("notificationSidebar");
   sidebar.style.transform = "translateX(0)";
   document.getElementById("overlay").style.display = "block";
 }
 
-window.closeSidebar = function(){
+window.closeSidebar = function () {
   const sidebar = document.getElementById("notificationSidebar");
   sidebar.style.transform = "translateX(100%)";
   document.getElementById("overlay").style.display = "none";

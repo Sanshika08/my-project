@@ -1,0 +1,145 @@
+/* PAGE */
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#f4f6f9;
+}
+
+
+/* SIDEBAR */
+
+.sidebar{
+position:fixed;
+left:0;
+top:0;
+width:220px;
+height:100%;
+background:#1e293b;
+color:white;
+padding-top:20px;
+}
+
+.sidebar-logo{
+display:flex;
+justify-content:center;
+padding-bottom:20px;
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-logo img{
+height:120px;
+}
+
+.sidebar a{
+display:block;
+padding:12px 20px;
+color:white;
+text-decoration:none;
+}
+
+.sidebar a:hover{
+background:#334155;
+}
+
+.sidebar .active{
+background:#334155;
+}
+
+
+/* MAIN */
+
+.main{
+margin-left:220px;
+padding:40px;
+}
+
+
+/* TITLE */
+
+.page-title{
+font-size:28px;
+font-weight:bold;
+margin-bottom:25px;
+}
+
+
+/* VOLUNTEER GRID */
+
+.vol-container{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+gap:20px;
+}
+
+
+/* VOLUNTEER CARD */
+
+.vol-card{
+background:white;
+border-radius:10px;
+padding:20px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+
+/* AVATAR */
+
+.avatar{
+width:60px;
+height:60px;
+border-radius:50%;
+background:#e2e8f0;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+font-weight:bold;
+color:#334155;
+}
+
+
+/* INFO */
+
+.vol-info{
+flex:1;
+}
+
+.vol-name{
+font-weight:bold;
+font-size:16px;
+}
+
+.vol-phone{
+font-size:13px;
+color:#64748b;
+margin-top:3px;
+}
+
+.vol-role{
+font-size:13px;
+color:#475569;
+margin-top:2px;
+}
+
+
+/* STATUS BADGE */
+
+.status{
+padding:5px 12px;
+border-radius:20px;
+font-size:12px;
+font-weight:600;
+color:white;
+background:#22c55e;
+}
+
+.active-card{
+border:2px solid #2563eb;
+background:#f0f7ff;
+transform:scale(1.03);
+transition:0.3s;
+}

@@ -2,64 +2,153 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Report</title>
+    <title>Report Details</title>
 
     <link rel="stylesheet" href="/css/report_details.css">
+
 </head>
 
 <body>
 
+    <!-- SIDEBAR -->
     <div class="sidebar">
 
         <div class="sidebar-logo">
-            <img src="../image/SARRS_circle_logo_removebg.png" alt="error">
+            <img src="../image/SARRS_circle_logo_removebg.png" alt="SARRS Logo">
         </div>
 
-        <a href="home_screen.html" class="drawer-item">
-            <span class="icon">🏠</span>
-            <span>Home</span>
-        </a>
+        <a href="home_screen.html">🏠 Home</a>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="report_details.html">📄 Report Details</a>
 
-        <a href="dashboard.html" class="drawer-item">
-            <span class="icon">📊</span>
-            <span>Dashboard</span>
-        </a>
-
-        <a href="report_details.html" class="report-item active">
-            <span class="icon">📄</span>
-            <span>Report Details</span>
-        </a>
     </div>
 
+
+    <!-- MAIN CONTENT -->
     <div class="main">
+
         <div class="card">
 
-            <h2>Report Details <span class="status" id="statusBadge">Pending</span></h2>
-
-            <div class="details">
-                <div class="detail-box">ID: </div>
-                <div class="detail-box">Animal Type: </div>
-                <div class="detail-box">CaseType: </div>
-                <div class="detail-box">Condition:</div>
-                <div class="detail-box">Location: </div>
-                <div class="detail-box">Date: </div>
-                <div class="detail-box">Image: </div>
-                <div class="detail-box">Status: </div>
-                <div class="detail-box">Description: </div>
-
-                <div class="actions">
-                    <button class="action approve" onclick="approve()">Toggle Status</button>
-                    <button class="action delete" onclick="deleteReport()">Delete</button>
-                    <button class="action back" onclick="goBack()">Back</button>
+            <div class="header">
+                <div class="title-section">
+                    <h2>Report Details</h2>
+                    <span class="status" id="statusBadge">Pending</span>
                 </div>
+            </div>
 
-                <div class="spinner" id="spinner"></div>
+
+            <div class="image-container">
+
+                <div id="imageLoader" class="image-loader"></div>
+
+                <img id="animalImage" class="report-image" style="display:none;">
 
             </div>
+
+
+            <div class="details">
+
+                <div class="detail-box">
+                    <b>Report ID:</b>
+                    <span id="reportId"></span>
+                </div>
+
+                <div class="detail-box">
+                    <b>Animal Type:</b>
+                    <span id="animalType"></span>
+                </div>
+
+                <div class="detail-box">
+                    <b>Case Type:</b>
+                    <span id="caseType"></span>
+                </div>
+
+                <div class="detail-box">
+                    <b>Reported Date:</b>
+                    <span id="reportDate"></span>
+                </div>
+
+                <div class="detail-box">
+                    <b>Reported:</b>
+                    <span id="reportTimeAgo"></span>
+                </div>
+
+                <div class="detail-box">
+                    <b>Location:</b>
+                    <span id="location"></span>
+                </div>
+
+                <div class="detail-box full">
+                    <b>Description:</b>
+                    <span id="description"></span>
+                </div>
+
+            </div>
+
+            <div class="assign-container">
+
+                <div class="assign-grid">
+
+                    <!-- LEFT TITLE -->
+                    <h3 class="assign-title">Assign Volunteer</h3>
+
+                    <!-- RIGHT TITLE -->
+                    <div class="assign-label">
+                        <b>Assigned To:</b>
+                    </div>
+
+                    <!-- LEFT CONTROLS -->
+                    <div class="assign-row">
+
+                        <select id="volunteerSelect" class="volunteer-dropdown">
+                            <option value="" disabled selected>-- Select Volunteer --</option>
+                        </select>
+
+                        <button class="assign-btn" onclick="assignVolunteer()">
+                            Assign
+                        </button>
+
+                    </div>
+
+                    <!-- RIGHT STATUS -->
+                    <div class="assigned-box">
+
+                        <span id="assignedVolunteer">Not Assigned</span>
+
+                        <button class="view-volunteer-btn" onclick="viewVolunteer()">
+                            View
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="actions">
+
+                <button class="approve" onclick="toggleStatus()">
+                    ✔ Toggle Status
+                </button>
+
+                <button class="delete" onclick="deleteReport()">
+                    🗑 Delete
+                </button>
+
+                <button class="back" onclick="goBack()">
+                    ← Back
+                </button>
+
+            </div>
+
         </div>
-        <script type="module" src="../js/report_details.js"></script>
+    </div>
+
+    <script type="module" src="../js/report_details.js"></script>
+
 </body>
 
 </html>
