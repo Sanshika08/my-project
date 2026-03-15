@@ -6,7 +6,8 @@ import {
     updateDoc,
     deleteDoc,
     collection,
-    getDocs
+    getDocs,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 
@@ -84,23 +85,50 @@ async function loadReport() {
         }
 
         // SHOW ASSIGNED VOLUNTEER
+        // SHOW ASSIGNED VOLUNTEER
+        const resolveBtn = document.getElementById("resolveBtn");
+        const volunteerElement = document.getElementById("assignedVolunteer");
+
+        const warning = document.getElementById("resolveWarning");
+
+        // show volunteer
         if (data.assignedVolunteer) {
-
-            document.getElementById("assignedVolunteer").innerText =
-                data.assignedVolunteer;
-
+            volunteerElement.innerText = data.assignedVolunteer;
+        } else {
+            volunteerElement.innerText = "Not Assigned";
         }
 
-        // DATE
-        const reportDate = data.createdAt.toDate();
+        // control resolve button + warning
+        const volunteer = data.assignedVolunteer;
 
-        document.getElementById("reportDate").innerText =
-            reportDate.toLocaleString();
+        if (volunteer && volunteer.trim() !== "" && data.status !== "Resolved") {
+            resolveBtn.disabled = false;
+            warning.style.display = "none";
+        } else {
+            resolveBtn.disabled = true;
+            warning.style.display = "block";
+        }
+        // DATE & TIME AGO
+        let reportDate = null;
 
+        if (data.createdAt && data.createdAt.toDate) {
+            reportDate = data.createdAt.toDate();
+        }
 
-        // TIME AGO
-        document.getElementById("reportTimeAgo").innerText =
-            getTimeAgo(reportDate);
+        if (reportDate) {
+
+            document.getElementById("reportDate").innerText =
+                reportDate.toLocaleString();
+
+            document.getElementById("reportTimeAgo").innerText =
+                getTimeAgo(reportDate);
+
+        } else {
+
+            document.getElementById("reportDate").innerText = "-";
+            document.getElementById("reportTimeAgo").innerText = "-";
+
+        }
 
     } catch (error) {
 
@@ -109,7 +137,7 @@ async function loadReport() {
 
     }
 
-}
+};
 
 // LOAD VOLUNTEERS INTO DROPDOWN
 async function loadVolunteers() {
@@ -171,19 +199,37 @@ window.toggleStatus = async function () {
         const reportRef = doc(db, "reports", reportId);
         const snap = await getDoc(reportRef);
 
-        const currentStatus = snap.data().status;
+        const data = snap.data();
+        const currentStatus = data.status;
+        const volunteer = data.assignedVolunteer;
 
-        const newStatus = currentStatus === "Pending"
-            ? "Resolved"
-            : "Pending";
+        // 🚨 PREVENT RESOLVING WITHOUT VOLUNTEER
+        if (!volunteer || volunteer === "Not Assigned") {
+            alert("Please assign a volunteer before resolving this report.");
+            return;
+        }
 
-        await updateDoc(reportRef, {
-            status: newStatus
-        });
+        if (currentStatus === "Resolved") {
+            alert("This report is already resolved.");
+            return;
+        }
 
+        const newStatus = "Resolved";
 
-        // UPDATE UI WITHOUT RELOAD
+        let updateData = {
+            status: newStatus,
+            updatedAt: serverTimestamp()
+        };
+
+        if (newStatus === "Resolved") {
+            updateData.resolvedAt = serverTimestamp();
+        }
+
+        await updateDoc(reportRef, updateData);
+
+        // UPDATE UI
         const badge = document.getElementById("statusBadge");
+        document.getElementById("resolveBtn").disabled = true;
 
         badge.innerText = newStatus;
 
@@ -191,8 +237,9 @@ window.toggleStatus = async function () {
 
         if (newStatus === "Resolved") {
             badge.classList.add("resolved");
-        } else {
-            badge.classList.add("pending");
+
+            // lock button
+            document.getElementById("resolveBtn").disabled = true;
         }
 
     } catch (error) {
@@ -257,6 +304,10 @@ window.assignVolunteer = async function () {
 
         document.getElementById("assignedVolunteer").innerText = volunteer;
 
+        // enable resolve button after assignment
+        document.getElementById("resolveBtn").disabled = false;
+        document.getElementById("resolveWarning").style.display = "none";
+
         alert("Volunteer Assigned Successfully");
 
     } catch (error) {
@@ -268,27 +319,15 @@ window.assignVolunteer = async function () {
 
 };
 
-window.viewVolunteer = function(){
+window.viewVolunteer = function () {
 
-const name = document.getElementById("assignedVolunteer").innerText;
+    const volunteer = document.getElementById("assignedVolunteer").innerText;
 
-if(name === "Not Assigned"){
-alert("No volunteer assigned");
-return;
-}
+    if (volunteer === "Not Assigned") {
+        alert("No volunteer assigned yet.");
+        return;
+    }
 
-// redirect to volunteer profile page
-window.viewVolunteer = function(){
-
-const volunteer = document.getElementById("assignedVolunteer").innerText;
-
-if(volunteer === "Not Assigned"){
-alert("No volunteer assigned yet.");
-return;
-}
-
-window.location.href = `volunteers.html?name=${encodeURIComponent(volunteer)}`;
-
-};
-
+    window.location.href =
+        `volunteers.html?name=${encodeURIComponent(volunteer)}`;
 };

@@ -130,9 +130,12 @@
 
             <div class="actions">
 
-                <button class="approve" onclick="toggleStatus()">
-                    ✔ Toggle Status
+                <button id="resolveBtn" class="approve" onclick="toggleStatus()" disabled>
+                    ✔ Mark as Resolved
                 </button>
+                <p id="resolveWarning" class="resolve-warning">
+                    ⚠ Assign a volunteer before resolving this report
+                </p>
 
                 <button class="delete" onclick="deleteReport()">
                     🗑 Delete
