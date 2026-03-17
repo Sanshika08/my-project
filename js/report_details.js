@@ -15,6 +15,11 @@ import {
 const params = new URLSearchParams(window.location.search);
 const reportId = params.get("id");
 
+// GLOBAL
+let reportLat = null;
+let reportLng = null;
+
+
 
 // LOAD REPORT
 loadReport();
@@ -40,7 +45,12 @@ async function loadReport() {
         document.getElementById("reportId").innerText = reportId;
         document.getElementById("animalType").innerText = data.animalType || "-";
         document.getElementById("caseType").innerText = data.caseType || "-";
+        // DISPLAY address
         document.getElementById("location").innerText = data.location?.address || "-";
+
+        // STORE coordinates (IMPORTANT)
+        reportLat = data.location?.latitude || null;
+        reportLng = data.location?.longitude || null;
         document.getElementById("description").innerText = data.description || "-";
 
 
@@ -137,6 +147,37 @@ async function loadReport() {
 
     }
 
+};
+
+function getMapLink() {
+   if (reportLat === null || reportLng === null){
+        alert("Location not available");
+        return null;
+    }
+    return `https://www.google.com/maps?q=${reportLat},${reportLng}`;
+}
+
+window.openMaps = function () {
+    const link = getMapLink();
+    if (link) window.open(link, "_blank");
+};
+
+window.shareLocation = function () {
+    const link = getMapLink();
+    if (!link) return;
+
+    const msg = `🚨 Animal Report Location:\n${link}`;
+    const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+
+    window.open(url, "_blank");
+};
+
+window.copyLocation = function () {
+    const link = getMapLink();
+    if (!link) return;
+
+    navigator.clipboard.writeText(link);
+    alert("Location copied!");
 };
 
 // LOAD VOLUNTEERS INTO DROPDOWN

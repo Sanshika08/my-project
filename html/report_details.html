@@ -22,7 +22,7 @@
 
         <a href="home_screen.html">🏠 Home</a>
         <a href="dashboard.html">📊 Dashboard</a>
-        <a href="report_details.html">📄 Report Details</a>
+        <a href="report_details.html" class="report_active">📄 Report Details</a>
 
     </div>
 
@@ -79,6 +79,13 @@
                 <div class="detail-box">
                     <b>Location:</b>
                     <span id="location"></span>
+
+                    <!-- ACTION BUTTONS -->
+                    <div class="location-actions">
+                        <button onclick="openMaps()">📍 Open Map</button>
+                        <button onclick="shareLocation()">📤 Share Location</button>
+                        <button onclick="copyLocation()">📋 Copy Location</button>
+                    </div>
                 </div>
 
                 <div class="detail-box full">
