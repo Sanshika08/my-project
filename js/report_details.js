@@ -110,14 +110,27 @@ async function loadReport() {
 
         // control resolve button + warning
         const volunteer = data.assignedVolunteer;
+        const status = data.status;
 
-        if (volunteer && volunteer.trim() !== "" && data.status !== "Resolved") {
-            resolveBtn.disabled = false;
-            warning.style.display = "none";
-        } else {
+        // 🚨 CASE 1: No volunteer
+        if (!volunteer || volunteer.trim() === "") {
             resolveBtn.disabled = true;
             warning.style.display = "block";
         }
+
+        // ✅ CASE 2: Already resolved
+        else if (status === "Resolved") {
+            resolveBtn.disabled = true;
+            warning.style.display = "none"; // 🔥 FIX
+        }
+
+        // ✅ CASE 3: Ready to resolve
+        else {
+            resolveBtn.disabled = false;
+            warning.style.display = "none";
+        }
+
+        
         // DATE & TIME AGO
         let reportDate = null;
 
@@ -150,7 +163,7 @@ async function loadReport() {
 };
 
 function getMapLink() {
-   if (reportLat === null || reportLng === null){
+    if (reportLat === null || reportLng === null) {
         alert("Location not available");
         return null;
     }
@@ -231,7 +244,6 @@ function getTimeAgo(time) {
 }
 
 
-
 // TOGGLE STATUS
 window.toggleStatus = async function () {
 
@@ -239,12 +251,20 @@ window.toggleStatus = async function () {
 
         const reportRef = doc(db, "reports", reportId);
         const snap = await getDoc(reportRef);
-
         const data = snap.data();
-        const currentStatus = data.status;
-        const volunteer = data.assignedVolunteer;
 
-        // 🚨 PREVENT RESOLVING WITHOUT VOLUNTEER
+        const currentStatus = data.status;
+
+        // 🔥 GET VOLUNTEER FROM UI (REAL-TIME)
+        const volunteerUI =
+            document.getElementById("assignedVolunteer").innerText;
+
+        // ALSO KEEP DB VALUE (fallback)
+        const volunteerDB = data.assignedVolunteer;
+
+        const volunteer = volunteerUI || volunteerDB;
+
+        // 🚨 VALIDATION
         if (!volunteer || volunteer === "Not Assigned") {
             alert("Please assign a volunteer before resolving this report.");
             return;
@@ -257,31 +277,22 @@ window.toggleStatus = async function () {
 
         const newStatus = "Resolved";
 
-        let updateData = {
+        const updateData = {
             status: newStatus,
-            updatedAt: serverTimestamp()
+            updatedAt: serverTimestamp(),
+            resolvedAt: serverTimestamp()
         };
-
-        if (newStatus === "Resolved") {
-            updateData.resolvedAt = serverTimestamp();
-        }
 
         await updateDoc(reportRef, updateData);
 
-        // UPDATE UI
+        // ✅ UPDATE UI
         const badge = document.getElementById("statusBadge");
-        document.getElementById("resolveBtn").disabled = true;
 
         badge.innerText = newStatus;
-
         badge.classList.remove("pending", "resolved");
+        badge.classList.add("resolved");
 
-        if (newStatus === "Resolved") {
-            badge.classList.add("resolved");
-
-            // lock button
-            document.getElementById("resolveBtn").disabled = true;
-        }
+        document.getElementById("resolveBtn").disabled = true;
 
     } catch (error) {
 
@@ -291,7 +302,6 @@ window.toggleStatus = async function () {
     }
 
 };
-
 
 
 
