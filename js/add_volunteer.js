@@ -1,7 +1,44 @@
 import { db } from "./firebase_config.js";
-import { collection, addDoc } from
-    "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
+import {
+    collection,
+    addDoc,
+    doc,
+    getDoc,
+    updateDoc
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+
+// 🔍 Get ID from URL (for edit mode)
+const params = new URLSearchParams(window.location.search);
+const volunteerId = params.get("id");
+
+
+// ✅ LOAD EXISTING DATA (EDIT MODE)
+if (volunteerId) {
+    loadVolunteer(volunteerId);
+}
+
+async function loadVolunteer(id) {
+    try {
+        const snap = await getDoc(doc(db, "volunteers", id));
+
+        if (snap.exists()) {
+            const data = snap.data();
+
+            document.getElementById("volName").value = data.name;
+            document.getElementById("volPhone").value = data.phone;
+            document.getElementById("volRole").value = data.role;
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Error loading volunteer data");
+    }
+}
+
+
+// 🚀 MAIN FUNCTION (ADD + UPDATE)
 window.addVolunteer = async function () {
 
     const name = document.getElementById("volName").value.trim();
@@ -14,8 +51,8 @@ window.addVolunteer = async function () {
         return;
     }
 
-    // ✅ normalize phone (VERY IMPORTANT for WhatsApp)
-    phone = phone.replace(/\s+/g, ""); // remove spaces
+    // ✅ normalize phone
+    phone = phone.replace(/\s+/g, "");
 
     if (!phone.startsWith("+")) {
         alert("Phone must include country code (e.g. +91...)");
@@ -24,19 +61,38 @@ window.addVolunteer = async function () {
 
     try {
 
-        await addDoc(collection(db, "volunteers"), {
-            name: name,
-            phone: phone,
-            role: role,
-            status: "Active"
-        });
+        // ✏️ UPDATE MODE
+        if (volunteerId) {
 
-        alert("Volunteer added successfully");
+            await updateDoc(doc(db, "volunteers", volunteerId), {
+                name: name,
+                phone: phone,
+                role: role
+            });
+
+            alert("Volunteer updated successfully");
+
+        } 
+        // ➕ ADD MODE
+        else {
+
+            await addDoc(collection(db, "volunteers"), {
+                name: name,
+                phone: phone,
+                role: role,
+                status: "Active"
+            });
+
+            alert("Volunteer added successfully");
+        }
 
         // clear fields
         document.getElementById("volName").value = "";
         document.getElementById("volPhone").value = "";
         document.getElementById("volRole").value = "";
+
+        // 🔁 redirect back to list
+        window.location.href = "volunteers.html";
 
     } catch (error) {
 
@@ -44,5 +100,4 @@ window.addVolunteer = async function () {
         alert("Failed to add volunteer");
 
     }
-
 };

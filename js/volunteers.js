@@ -29,27 +29,32 @@ const isSelected = data.name === selectedVolunteer;
 const card = `
 <div class="vol-card ${isSelected ? "active-card" : ""}">
 
-<div class="avatar">
-${firstLetter}
-</div>
+    <div class="vol-actions">
+        <i class="fas fa-edit edit-btn" onclick="editVolunteer('${doc.id}')"></i>
+        <i class="fas fa-trash delete-btn" onclick="deleteVolunteer('${doc.id}')"></i>
+    </div>
 
-<div class="vol-info">
+    <div class="avatar">
+        ${firstLetter}
+    </div>
 
-<div class="vol-name">
-${data.name}
-</div>
+    <div class="vol-info">
 
-<div class="vol-phone">
-📞 ${data.phone}
-</div>
+        <div class="vol-name">
+            ${data.name}
+        </div>
 
-<div class="vol-role">
-${data.role}
-</div>
+        <div class="vol-phone">
+            📞 ${data.phone}
+        </div>
 
-</div>
+        <div class="vol-role">
+            ${data.role}
+        </div>
 
-<span class="status">Active</span>
+    </div>
+
+    <span class="status">Active</span>
 
 </div>
 `;
@@ -78,3 +83,25 @@ block:"center"
 }
 
 });
+
+//EDIT FUNCTION
+window.editVolunteer = function (id) {
+    window.location.href = `add_volunteer.html?id=${id}`;
+};
+
+//DELETE FUNCTION
+import { doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+window.deleteVolunteer = async function (id) {
+
+    const confirmDelete = confirm("Delete this volunteer?");
+    if (!confirmDelete) return;
+
+    try {
+        await deleteDoc(doc(db, "volunteers", id));
+        alert("Deleted successfully");
+    } catch (error) {
+        console.error(error);
+        alert("Error deleting");
+    }
+};

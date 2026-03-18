@@ -143,3 +143,64 @@ background:#f0f7ff;
 transform:scale(1.03);
 transition:0.3s;
 }
+
+
+/* ACTION BUTTONS */
+
+.vol-card {
+    position: relative;
+    transition: 0.2s ease;
+}
+
+.vol-card:hover {
+    transform: translateY(-3px);
+}
+
+/* ICON CONTAINER */
+.vol-actions {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 6px;
+}
+
+/* COMMON ICON STYLE */
+.vol-actions i {
+    font-size: 13px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%; /* circle shape */
+    transition: all 0.2s ease;
+}
+
+/* EDIT ICON */
+.edit-btn {
+    color: #2563eb;
+}
+
+.edit-btn:hover {
+    background: rgba(37, 99, 235, 0.15);
+    transform: scale(1.1);
+}
+
+/* DELETE ICON */
+.delete-btn {
+    color: #dc2626;
+}
+
+.delete-btn:hover {
+    background: rgba(220, 38, 38, 0.15);
+    transform: scale(1.1);
+}
+
+.vol-actions {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.vol-card:hover .vol-actions {
+    opacity: 1;
+    pointer-events: auto;
+}
+
