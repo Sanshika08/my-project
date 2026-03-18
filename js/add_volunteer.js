@@ -1,38 +1,48 @@
 import { db } from "./firebase_config.js";
-import { collection, addDoc } from 
-"https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { collection, addDoc } from
+    "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-window.addVolunteer = async function(){
+window.addVolunteer = async function () {
 
-const name = document.getElementById("volName").value;
-const phone = document.getElementById("volPhone").value;
-const role = document.getElementById("volRole").value;
+    const name = document.getElementById("volName").value.trim();
+    let phone = document.getElementById("volPhone").value.trim();
+    const role = document.getElementById("volRole").value.trim();
 
-if(!name || !phone){
-alert("Please fill all fields");
-return;
-}
+    // ✅ validation
+    if (!name || !phone || !role) {
+        alert("Please fill all fields");
+        return;
+    }
 
-try{
+    // ✅ normalize phone (VERY IMPORTANT for WhatsApp)
+    phone = phone.replace(/\s+/g, ""); // remove spaces
 
-await addDoc(collection(db,"volunteers"),{
-name:name,
-phone:phone,
-role:role,
-status:"Active"
-});
+    if (!phone.startsWith("+")) {
+        alert("Phone must include country code (e.g. +91...)");
+        return;
+    }
 
-alert("Volunteer added successfully");
+    try {
 
-document.getElementById("volName").value="";
-document.getElementById("volPhone").value="";
-document.getElementById("volRole").value="";
+        await addDoc(collection(db, "volunteers"), {
+            name: name,
+            phone: phone,
+            role: role,
+            status: "Active"
+        });
 
-}catch(error){
+        alert("Volunteer added successfully");
 
-console.error(error);
-alert("Failed to add volunteer");
+        // clear fields
+        document.getElementById("volName").value = "";
+        document.getElementById("volPhone").value = "";
+        document.getElementById("volRole").value = "";
 
-}
+    } catch (error) {
+
+        console.error(error);
+        alert("Failed to add volunteer");
+
+    }
 
 };
