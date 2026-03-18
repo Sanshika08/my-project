@@ -212,7 +212,7 @@ window.shareWithVolunteer = async function () {
     }
 
     const volunteer =
-        document.getElementById("assignedVolunteer").innerText.trim(); // 🔥 FIX
+        document.getElementById("assignedVolunteer").innerText.trim();
 
     if (!volunteer || volunteer === "Not Assigned") {
         alert("Assign volunteer first!");
@@ -220,6 +220,22 @@ window.shareWithVolunteer = async function () {
     }
 
     try {
+
+        let allowSend = true;
+
+        // 🔥 CHECK: already shared
+        if (reportData.sharedWith === volunteer) {
+
+            const confirmResend = confirm(
+                "⚠️ Already sent to this volunteer.\n\nDo you want to resend?"
+            );
+
+            if (!confirmResend) {
+                allowSend = false;
+            }
+        }
+
+        if (!allowSend) return;
 
         const phone = await getVolunteerPhone(volunteer);
 
@@ -238,9 +254,18 @@ window.shareWithVolunteer = async function () {
 
         const message = generateWhatsAppMessage();
 
-        // 🔥 FIX HERE
         const url = `https://wa.me/${finalPhone}?text=${message}`;
 
+        // ✅ SAVE / UPDATE SHARE STATUS
+        await updateDoc(doc(db, "reports", reportId), {
+            sharedWith: volunteer,
+            sharedAt: serverTimestamp()
+        });
+
+        // 🔥 update local state
+        reportData.sharedWith = volunteer;
+
+        // 🔥 open WhatsApp
         window.location.href = url;
 
     } catch (error) {
@@ -250,7 +275,6 @@ window.shareWithVolunteer = async function () {
 
     }
 };
-
 
 function getMapLink() {
     if (reportLat === null || reportLng === null) {
@@ -441,11 +465,17 @@ window.assignVolunteer = async function () {
         const reportRef = doc(db, "reports", reportId);
 
         await updateDoc(reportRef, {
-            assignedVolunteer: volunteer
+            assignedVolunteer: volunteer,
+            sharedWith: null,          // 🔥 RESET SHARE STATUS
+            sharedAt: null             // 🔥 OPTIONAL RESET
         });
 
         // ✅ Update UI
         document.getElementById("assignedVolunteer").innerText = volunteer;
+
+        // 🔥 ALSO update local data (VERY IMPORTANT)
+        reportData.assignedVolunteer = volunteer;
+        reportData.sharedWith = null;
 
         // ✅ Enable Resolve Button
         const resolveBtn = document.getElementById("resolveBtn");
@@ -453,7 +483,7 @@ window.assignVolunteer = async function () {
 
         document.getElementById("resolveWarning").style.display = "none";
 
-        // ✅ 🔥 Enable Share Button (FIX)
+        // ✅ Enable Share Button
         const shareBtn = document.getElementById("shareBtn");
         if (shareBtn) {
             shareBtn.disabled = false;
@@ -461,8 +491,7 @@ window.assignVolunteer = async function () {
 
         alert("Volunteer Assigned Successfully");
 
-        // 🔥 OPTIONAL (AUTO SHARE)
-        // Uncomment if you want auto WhatsApp open after assign
+        // 🔥 OPTIONAL AUTO SHARE
         /*
         setTimeout(() => {
             shareWithVolunteer();
