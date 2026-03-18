@@ -113,3 +113,35 @@ window.closeSidebar = function () {
   sidebar.style.transform = "translateX(100%)";
   document.getElementById("overlay").style.display = "none";
 }
+window.logout = function (event) {
+    if (event) event.preventDefault();
+
+    const popup = document.getElementById("logoutPopup");
+    if (popup) {
+        popup.style.display = "flex";
+    }
+};
+
+window.closeLogoutPopup = function () {
+    const popup = document.getElementById("logoutPopup");
+    if (popup) {
+        popup.style.display = "none";
+    }
+
+    document.getElementById("logoutEmail").value = "";
+    document.getElementById("logoutPassword").value = "";
+};
+
+window.checkLogout = function () {
+    const email = document.getElementById("logoutEmail").value.trim();
+    const password = document.getElementById("logoutPassword").value.trim();
+
+    if (email !== "ngosarrs@gmail.com") {
+        alert("Wrong Email");
+    } else if (password !== "1234") {
+        alert("Wrong Password");
+    } else {
+        alert("Logout Successful");
+        window.location.href = "login.html"; // apni login file ka exact naam likho
+    }
+};

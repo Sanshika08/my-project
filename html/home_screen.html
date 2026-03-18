@@ -5,6 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Street Animal report</title>
+    <!-- Logout Popup -->
+<div id="logoutPopup" class="logout-popup">
+    <div class="logout-box">
+        <h3>Confirm Logout</h3>
+        
+        <input type="email" id="logoutEmail" placeholder="Enter Email">
+        <input type="password" id="logoutPassword" placeholder="Enter Password">
+
+        <div class="popup-buttons">
+            <button onclick="checkLogout()">OK</button>
+            <button onclick="closeLogoutPopup()">Cancel</button>
+        </div>
+    </div>
+</div>
 
     <link rel="stylesheet" href="/css/home_screen.css">
 
@@ -103,7 +117,7 @@
         </div>
 
         <div class="drawer-footer">
-            <a href="#" onclick="logout()" class="logout-btn">
+            <a href="#" onclick="logout(event)" class="logout-btn">
                 ⏻ Logout
             </a>
         </div>
