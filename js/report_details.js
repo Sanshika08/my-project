@@ -94,7 +94,7 @@ async function loadReport() {
         const volunteerElement = document.getElementById("assignedVolunteer");
         const warning = document.getElementById("resolveWarning");
 
-        const volunteer = data.assignedVolunteer || "";
+        const volunteer = data.assignedVolunteer?.name || "";
 
         // show volunteer
         volunteerElement.innerText = volunteer || "Not Assigned";
@@ -448,65 +448,89 @@ window.goBack = function () {
     window.history.back();
 };
 
+async function getVolunteerDetails(name) {
+    const q = query(collection(db, "volunteers"), where("name", "==", name));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+        return snapshot.docs[0].data(); // {name, phone}
+    }
+
+    return null;
+}
 
 // ASSIGN VOLUNTEER
 window.assignVolunteer = async function () {
 
     const select = document.getElementById("volunteerSelect");
-    const volunteer = select.value;
+    const volunteerName = select.value;
 
-    if (!volunteer) {
+    if (!volunteerName) {
         alert("Please select a volunteer");
         return;
     }
 
     try {
 
+        // 🔥 GET FULL VOLUNTEER DATA
+        const q = query(
+            collection(db, "volunteers"),
+            where("name", "==", volunteerName)
+        );
+
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            alert("Volunteer not found");
+            return;
+        }
+
+        const volunteerData = snapshot.docs[0].data();
+
+        // ✅ SAFE ACCESS
+        const name = volunteerData['name'] || "";
+        const phone = volunteerData['phone'] || "";
+
         const reportRef = doc(db, "reports", reportId);
 
+        // 🔥 UPDATE REPORT WITH FULL OBJECT
         await updateDoc(reportRef, {
-            assignedVolunteer: volunteer,
-            sharedWith: null,          // 🔥 RESET SHARE STATUS
-            sharedAt: null             // 🔥 OPTIONAL RESET
+            status: "Assigned",
+            assignedVolunteer: {
+                name: name,
+                phone: phone
+            },
+            assignedAt: serverTimestamp(),
+
+            sharedWith: null,
+            sharedAt: null
         });
 
         // ✅ Update UI
-        document.getElementById("assignedVolunteer").innerText = volunteer;
+        document.getElementById("assignedVolunteer").innerText = name;
 
-        // 🔥 ALSO update local data (VERY IMPORTANT)
-        reportData.assignedVolunteer = volunteer;
-        reportData.sharedWith = null;
+        // 🔥 Update local state
+        reportData.assignedVolunteer = {
+            name: name,
+            phone: phone
+        };
 
-        // ✅ Enable Resolve Button
-        const resolveBtn = document.getElementById("resolveBtn");
-        resolveBtn.disabled = false;
+        reportData.status = "Assigned";
 
+        // ✅ Enable buttons
+        document.getElementById("resolveBtn").disabled = false;
         document.getElementById("resolveWarning").style.display = "none";
 
-        // ✅ Enable Share Button
         const shareBtn = document.getElementById("shareBtn");
-        if (shareBtn) {
-            shareBtn.disabled = false;
-        }
+        if (shareBtn) shareBtn.disabled = false;
 
         alert("Volunteer Assigned Successfully");
 
-        // 🔥 OPTIONAL AUTO SHARE
-        /*
-        setTimeout(() => {
-            shareWithVolunteer();
-        }, 500);
-        */
-
     } catch (error) {
-
         console.error("Assignment failed:", error);
         alert("Failed to assign volunteer");
-
     }
-
 };
-
 window.viewVolunteer = function () {
 
     const volunteer = document.getElementById("assignedVolunteer").innerText;
@@ -519,3 +543,5 @@ window.viewVolunteer = function () {
     window.location.href =
         `volunteers.html?name=${encodeURIComponent(volunteer)}`;
 };
+
+
