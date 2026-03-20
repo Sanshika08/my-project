@@ -62,3 +62,33 @@ loginBtn.addEventListener("click", async () => {
   }
 
 });
+document.getElementById("loginBtn").addEventListener("click", function () {
+  let email = document.getElementById("email").value.trim();
+  let password = document.getElementById("password").value.trim();
+
+  let correctEmail = "ngosarrs@gmail.com";
+  let correctPassword = "1234";
+
+  if (email === "" || password === "") {
+    alert("Please enter email and password");
+  } 
+  else if (email === correctEmail && password === correctPassword) {
+    window.location.href = "home_screen.html";
+  } 
+  else {
+    alert("Wrong email or password");
+  }
+});
+
+// Show / Hide Password
+document.getElementById("togglePassword").addEventListener("click", function () {
+  let passwordField = document.getElementById("password");
+
+  if (passwordField.type === "password") {
+    passwordField.type = "text";
+    this.textContent = "Hide";
+  } else {
+    passwordField.type = "password";
+    this.textContent = "Show";
+  }
+});
