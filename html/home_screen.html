@@ -143,7 +143,12 @@
         <input type="text" id="searchInput" placeholder="Search by location..." onkeyup="searchTable()">
     </div>
 
-    <button class="add-btn" onclick="redirectToForm()">+ Report Street Animal</button>
+   <div class="filter-box">
+    <button onclick="filterReports('all', this)">All</button>
+    <button onclick="filterReports('pending', this)">Pending</button>
+    <button onclick="filterReports('resolved', this)">Resolved</button>
+    <button onclick="filterReports('assigned', this)">Assigned</button>
+</div>
 
     <table>
         <thead>

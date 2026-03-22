@@ -3,26 +3,75 @@ import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10
 
 const tableBody = document.getElementById("tableBody");
 
-// 🔥 Listen to Firestore reports collection
+// 🔥 Global state
+let allReports = [];
+let currentFilter = "all";
+
 let total = 0;
 let pending = 0;
 let resolved = 0;
 
+// 🔥 Firestore Real-time Listener
 onSnapshot(collection(db, "reports"), (snapshot) => {
 
-  tableBody.innerHTML = "";
+  allReports = [];
 
   total = 0;
   pending = 0;
   resolved = 0;
 
   snapshot.forEach(doc => {
-
     const data = doc.data();
+    data.id = doc.id;
+
+    allReports.push(data);
+
     total++;
 
     if (data.status === "Pending") pending++;
     if (data.status === "Resolved") resolved++;
+  });
+
+  // 🔥 Render based on current filter
+  filterReports(currentFilter);
+
+  // 🔢 Update counters
+  document.getElementById("totalReports").innerText = total;
+  document.getElementById("pendingReports").innerText = pending;
+  document.getElementById("resolvedReports").innerText = resolved;
+  filterReports("all", document.querySelector(".filter-box button"));
+
+});
+
+
+// 🔥 Render Table
+function renderTable(data) {
+  tableBody.innerHTML = "";
+
+  // 🔴 If no data → show message
+  if (data.length === 0) {
+    let message = "No reports available";
+
+    if (currentFilter === "pending") {
+      message = "No pending cases";
+    } else if (currentFilter === "resolved") {
+      message = "No resolved cases";
+    } else if (currentFilter === "assigned") {
+      message = "No assigned cases";
+    }
+
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center; padding:20px; color:#777;">
+          ${message}
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  // ✅ Normal data rendering
+  data.forEach((data) => {
 
     let statusClass = data.status === "Resolved"
       ? "status-resolved"
@@ -30,7 +79,7 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
 
     const row = `
     <tr>
-      <td>${doc.id.substring(0, 6)}</td>
+      <td>${data.id.substring(0, 6)}</td>
 
       <td>
         <img src="${data.imageUrl}" 
@@ -44,17 +93,16 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
         </span>
       </td>
 
-       <td>
-    <span class="status-badge ${statusClass}">
-    ${data.status}
-    </span>
-  </td>
-
+      <td>
+        <span class="status-badge ${statusClass}">
+        ${data.status}
+        </span>
+      </td>
 
       <td>${data.location?.address || ""}</td>
 
       <td>
-        <button class="view-btn" onclick="viewReport('${doc.id}')">
+        <button class="view-btn" onclick="viewReport('${data.id}')">
         View
         </button>
       </td>
@@ -63,53 +111,89 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
 
     tableBody.innerHTML += row;
   });
+}
 
-  document.getElementById("totalReports").innerText = total;
-  document.getElementById("pendingReports").innerText = pending;
-  document.getElementById("resolvedReports").innerText = resolved;
+// 🔥 Filter Function
+window.filterReports = function (type, btn) {
+  currentFilter = type;
 
-});
+  // ✅ Remove active from all
+  document.querySelectorAll(".filter-box button").forEach(button => {
+    button.classList.remove("active");
+  });
 
-// 🔍 View report
+  // ✅ Add active to clicked button
+  if (btn) btn.classList.add("active");
+
+  // ✅ Apply filter
+  if (type === "all") {
+    renderTable(allReports);
+    return;
+  }
+
+  const filtered = allReports.filter((report) => {
+    return report.status?.toLowerCase() === type;
+  });
+
+  renderTable(filtered);
+};
+
+
+// 🔍 Search Function (works with filter)
+window.searchTable = function () {
+  let input = document.getElementById("searchInput").value.toLowerCase();
+
+  const filtered = allReports.filter((report) => {
+    const location = report.location?.address?.toLowerCase() || "";
+    const matchesSearch = location.includes(input);
+
+    const matchesFilter =
+      currentFilter === "all" ||
+      report.status?.toLowerCase() === currentFilter;
+
+    return matchesSearch && matchesFilter;
+  });
+
+  renderTable(filtered);
+};
+
+
+// 🔍 View Report
 window.viewReport = function (id) {
   window.location.href = `report_details.html?id=${id}`;
 };
 
-// Search Function
-window.searchTable = function () {
-  let input = document.getElementById("searchInput").value.toLowerCase();
-  let rows = document.querySelectorAll("#tableBody tr");
 
-  rows.forEach(row => {
-    let location = row.cells[4].innerText.toLowerCase();
-    row.style.display = location.includes(input) ? "" : "none";
-  });
-};
-
-//Drawer Menu
+// 📂 Drawer Menu
 window.openDrawer = function () {
   document.getElementById("drawer").style.left = "0";
   document.getElementById("drawerOverlay").style.display = "block";
-}
+};
 
 window.closeDrawer = function () {
   document.getElementById("drawer").style.left = "-260px";
   document.getElementById("drawerOverlay").style.display = "none";
-}
+};
 
+
+// 🔐 Logout
 function logout() {
   window.location.href = "login.html";
 }
 
-// Notification Sidebar
+
+// 🔔 Notification Sidebar
 window.openSidebar = function () {
   const sidebar = document.getElementById("notificationSidebar");
   sidebar.style.transform = "translateX(0)";
-  document.getElementById("overlay").style.display = "block";
-}
+};
 
 window.closeSidebar = function () {
   const sidebar = document.getElementById("notificationSidebar");
   sidebar.style.transform = "translateX(100%)";
-  document.getElementById("overlay").style.display = "none";
-}
+};
+
+window.onload = () => {
+  const firstBtn = document.querySelector(".filter-box button");
+  if (firstBtn) firstBtn.classList.add("active");
+};

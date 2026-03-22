@@ -363,3 +363,47 @@ tbody tr:hover {
     background: #f8fafc;
     transition: 0.2s;
 }
+
+
+/* FILTER BOX */
+.filter-box {
+    margin: 12px 0 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* BUTTON STYLE */
+.filter-box button {
+    padding: 8px 18px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    color: #333;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: all 0.25s ease;
+}
+
+/* 🔥 HOVER EFFECT */
+.filter-box button:hover {
+    background: #e8f0fe;
+    border-color: #2d89ef;
+    color: #2d89ef;
+    transform: translateY(-2px);
+}
+
+/* 🔥 ACTIVE BUTTON */
+.filter-box button.active {
+    background: #2d89ef;
+    color: white;
+    border-color: #2d89ef;
+    box-shadow: 0 4px 10px rgba(45, 137, 239, 0.3);
+}
+
+/* CLICK EFFECT */
+.filter-box button:active {
+    transform: scale(0.96);
+}
