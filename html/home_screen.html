@@ -6,19 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Street Animal report</title>
     <!-- Logout Popup -->
-<div id="logoutPopup" class="logout-popup">
-    <div class="logout-box">
-        <h3>Confirm Logout</h3>
-        
-        <input type="email" id="logoutEmail" placeholder="Enter Email">
-        <input type="password" id="logoutPassword" placeholder="Enter Password">
+    <div id="logoutPopup" class="logout-popup">
+        <div class="logout-box">
+            <h3>Confirm Logout</h3>
 
-        <div class="popup-buttons">
-            <button onclick="checkLogout()">OK</button>
-            <button onclick="closeLogoutPopup()">Cancel</button>
+            <input type="email" id="logoutEmail" placeholder="Enter Email">
+            <input type="password" id="logoutPassword" placeholder="Enter Password">
+
+            <div class="popup-buttons">
+                <button onclick="checkLogout()">OK</button>
+                <button onclick="closeLogoutPopup()">Cancel</button>
+            </div>
         </div>
     </div>
-</div>
 
     <link rel="stylesheet" href="/css/home_screen.css">
 
@@ -88,7 +88,7 @@
 
         <div class="drawer-menu">
 
-             <a href="home_screen.html" class="drawer-item active">
+            <a href="home_screen.html" class="drawer-item active">
                 <span class="icon">🏠</span>
                 <span>Home</span>
             </a>
@@ -98,26 +98,26 @@
                 <span>Dashboard</span>
             </a>
 
-             <a href="volunteers.html" class="drawer-item">
-            <span class="icon">👥</span>
-            <span>Volunteers</span>
-        </a>
+            <a href="volunteers.html" class="drawer-item">
+                <span class="icon">👥</span>
+                <span>Volunteers</span>
+            </a>
 
             <!-- ADD VOLUNTEER PAGE -->
-        <a href="add_volunteer.html" class="drawer-item">
-            <span class="icon">➕</span>
-            <span>Add Volunteer</span>
-        </a>
+            <a href="add_volunteer.html" class="drawer-item">
+                <span class="icon">➕</span>
+                <span>Add Volunteer</span>
+            </a>
 
-        <a href="history_reports.html" class="drawer-item">
-            <span class="icon">📜</span>
-            <span>History Reports</span>
-        </a>
+            <a href="history_reports.html" class="drawer-item">
+                <span class="icon">📜</span>
+                <span>History Reports</span>
+            </a>
 
         </div>
 
         <div class="drawer-footer">
-            <a href="#" onclick="logout(event)" class="logout-btn">
+            <a href="#" id="logoutBtn" class="logout-btn">
                 ⏻ Logout
             </a>
         </div>
@@ -157,12 +157,12 @@
         <input type="text" id="searchInput" placeholder="Search by location..." onkeyup="searchTable()">
     </div>
 
-   <div class="filter-box">
-    <button onclick="filterReports('all', this)">All</button>
-    <button onclick="filterReports('pending', this)">Pending</button>
-    <button onclick="filterReports('resolved', this)">Resolved</button>
-    <button onclick="filterReports('assigned', this)">Assigned</button>
-</div>
+    <div class="filter-box">
+        <button onclick="filterReports('all', this)">All</button>
+        <button onclick="filterReports('pending', this)">Pending</button>
+        <button onclick="filterReports('resolved', this)">Resolved</button>
+        <button onclick="filterReports('assigned', this)">Assigned</button>
+    </div>
 
     <table>
         <thead>
@@ -176,6 +176,11 @@
             </tr>
         </thead>
         <tbody id="tableBody">
+
+
+            <div id="logoutLoader" class="logout-loader">
+                <div class="spinner"></div>
+            </div>
 
         </tbody>
     </table>

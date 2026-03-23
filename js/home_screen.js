@@ -3,6 +3,11 @@ import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10
 
 const tableBody = document.getElementById("tableBody");
 
+document.addEventListener("DOMContentLoaded", function () {
+    // Fade in page when loaded
+    document.body.classList.add("fade-in");
+});
+
 // 🔥 Global state
 let allReports = [];
 let currentFilter = "all";
@@ -177,9 +182,31 @@ window.closeDrawer = function () {
 
 
 // 🔐 Logout
-function logout() {
-  window.location.href = "login.html";
-}
+document.addEventListener("DOMContentLoaded", function () {
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    logoutBtn.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        const loader = document.getElementById("logoutLoader");
+
+        // Show loader
+        if (loader) {
+            loader.classList.add("active");
+        }
+
+        // Fade out page
+        document.body.classList.add("fade-out");
+
+        // Clear session
+        localStorage.clear();
+
+        // Redirect after animation
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 800);
+    });
+});
 
 
 // 🔔 Notification Sidebar
