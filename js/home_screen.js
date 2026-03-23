@@ -3,6 +3,7 @@ import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10
 
 const tableBody = document.getElementById("tableBody");
 
+
 document.addEventListener("DOMContentLoaded", function () {
     // Fade in page when loaded
     document.body.classList.add("fade-in");

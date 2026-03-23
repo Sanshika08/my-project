@@ -8,8 +8,8 @@ const btnLoader = document.getElementById("btnLoader");
 
 loginBtn.addEventListener("click", async () => {
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
 
   if (!email || !password) {
     alert("Please enter email and password");
@@ -22,9 +22,11 @@ loginBtn.addEventListener("click", async () => {
     btnText.style.display = "none";
     btnLoader.style.display = "inline-block";
 
+    // ✅ Firebase login
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
+    // ✅ Check role from Firestore
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
 
@@ -38,49 +40,28 @@ loginBtn.addEventListener("click", async () => {
       throw new Error("Access denied");
     }
 
-    // ⏳ Keep loader for 2 seconds
-   setTimeout(() => {
+    // ✅ Smooth transition
+    setTimeout(() => {
+      document.body.classList.add("fade-out");
 
-  // Fade out page
-  document.body.classList.add("fade-out");
+      setTimeout(() => {
+        window.location.replace("../html/home_screen.html");
+      }, 600);
 
-  // Wait for fade animation
-  setTimeout(() => {
-    window.location.replace("../html/home_screen.html");
-  }, 600);
-
-}, 1500);
+    }, 2000);
 
   } catch (error) {
 
-    // ❌ Reset button if error
+    // ❌ Reset UI on error
     loginBtn.disabled = false;
     btnText.style.display = "inline";
     btnLoader.style.display = "none";
 
     alert("Login failed: " + error.message);
   }
-
-});
-document.getElementById("loginBtn").addEventListener("click", function () {
-  let email = document.getElementById("email").value.trim();
-  let password = document.getElementById("password").value.trim();
-
-  let correctEmail = "ngosarrs@gmail.com";
-  let correctPassword = "1234";
-
-  if (email === "" || password === "") {
-    alert("Please enter email and password");
-  } 
-  else if (email === correctEmail && password === correctPassword) {
-    window.location.href = "home_screen.html";
-  } 
-  else {
-    alert("Wrong email or password");
-  }
 });
 
-// Show / Hide Password
+// 👁 Show / Hide Password
 document.getElementById("togglePassword").addEventListener("click", function () {
   let passwordField = document.getElementById("password");
 
