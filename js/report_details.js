@@ -7,7 +7,9 @@ import {
     deleteDoc,
     collection,
     getDocs,
-    serverTimestamp
+    serverTimestamp,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 
@@ -18,7 +20,7 @@ const reportId = params.get("id");
 // GLOBAL
 let reportLat = null;
 let reportLng = null;
-
+let reportData = null;
 
 
 // LOAD REPORT
@@ -39,41 +41,33 @@ async function loadReport() {
         }
 
         const data = reportSnap.data();
+        reportData = data; // ✅ GLOBAL STORE
 
 
-        // BASIC DATA
+        // ================= BASIC DATA =================
         document.getElementById("reportId").innerText = reportId;
         document.getElementById("animalType").innerText = data.animalType || "-";
         document.getElementById("caseType").innerText = data.caseType || "-";
-        // DISPLAY address
         document.getElementById("location").innerText = data.location?.address || "-";
-
-        // STORE coordinates (IMPORTANT)
-        reportLat = data.location?.latitude || null;
-        reportLng = data.location?.longitude || null;
         document.getElementById("description").innerText = data.description || "-";
 
+        // ================= LOCATION =================
+        reportLat = data.location?.latitude || null;
+        reportLng = data.location?.longitude || null;
 
-        // IMAGE
-        // IMAGE
+
+        // ================= IMAGE =================
         const image = document.getElementById("animalImage");
         const loader = document.getElementById("imageLoader");
 
-        // choose image source
-        if (data.imageUrl) {
-            image.src = data.imageUrl;
-        } else {
-            image.src = "../image/no-image.png";
-        }
+        image.src = data.imageUrl || "../image/no-image.png";
 
-        // when image finishes loading
         image.onload = function () {
             loader.style.display = "none";
             image.style.display = "block";
             image.style.opacity = "1";
         };
 
-        // if image fails
         image.onerror = function () {
             loader.style.display = "none";
             image.src = "../image/no-image.png";
@@ -81,11 +75,10 @@ async function loadReport() {
         };
 
 
-        // STATUS
+        // ================= STATUS =================
         const statusBadge = document.getElementById("statusBadge");
 
-        statusBadge.innerText = data.status;
-
+        statusBadge.innerText = data.status || "Pending";
         statusBadge.classList.remove("pending", "resolved");
 
         if (data.status === "Resolved") {
@@ -94,47 +87,53 @@ async function loadReport() {
             statusBadge.classList.add("pending");
         }
 
-        // SHOW ASSIGNED VOLUNTEER
-        // SHOW ASSIGNED VOLUNTEER
-        const resolveBtn = document.getElementById("resolveBtn");
-        const volunteerElement = document.getElementById("assignedVolunteer");
 
+        // ================= VOLUNTEER =================
+        const resolveBtn = document.getElementById("resolveBtn");
+        const shareBtn = document.getElementById("shareBtn"); // 🔥 ADD THIS
+        const volunteerElement = document.getElementById("assignedVolunteer");
         const warning = document.getElementById("resolveWarning");
 
-        // show volunteer
-        if (data.assignedVolunteer) {
-            volunteerElement.innerText = data.assignedVolunteer;
-        } else {
-            volunteerElement.innerText = "Not Assigned";
-        }
+        const volunteer = data.assignedVolunteer?.name || "";
 
-        // control resolve button + warning
-        const volunteer = data.assignedVolunteer;
-        const status = data.status;
+        // show volunteer
+        volunteerElement.innerText = volunteer || "Not Assigned";
+
+
+        // ================= BUTTON CONTROL =================
 
         // 🚨 CASE 1: No volunteer
-        if (!volunteer || volunteer.trim() === "") {
+        if (!volunteer.trim()) {
+
             resolveBtn.disabled = true;
+            if (shareBtn) shareBtn.disabled = true; // 🔥 FIX
+
             warning.style.display = "block";
         }
 
         // ✅ CASE 2: Already resolved
-        else if (status === "Resolved") {
-            resolveBtn.disabled = true;
-            warning.style.display = "none"; // 🔥 FIX
-        }
+        else if (data.status === "Resolved") {
 
-        // ✅ CASE 3: Ready to resolve
-        else {
-            resolveBtn.disabled = false;
+            resolveBtn.disabled = true;
+            if (shareBtn) shareBtn.disabled = false; // still allow sharing
+
             warning.style.display = "none";
         }
 
-        
-        // DATE & TIME AGO
+        // ✅ CASE 3: Ready
+        else {
+
+            resolveBtn.disabled = false;
+            if (shareBtn) shareBtn.disabled = false; // 🔥 FIX
+
+            warning.style.display = "none";
+        }
+
+
+        // ================= DATE =================
         let reportDate = null;
 
-        if (data.createdAt && data.createdAt.toDate) {
+        if (data.createdAt?.toDate) {
             reportDate = data.createdAt.toDate();
         }
 
@@ -160,6 +159,121 @@ async function loadReport() {
 
     }
 
+}
+async function getVolunteerPhone(name) {
+
+    const cleanName = name.trim(); // 🔥 FIX
+
+    const q = query(collection(db, "volunteers"), where("name", "==", cleanName));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+        return snapshot.docs[0].data().phone;
+    }
+
+    return null;
+}
+
+
+function generateWhatsAppMessage() {
+
+    if (!reportData) return null;
+
+    const mapLink = reportLat && reportLng
+        ? `https://www.google.com/maps?q=${reportLat},${reportLng}`
+        : "Location not available";
+
+    return encodeURIComponent(`
+🚨 *SARRS Rescue Alert*
+
+🆔 Report ID: ${reportId}
+
+🐾 Animal: ${reportData.animalType || "-"}
+⚠️ Case: ${reportData.caseType || "-"}
+
+📝 Description:
+${reportData.description || "-"}
+
+📍 Location:
+${mapLink}
+
+🖼 Image:
+${reportData.imageUrl || "No image"}
+
+👉 Please take action.
+`);
+}
+
+window.shareWithVolunteer = async function () {
+
+    if (!reportData) {
+        alert("Report still loading. Please try again.");
+        return;
+    }
+
+    const volunteer =
+        document.getElementById("assignedVolunteer").innerText.trim();
+
+    if (!volunteer || volunteer === "Not Assigned") {
+        alert("Assign volunteer first!");
+        return;
+    }
+
+    try {
+
+        let allowSend = true;
+
+        // 🔥 CHECK: already shared
+        if (reportData.sharedWith === volunteer) {
+
+            const confirmResend = confirm(
+                "⚠️ Already sent to this volunteer.\n\nDo you want to resend?"
+            );
+
+            if (!confirmResend) {
+                allowSend = false;
+            }
+        }
+
+        if (!allowSend) return;
+
+        const phone = await getVolunteerPhone(volunteer);
+
+        if (!phone) {
+            alert("Volunteer phone not found!");
+            return;
+        }
+
+        const cleanPhone = phone.replace(/\D/g, "");
+
+        let finalPhone = cleanPhone;
+
+        if (cleanPhone.length === 10) {
+            finalPhone = "91" + cleanPhone;
+        }
+
+        const message = generateWhatsAppMessage();
+
+        const url = `https://wa.me/${finalPhone}?text=${message}`;
+
+        // ✅ SAVE / UPDATE SHARE STATUS
+        await updateDoc(doc(db, "reports", reportId), {
+            sharedWith: volunteer,
+            sharedAt: serverTimestamp()
+        });
+
+        // 🔥 update local state
+        reportData.sharedWith = volunteer;
+
+        // 🔥 open WhatsApp
+        window.location.href = url;
+
+    } catch (error) {
+
+        console.error("WhatsApp share failed:", error);
+        alert("Failed to share report");
+
+    }
 };
 
 function getMapLink() {
@@ -334,42 +448,89 @@ window.goBack = function () {
     window.history.back();
 };
 
+async function getVolunteerDetails(name) {
+    const q = query(collection(db, "volunteers"), where("name", "==", name));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+        return snapshot.docs[0].data(); // {name, phone}
+    }
+
+    return null;
+}
+
 // ASSIGN VOLUNTEER
 window.assignVolunteer = async function () {
 
     const select = document.getElementById("volunteerSelect");
-    const volunteer = select.value;
+    const volunteerName = select.value;
 
-    if (!volunteer) {
+    if (!volunteerName) {
         alert("Please select a volunteer");
         return;
     }
 
     try {
 
+        // 🔥 GET FULL VOLUNTEER DATA
+        const q = query(
+            collection(db, "volunteers"),
+            where("name", "==", volunteerName)
+        );
+
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            alert("Volunteer not found");
+            return;
+        }
+
+        const volunteerData = snapshot.docs[0].data();
+
+        // ✅ SAFE ACCESS
+        const name = volunteerData['name'] || "";
+        const phone = volunteerData['phone'] || "";
+
         const reportRef = doc(db, "reports", reportId);
 
+        // 🔥 UPDATE REPORT WITH FULL OBJECT
         await updateDoc(reportRef, {
-            assignedVolunteer: volunteer
+            status: "Assigned",
+            assignedVolunteer: {
+                name: name,
+                phone: phone
+            },
+            assignedAt: serverTimestamp(),
+
+            sharedWith: null,
+            sharedAt: null
         });
 
-        document.getElementById("assignedVolunteer").innerText = volunteer;
+        // ✅ Update UI
+        document.getElementById("assignedVolunteer").innerText = name;
 
-        // enable resolve button after assignment
+        // 🔥 Update local state
+        reportData.assignedVolunteer = {
+            name: name,
+            phone: phone
+        };
+
+        reportData.status = "Assigned";
+
+        // ✅ Enable buttons
         document.getElementById("resolveBtn").disabled = false;
         document.getElementById("resolveWarning").style.display = "none";
+
+        const shareBtn = document.getElementById("shareBtn");
+        if (shareBtn) shareBtn.disabled = false;
 
         alert("Volunteer Assigned Successfully");
 
     } catch (error) {
-
         console.error("Assignment failed:", error);
         alert("Failed to assign volunteer");
-
     }
-
 };
-
 window.viewVolunteer = function () {
 
     const volunteer = document.getElementById("assignedVolunteer").innerText;
@@ -382,3 +543,5 @@ window.viewVolunteer = function () {
     window.location.href =
         `volunteers.html?name=${encodeURIComponent(volunteer)}`;
 };
+
+
