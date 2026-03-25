@@ -33,7 +33,7 @@ body{
 
 .image-section{
   width:60%;
-  background:url('/image/SARRS_circle_logo.png') no-repeat center;
+  background:url('../image/SARRS_circle_logo.png') no-repeat center;
   background-size:cover;
 
 }
