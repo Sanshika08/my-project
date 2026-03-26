@@ -339,23 +339,30 @@ th {
 }
 
 
-/* STATUS BADGE */
-.status-badge {
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    color: white;
-}
-
-/* Pending */
+/* 🟠 Pending */
 .status-pending {
-    background: #f97316;
+  background-color: #F97316;
+  color: white;
 }
 
-/* Resolved */
+/* 🔵 Assigned */
+.status-assigned {
+  background-color: #3B82F6;
+  color: white;
+}
+
+/* 🟢 Resolved */
 .status-resolved {
-    background: #22c55e;
+  background-color: #22C55E;
+  color: white;
+}
+
+/* Common */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 13px;
 }
 
 
@@ -505,3 +512,5 @@ body.fade-out {
     opacity: 0;
     transition: opacity 0.4s ease;
 }
+
+

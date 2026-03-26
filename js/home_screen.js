@@ -5,8 +5,8 @@ const tableBody = document.getElementById("tableBody");
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Fade in page when loaded
-    document.body.classList.add("fade-in");
+  // Fade in page when loaded
+  document.body.classList.add("fade-in");
 });
 
 // 🔥 Global state
@@ -79,10 +79,15 @@ function renderTable(data) {
   // ✅ Normal data rendering
   data.forEach((data) => {
 
-    let statusClass = data.status === "Resolved"
-      ? "status-resolved"
-      : "status-pending";
+    let statusClass = "";
 
+    if (data.status === "Pending") {
+      statusClass = "status-pending";
+    } else if (data.status === "Assigned") {
+      statusClass = "status-assigned";
+    } else if (data.status === "Resolved") {
+      statusClass = "status-resolved";
+    }
     const row = `
     <tr>
       <td>${data.id.substring(0, 6)}</td>
@@ -184,29 +189,29 @@ window.closeDrawer = function () {
 
 // 🔐 Logout
 document.addEventListener("DOMContentLoaded", function () {
-    const logoutBtn = document.getElementById("logoutBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
 
-    logoutBtn.addEventListener("click", function (event) {
-        event.preventDefault();
+  logoutBtn.addEventListener("click", function (event) {
+    event.preventDefault();
 
-        const loader = document.getElementById("logoutLoader");
+    const loader = document.getElementById("logoutLoader");
 
-        // Show loader
-        if (loader) {
-            loader.classList.add("active");
-        }
+    // Show loader
+    if (loader) {
+      loader.classList.add("active");
+    }
 
-        // Fade out page
-        document.body.classList.add("fade-out");
+    // Fade out page
+    document.body.classList.add("fade-out");
 
-        // Clear session
-        localStorage.clear();
+    // Clear session
+    localStorage.clear();
 
-        // Redirect after animation
-        setTimeout(() => {
-            window.location.href = "login.html";
-        }, 800);
-    });
+    // Redirect after animation
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 800);
+  });
 });
 
 
@@ -222,36 +227,36 @@ window.closeSidebar = function () {
   document.getElementById("overlay").style.display = "none";
 }
 window.logout = function (event) {
-    if (event) event.preventDefault();
+  if (event) event.preventDefault();
 
-    const popup = document.getElementById("logoutPopup");
-    if (popup) {
-        popup.style.display = "flex";
-    }
+  const popup = document.getElementById("logoutPopup");
+  if (popup) {
+    popup.style.display = "flex";
+  }
 };
 
 window.closeLogoutPopup = function () {
-    const popup = document.getElementById("logoutPopup");
-    if (popup) {
-        popup.style.display = "none";
-    }
+  const popup = document.getElementById("logoutPopup");
+  if (popup) {
+    popup.style.display = "none";
+  }
 
-    document.getElementById("logoutEmail").value = "";
-    document.getElementById("logoutPassword").value = "";
+  document.getElementById("logoutEmail").value = "";
+  document.getElementById("logoutPassword").value = "";
 };
 
 window.checkLogout = function () {
-    const email = document.getElementById("logoutEmail").value.trim();
-    const password = document.getElementById("logoutPassword").value.trim();
+  const email = document.getElementById("logoutEmail").value.trim();
+  const password = document.getElementById("logoutPassword").value.trim();
 
-    if (email !== "ngosarrs@gmail.com") {
-        alert("Wrong Email");
-    } else if (password !== "1234") {
-        alert("Wrong Password");
-    } else {
-        alert("Logout Successful");
-        window.location.href = "login.html"; // apni login file ka exact naam likho
-    }
+  if (email !== "ngosarrs@gmail.com") {
+    alert("Wrong Email");
+  } else if (password !== "1234") {
+    alert("Wrong Password");
+  } else {
+    alert("Logout Successful");
+    window.location.href = "login.html"; // apni login file ka exact naam likho
+  }
 };
 
 window.onload = () => {
