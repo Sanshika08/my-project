@@ -3,6 +3,7 @@ import { db } from "./firebase_config.js";
 import {
     doc,
     getDoc,
+    onSnapshot,
     updateDoc,
     deleteDoc,
     collection,
@@ -26,23 +27,27 @@ let reportData = null;
 // LOAD REPORT
 loadReport();
 
-async function loadReport() {
+function loadReport() {
 
     if (!reportId) return;
 
-    try {
+    const reportRef = doc(db, "reports", reportId);
 
-        const reportRef = doc(db, "reports", reportId);
-        const reportSnap = await getDoc(reportRef);
+    onSnapshot(reportRef, (reportSnap) => {
 
         if (!reportSnap.exists()) {
-            alert("Report not found");
+            console.log("Report deleted");
+
+            // 🔥 Prevent duplicate alerts
+            if (!window._isDeleting) {
+                alert("Report not found");
+            }
+
             return;
         }
 
         const data = reportSnap.data();
         reportData = data; // ✅ GLOBAL STORE
-
 
         // ================= BASIC DATA =================
         document.getElementById("reportId").innerText = reportId;
@@ -54,7 +59,6 @@ async function loadReport() {
         // ================= LOCATION =================
         reportLat = data.location?.latitude || null;
         reportLng = data.location?.longitude || null;
-
 
         // ================= IMAGE =================
         const image = document.getElementById("animalImage");
@@ -74,61 +78,46 @@ async function loadReport() {
             image.style.display = "block";
         };
 
-
         // ================= STATUS =================
         const statusBadge = document.getElementById("statusBadge");
 
         statusBadge.innerText = data.status || "Pending";
-        statusBadge.classList.remove("pending", "resolved");
+        statusBadge.classList.remove("pending", "resolved", "assigned");
 
-        if (data.status === "Resolved") {
-            statusBadge.classList.add("resolved");
-        } else {
+        if (data.status === "Pending") {
             statusBadge.classList.add("pending");
+        } else if (data.status === "Assigned") {
+            statusBadge.classList.add("assigned");
+        } else if (data.status === "Resolved") {
+            statusBadge.classList.add("resolved");
         }
-
 
         // ================= VOLUNTEER =================
         const resolveBtn = document.getElementById("resolveBtn");
-        const shareBtn = document.getElementById("shareBtn"); // 🔥 ADD THIS
+        const shareBtn = document.getElementById("shareBtn");
         const volunteerElement = document.getElementById("assignedVolunteer");
         const warning = document.getElementById("resolveWarning");
 
         const volunteer = data.assignedVolunteer?.name || "";
 
-        // show volunteer
         volunteerElement.innerText = volunteer || "Not Assigned";
 
-
         // ================= BUTTON CONTROL =================
-
-        // 🚨 CASE 1: No volunteer
         if (!volunteer.trim()) {
-
             resolveBtn.disabled = true;
-            if (shareBtn) shareBtn.disabled = true; // 🔥 FIX
-
+            if (shareBtn) shareBtn.disabled = true;
             warning.style.display = "block";
         }
-
-        // ✅ CASE 2: Already resolved
         else if (data.status === "Resolved") {
-
             resolveBtn.disabled = true;
-            if (shareBtn) shareBtn.disabled = false; // still allow sharing
-
+            if (shareBtn) shareBtn.disabled = false;
             warning.style.display = "none";
         }
-
-        // ✅ CASE 3: Ready
         else {
-
             resolveBtn.disabled = false;
-            if (shareBtn) shareBtn.disabled = false; // 🔥 FIX
-
+            if (shareBtn) shareBtn.disabled = false;
             warning.style.display = "none";
         }
-
 
         // ================= DATE =================
         let reportDate = null;
@@ -138,28 +127,21 @@ async function loadReport() {
         }
 
         if (reportDate) {
-
             document.getElementById("reportDate").innerText =
                 reportDate.toLocaleString();
 
             document.getElementById("reportTimeAgo").innerText =
                 getTimeAgo(reportDate);
-
         } else {
-
             document.getElementById("reportDate").innerText = "-";
             document.getElementById("reportTimeAgo").innerText = "-";
-
         }
 
-    } catch (error) {
-
-        console.error("Error loading report:", error);
-        alert("Failed to load report.");
-
-    }
-
+    });
 }
+
+
+
 async function getVolunteerPhone(name) {
 
     const cleanName = name.trim(); // 🔥 FIX
@@ -423,10 +405,11 @@ window.toggleStatus = async function () {
 window.deleteReport = async function () {
 
     const confirmDelete = confirm("Are you sure you want to delete this report?");
-
     if (!confirmDelete) return;
 
     try {
+
+        window._isDeleting = true; // 🔥 FLAG
 
         await deleteDoc(doc(db, "reports", reportId));
 
@@ -440,7 +423,6 @@ window.deleteReport = async function () {
         alert("Failed to delete report.");
 
     }
-
 };
 
 // BACK BUTTON

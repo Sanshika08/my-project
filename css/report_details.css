@@ -99,16 +99,22 @@ body {
     color: white;
 }
 
-/* Pending */
-
-.status.pending {
-    background: #f97316;
+/* 🟠 Pending */
+.pending {
+  background-color: #F97316;
+  color: white;
 }
 
-/* Resolved */
+/* 🔵 Assigned */
+.assigned {
+  background-color: #3B82F6;
+  color: white;
+}
 
-.status.resolved {
-    background: #22c55e;
+/* 🟢 Resolved */
+.resolved {
+  background-color: #22C55E;
+  color: white;
 }
 
 /* IMAGE */
@@ -528,3 +534,4 @@ background:#0284c7;
     margin-top: 8px;
     font-weight: 500;
 }
+
