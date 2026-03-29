@@ -12,12 +12,12 @@ import {
 
 // LOAD HISTORY REPORTS
 async function loadHistoryReports() {
-    
+
 
     const table = document.getElementById("historyTable");
     const loader = document.getElementById("loader");
 
-loader.style.display = "flex";
+    loader.style.display = "flex";
     table.innerHTML = "";
 
     try {
@@ -54,8 +54,14 @@ loader.style.display = "flex";
 <td class="report-id">${docSnap.id.substring(0, 6)}</td>
 
 <td>
-<img src="${data.imageUrl || '../image/no-image.png'}"
-class="history-image">
+  <div class="image-wrapper">
+    <div class="img-loader"></div>
+    <img 
+      src="${data.imageUrl || '../image/no-image.png'}"
+      class="history-image"
+      onload="this.previousElementSibling.style.display='none'"
+    >
+  </div>
 </td>
 
 <td class="animal-info">
@@ -105,10 +111,10 @@ function formatDate(timestamp) {
 
 
 // VIEW REPORT DETAILS
-window.viewReport = function(id){
+window.viewReport = function (id) {
 
-window.location.href =
-"report_details.html?id=" + id;
+    window.location.href =
+        "report_details.html?id=" + id;
 
 };
 

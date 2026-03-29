@@ -93,9 +93,16 @@ function renderTable(data) {
       <td>${data.id.substring(0, 6)}</td>
 
       <td>
-        <img src="${data.imageUrl}" 
-        style="width:90px;height:70px;border-radius:10px;object-fit:cover;">
-      </td>
+  <div class="image-wrapper">
+    <div class="img-loader"></div>
+    <img 
+      src="${data.imageUrl || '../image/no-image.png'}"
+      class="history-image"
+      onload="this.previousElementSibling.style.display='none'"
+      onerror="this.src='../image/no-image.png'; this.previousElementSibling.style.display='none'"
+    >
+  </div>
+</td>
 
       <td>
         <strong>${data.animalType}</strong><br>
