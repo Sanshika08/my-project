@@ -70,7 +70,7 @@ class="history-image">
 
 <td>${formatDate(data.resolvedAt)}</td>
 
-<td>${data.assignedVolunteer || "Not Assigned"}</td>
+<td>${data.assignedVolunteer?.name || "Not Assigned"}</td>
 
 <td>
 <button class="view-btn"
