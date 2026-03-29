@@ -68,7 +68,7 @@ function renderTable(data) {
 
     tableBody.innerHTML = `
       <tr>
-        <td colspan="6" style="text-align:center; padding:20px; color:#777;">
+        <td colspan="7" style="text-align:center; padding:20px; color:#777;">
           ${message}
         </td>
       </tr>
@@ -89,43 +89,51 @@ function renderTable(data) {
       statusClass = "status-resolved";
     }
     const row = `
-    <tr>
-      <td>${data.id.substring(0, 6)}</td>
+<tr>
+  <td>${data.id.substring(0, 6)}</td>
 
-      <td>
-  <div class="image-wrapper">
-    <div class="img-loader"></div>
-    <img 
-      src="${data.imageUrl || '../image/no-image.png'}"
-      class="history-image"
-      onload="this.previousElementSibling.style.display='none'"
-      onerror="this.src='../image/no-image.png'; this.previousElementSibling.style.display='none'"
-    >
-  </div>
-</td>
+  <td>
+    <div class="image-wrapper">
+      <div class="img-loader"></div>
+      <img 
+        src="${data.imageUrl || '../image/no-image.png'}"
+        class="history-image"
+        onload="this.previousElementSibling.style.display='none'"
+        onerror="this.src='../image/no-image.png'; this.previousElementSibling.style.display='none'"
+      >
+    </div>
+  </td>
 
-      <td>
-        <strong>${data.animalType}</strong><br>
-        <span style="color:#666;font-size:13px;">
-        ${data.caseType}
-        </span>
-      </td>
+  <td>
+    <strong>${data.animalType}</strong><br>
+    <span style="color:#666;font-size:13px;">
+      ${data.caseType}
+    </span>
+  </td>
 
-      <td>
-        <span class="status-badge ${statusClass}">
-        ${data.status}
-        </span>
-      </td>
+  <td>
+    <span class="status-badge ${statusClass}">
+      ${data.status}
+    </span>
+  </td>
 
-      <td>${data.location?.address || ""}</td>
+  <td>${data.location?.address || ""}</td>
 
-      <td>
-        <button class="view-btn" onclick="viewReport('${data.id}')">
-        View
-        </button>
-      </td>
-    </tr>
-    `;
+  <!-- ✅ NEW COLUMN -->
+  <td>
+    ${data.createdAt 
+      ? data.createdAt.toDate().toLocaleString() 
+      : "-"
+    }
+  </td>
+
+  <td>
+    <button class="view-btn" onclick="viewReport('${data.id}')">
+      View
+    </button>
+  </td>
+</tr>
+`;
 
     tableBody.innerHTML += row;
   });
