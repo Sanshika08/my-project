@@ -5,20 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Street Animal report</title>
-    <!-- Logout Popup -->
-    <div id="logoutPopup" class="logout-popup">
-        <div class="logout-box">
-            <h3>Confirm Logout</h3>
-
-            <input type="email" id="logoutEmail" placeholder="Enter Email">
-            <input type="password" id="logoutPassword" placeholder="Enter Password">
-
-            <div class="popup-buttons">
-                <button onclick="checkLogout()">OK</button>
-                <button onclick="closeLogoutPopup()">Cancel</button>
-            </div>
-        </div>
-    </div>
 
     <link rel="stylesheet" href="../css/home_screen.css">
 
@@ -37,6 +23,21 @@
 
 <body>
 
+    <!-- Logout Popup -->
+    <div id="logoutPopup" class="logout-popup">
+        <div class="logout-box">
+            <h3>Confirm Logout</h3>
+
+            <input type="email" id="logoutEmail" placeholder="Enter Email">
+            <input type="password" id="logoutPassword" placeholder="Enter Password">
+
+            <div class="popup-buttons">
+                <button onclick="checkLogout()">OK</button>
+                <button onclick="closeLogoutPopup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <div id="drawerOverlay" class="drawer-overlay" onclick="closeDrawer()"></div>
     <script>
         window.addEventListener("load", () => {
@@ -49,7 +50,10 @@
 
         <div class="menu-logo">
             <span class="menu-btn" onclick="openDrawer()">☰</span>
-            <div class="logo">Animal Rescue Dashboard</div>
+            <div class="logo">
+                Animal Rescue Dashboard
+                <span class="sub-title">Street Animal Rescue Report</span>
+            </div>
         </div>
 
         <a href="#" class="notification" onclick="openSidebar()">
@@ -119,10 +123,7 @@
 
     </div>
 
-    <header>
-        <h2>Street Animal Rescue report</h2>
 
-    </header>
 
     <div class="stats-container">
 
@@ -149,41 +150,53 @@
     </div>
 
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search by ID, animal, location, status, date..." onkeyup="searchTable()">
+        <input type="text" id="searchInput" placeholder="Search Report by ID, animal, location, status, date..."
+            onkeyup="searchTable()">
     </div>
 
-    <div class="filter-box">
-        <button onclick="filterReports('all', this)">All</button>
-        <button onclick="filterReports('pending', this)">Pending</button>
-        <button onclick="filterReports('resolved', this)">Resolved</button>
-        <button onclick="filterReports('assigned', this)">Assigned</button>
+
+    <div class="content-wrapper">
+
+        <div class="filter-box">
+            <button onclick="filterReports('all', this)">All</button>
+            <button onclick="filterReports('pending', this)">Pending</button>
+            <button onclick="filterReports('resolved', this)">Resolved</button>
+            <button onclick="filterReports('assigned', this)">Assigned</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Animal Info</th>
+                    <th>Status</th>
+                    <th>Location</th>
+                    <th>Reported At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="tableBody">
+
+                <tr id="tableLoaderRow">
+                    <td colspan="7">
+                        <div class="table-loader">
+                            <div class="spinner"></div>
+                            <p>Loading reports...</p>
+                        </div>
+                        <!-- rows will come from JS -->
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Animal Info</th>
-                <th>Status</th>
-                <th>Location</th>
-                <th>Reported At</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody">
-
-
-            <div id="logoutLoader" class="logout-loader">
-                <div class="spinner"></div>
-            </div>
-
-        </tbody>
-    </table>
-
-     <div id="logoutLoader" class="logout-loader">
-                <div class="spinner"></div>
-            </div>
+    <div id="logoutLoader" class="logout-loader">
+        <div class="spinner"></div>
+    </div>
     <script type="module" src="../js/home_screen.js"></script>
 </body>
 

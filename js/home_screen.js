@@ -2,6 +2,7 @@ import { db } from "./firebase_config.js";
 import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 const tableBody = document.getElementById("tableBody");
+const tableLoader = document.getElementById("tableLoader");
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -18,10 +19,12 @@ let pending = 0;
 let resolved = 0;
 
 // 🔥 Firestore Real-time Listener
+// 🔥 Show loader first
+if (tableLoader) tableLoader.style.display = "flex";
+
 onSnapshot(collection(db, "reports"), (snapshot) => {
 
   allReports = [];
-
   total = 0;
   pending = 0;
   resolved = 0;
@@ -38,14 +41,16 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
     if (data.status === "Resolved") resolved++;
   });
 
-  // 🔥 Render based on current filter
-  filterReports(currentFilter);
+  // 🔥 Hide loader
+  if (tableLoader) tableLoader.style.display = "none";
 
-  // 🔢 Update counters
+  // 🔥 Render
+  filterReports(currentFilter, document.querySelector(".filter-box button"));
+
+  // 🔢 Counters
   document.getElementById("totalReports").innerText = total;
   document.getElementById("pendingReports").innerText = pending;
   document.getElementById("resolvedReports").innerText = resolved;
-  filterReports("all", document.querySelector(".filter-box button"));
 
 });
 
