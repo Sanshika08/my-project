@@ -157,17 +157,44 @@ window.filterReports = function (type, btn) {
 };
 
 
-// 🔍 Search Function (works with filter)
+// 🔍 Enhanced Search Function
 window.searchTable = function () {
-  let input = document.getElementById("searchInput").value.toLowerCase();
+  let input = document.getElementById("searchInput").value.toLowerCase().trim();
 
   const filtered = allReports.filter((report) => {
-    const location = report.location?.address?.toLowerCase() || "";
-    const matchesSearch = location.includes(input);
 
+    // 🔹 Fields
+    const location = report.location?.address?.toLowerCase() || "";
+    const animal = report.animalType?.toLowerCase() || "";
+    const volunteer = report.assignedVolunteer?.name?.toLowerCase() || "";
+    const reportId = report.id?.toLowerCase() || "";
+
+    // 🔹 Dates (convert to readable string)
+    let createdDate = "";
+    let resolvedDate = "";
+
+    if (report.createdAt) {
+      createdDate = report.createdAt.toDate().toLocaleString().toLowerCase();
+    }
+
+    if (report.resolvedAt) {
+      resolvedDate = report.resolvedAt.toDate().toLocaleString().toLowerCase();
+    }
+
+    // 🔍 Match ANY field
+    const matchesSearch =
+      location.includes(input) ||
+      animal.includes(input) ||
+      volunteer.includes(input) ||
+      reportId.includes(input) ||
+      createdDate.includes(input) ||
+      resolvedDate.includes(input);
+
+    // 🔹 Filter (status)
     const matchesFilter =
       currentFilter === "all" ||
       report.status?.toLowerCase() === currentFilter;
+      console.log(report);
 
     return matchesSearch && matchesFilter;
   });
