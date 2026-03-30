@@ -616,3 +616,151 @@ body.fade-out {
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
+
+
+/* NAVBAR LAYOUT */
+.navbar {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 30px; /* increased */
+    background: #1e293b;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    
+}
+
+/* LEFT */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* LOGO IMAGE */
+.nav-logo {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* TEXT */
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.main-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* LOGO */
+.logo {
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+}
+
+.sub-title {
+    font-size: 11px;
+    color: #cbd5e1;
+}
+
+/* CENTER NAV */
+.nav-center {
+    display: flex;
+    gap: 40px; /* more spacing */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+.nav-link {
+    color: #cbd5e1;
+    text-decoration: none;
+     font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    position: relative;
+    transition: 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: white;
+     transform: translateY(-1px);
+}
+
+/* underline effect */
+.nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #3b82f6;
+}
+
+/* RIGHT */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 22px; /* better spacing */
+}
+
+
+/* icons */
+.notification,
+.profile-icon {
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.notification:hover,
+.profile-icon:hover {
+    transform: scale(1.15);
+}
+
+@media (max-width: 768px) {
+    .nav-center {
+        display: none;
+    }
+}
+
+/* Hide menu button on desktop */
+@media (min-width: 769px) {
+    .menu-btn {
+        display: none;
+    }
+}
+
+/* Show drawer button only on mobile */
+@media (max-width: 768px) {
+    .menu-btn {
+        display: block;
+        font-size: 20px;
+        cursor: pointer;
+    }
+}
+
+/* Hide drawer itself on desktop */
+@media (min-width: 769px) {
+    .drawer {
+        display: none;
+    }
+
+    .drawer-overlay {
+        display: none;
+    }
+}
+.drawer {
+    transition: transform 0.3s ease;
+}

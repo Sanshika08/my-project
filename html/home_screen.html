@@ -48,18 +48,39 @@
 
     <nav class="navbar">
 
-        <div class="menu-logo">
-            <span class="menu-btn" onclick="openDrawer()">☰</span>
-            <div class="logo">
-                Animal Rescue Dashboard
-                <span class="sub-title">Street Animal Rescue Report</span>
-            </div>
-        </div>
+  <!-- LEFT -->
+  <div class="nav-left">
 
-        <a href="#" class="notification" onclick="openSidebar()">
-            🔔
-            <span class="badge">3</span>
-        </a>
+  <img src="../image/SARRS_circle_logo_removebg.png" class="nav-logo">
+
+  <div class="logo-text">
+      <span class="main-title">SARRS Dashboard</span>
+      <span class="sub-title">Street Animal Rescue System</span>
+  </div>
+
+</div>
+
+  <!-- CENTER -->
+  <div class="nav-center">
+    <a href="home_screen.html" class="nav-link active">Home</a>
+    <a href="volunteers.html" class="nav-link">Volunteers</a>
+    <a href="add_volunteer.html" class="nav-link">Add Volunteer</a>
+    <a href="history_reports.html" class="nav-link">History</a>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="nav-right">
+
+  <!-- 🔔 Notification -->
+  <div class="notification" onclick="openSidebar()">
+    🔔
+    <span class="badge">3</span>
+  </div>
+
+  <!-- 👤 Profile -->
+  <div class="profile-icon">
+    👤
+  </div>
 
     </nav>
     <!-- Notification Sidebar -->
