@@ -1,5 +1,8 @@
 import { db } from "./firebase_config.js";
 import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { auth } from "./firebase_config.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 const tableBody = document.getElementById("tableBody");
 const tableLoader = document.getElementById("tableLoader");
@@ -8,7 +11,93 @@ const tableLoader = document.getElementById("tableLoader");
 document.addEventListener("DOMContentLoaded", function () {
   // Fade in page when loaded
   document.body.classList.add("fade-in");
+
+  const logoutBtn = document.getElementById("logoutBtn");
+  const dropdownLogout = document.getElementById("dropdownLogout");
+
+  function logoutUser(event) {
+    event.preventDefault();
+
+    const loader = document.getElementById("logoutLoader");
+
+    if (loader) loader.classList.add("active");
+
+    document.body.classList.add("fade-out");
+
+    localStorage.clear();
+
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 800);
+  }
+
+  if (logoutBtn) logoutBtn.addEventListener("click", logoutUser);
+  if (dropdownLogout) dropdownLogout.addEventListener("click", logoutUser);
 });
+
+
+// Open modal
+window.openLogoutModal = function () {
+  document.getElementById("confirmLogoutModal").style.display = "flex";
+};
+
+// Close modal
+window.closeLogoutModal = function () {
+  document.getElementById("confirmLogoutModal").style.display = "none";
+};
+
+// Final logout
+window.confirmLogout = function () {
+  const loader = document.getElementById("logoutLoader");
+
+  document.getElementById("confirmLogoutModal").style.display = "none";
+
+  if (loader) loader.classList.add("active");
+
+  document.body.classList.add("fade-out");
+
+  localStorage.clear();
+
+  setTimeout(() => {
+    window.location.href = "login.html";
+  }, 800);
+};
+
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const uid = user.uid;
+
+    try {
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
+
+      let name = "Admin";
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        name = data.name || "Admin";
+      }
+
+      const email = user.email;
+
+      // ✅ UI Update
+      document.querySelector(".profile-top h3").innerText = name;
+      document.querySelector(".profile-top p").innerText = email;
+
+      // 🔥 IMPORTANT FIX (USE EMAIL NOT NAME)
+      const firstLetter = email.charAt(0).toUpperCase();
+      document.querySelector(".avatar").innerText = firstLetter;
+
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+
+  } else {
+    window.location.href = "login.html";
+  }
+});
+
+
 
 // 🔥 Global state
 let allReports = [];
@@ -126,10 +215,10 @@ function renderTable(data) {
 
   <!-- ✅ NEW COLUMN -->
   <td>
-    ${data.createdAt 
-      ? data.createdAt.toDate().toLocaleString() 
-      : "-"
-    }
+    ${data.createdAt
+        ? data.createdAt.toDate().toLocaleString()
+        : "-"
+      }
   </td>
 
   <td>
@@ -207,7 +296,7 @@ window.searchTable = function () {
     const matchesFilter =
       currentFilter === "all" ||
       report.status?.toLowerCase() === currentFilter;
-      console.log(report);
+    console.log(report);
 
     return matchesSearch && matchesFilter;
   });
@@ -234,33 +323,6 @@ window.closeDrawer = function () {
 };
 
 
-// 🔐 Logout
-document.addEventListener("DOMContentLoaded", function () {
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  logoutBtn.addEventListener("click", function (event) {
-    event.preventDefault();
-
-    const loader = document.getElementById("logoutLoader");
-
-    // Show loader
-    if (loader) {
-      loader.classList.add("active");
-    }
-
-    // Fade out page
-    document.body.classList.add("fade-out");
-
-    // Clear session
-    localStorage.clear();
-
-    // Redirect after animation
-    setTimeout(() => {
-      window.location.href = "login.html";
-    }, 800);
-  });
-});
-
 
 // 🔔 Notification Sidebar
 window.openSidebar = function () {
@@ -273,41 +335,31 @@ window.closeSidebar = function () {
   sidebar.style.transform = "translateX(100%)";
   document.getElementById("overlay").style.display = "none";
 }
-window.logout = function (event) {
-  if (event) event.preventDefault();
 
-  const popup = document.getElementById("logoutPopup");
-  if (popup) {
-    popup.style.display = "flex";
-  }
-};
 
-window.closeLogoutPopup = function () {
-  const popup = document.getElementById("logoutPopup");
-  if (popup) {
-    popup.style.display = "none";
-  }
 
-  document.getElementById("logoutEmail").value = "";
-  document.getElementById("logoutPassword").value = "";
-};
-
-window.checkLogout = function () {
-  const email = document.getElementById("logoutEmail").value.trim();
-  const password = document.getElementById("logoutPassword").value.trim();
-
-  if (email !== "ngosarrs@gmail.com") {
-    alert("Wrong Email");
-  } else if (password !== "1234") {
-    alert("Wrong Password");
-  } else {
-    alert("Logout Successful");
-    window.location.href = "login.html"; // apni login file ka exact naam likho
-  }
-};
 
 window.onload = () => {
   const firstBtn = document.querySelector(".filter-box button");
   if (firstBtn) firstBtn.classList.add("active");
 
 }
+
+
+
+window.toggleProfileMenu = function () {
+  const menu = document.getElementById("profileMenu");
+
+  menu.style.display =
+    menu.style.display === "block" ? "none" : "block";
+};
+
+// Close when clicking outside
+document.addEventListener("click", function (e) {
+  const profile = document.querySelector(".profile");
+  const menu = document.getElementById("profileMenu");
+
+  if (!profile.contains(e.target)) {
+    menu.style.display = "none";
+  }
+});

@@ -23,21 +23,6 @@
 
 <body>
 
-    <!-- Logout Popup -->
-    <div id="logoutPopup" class="logout-popup">
-        <div class="logout-box">
-            <h3>Confirm Logout</h3>
-
-            <input type="email" id="logoutEmail" placeholder="Enter Email">
-            <input type="password" id="logoutPassword" placeholder="Enter Password">
-
-            <div class="popup-buttons">
-                <button onclick="checkLogout()">OK</button>
-                <button onclick="closeLogoutPopup()">Cancel</button>
-            </div>
-        </div>
-    </div>
-
     <div id="drawerOverlay" class="drawer-overlay" onclick="closeDrawer()"></div>
     <script>
         window.addEventListener("load", () => {
@@ -48,39 +33,64 @@
 
     <nav class="navbar">
 
-  <!-- LEFT -->
-  <div class="nav-left">
+        <!-- LEFT -->
+        <div class="nav-left">
 
-  <img src="../image/SARRS_circle_logo_removebg.png" class="nav-logo">
+            <img src="../image/SARRS_circle_logo_removebg.png" class="nav-logo">
 
-  <div class="logo-text">
-      <span class="main-title">SARRS Dashboard</span>
-      <span class="sub-title">Street Animal Rescue System</span>
-  </div>
+            <div class="logo-text">
+                <span class="main-title">SARRS Dashboard</span>
+                <span class="sub-title">Street Animal Rescue System</span>
+            </div>
 
-</div>
+        </div>
 
-  <!-- CENTER -->
-  <div class="nav-center">
-    <a href="home_screen.html" class="nav-link active">Home</a>
-    <a href="volunteers.html" class="nav-link">Volunteers</a>
-    <a href="add_volunteer.html" class="nav-link">Add Volunteer</a>
-    <a href="history_reports.html" class="nav-link">History</a>
-  </div>
+        <!-- CENTER -->
+        <div class="nav-center">
+            <a href="home_screen.html" class="nav-link active">Home</a>
+            <a href="volunteers.html" class="nav-link">Volunteers</a>
+            <a href="add_volunteer.html" class="nav-link">Add Volunteer</a>
+            <a href="history_reports.html" class="nav-link">History</a>
+        </div>
 
-  <!-- RIGHT -->
-  <div class="nav-right">
+        <!-- RIGHT -->
+        <div class="nav-right">
 
-  <!-- 🔔 Notification -->
-  <div class="notification" onclick="openSidebar()">
-    🔔
-    <span class="badge">3</span>
-  </div>
+            <!-- 🔔 Notification -->
+            <div class="notification" onclick="openSidebar()">
+                🔔
+                <span class="badge">3</span>
+            </div>
 
-  <!-- 👤 Profile -->
-  <div class="profile-icon">
-    👤
-  </div>
+            <!-- 👤 Profile -->
+            <div class="profile">
+
+                <div class="profile-icon" onclick="toggleProfileMenu()">
+                    👤
+                </div>
+
+                <!-- ✅ Dropdown -->
+                <div class="profile-menu" id="profileMenu">
+
+                    <!-- Profile Top -->
+                    <div class="profile-top">
+                        <div class="avatar">A</div>
+                        <h3>Admin</h3>
+                        <p>admin@email.com</p>
+                    </div>
+
+                    <hr>
+
+                    <!-- Actions -->
+                    <div class="menu-item">⚙️ Settings</div>
+                    <div class="menu-item logout" onclick="openLogoutModal()">⏻ Logout</div>
+
+                </div>
+
+            </div>
+
+        </div>
+        </div>
 
     </nav>
     <!-- Notification Sidebar -->
@@ -137,7 +147,7 @@
         </div>
 
         <div class="drawer-footer">
-            <a href="#" id="logoutBtn" class="logout-btn">
+           <a href="#" class="logout-btn" onclick="openLogoutModal()">
                 ⏻ Logout
             </a>
         </div>
@@ -217,8 +227,27 @@
 
     <div id="logoutLoader" class="logout-loader">
         <div class="spinner"></div>
+        <p>Logging out...</p>
     </div>
+
     <script type="module" src="../js/home_screen.js"></script>
+
+
+    <!-- ✅ Confirm Logout Modal -->
+    <div id="confirmLogoutModal" class="logout-modal">
+
+        <div class="logout-modal-box">
+            <h3>Are you sure?</h3>
+            <p>You are about to logout</p>
+
+            <div class="modal-actions">
+                <button class="cancel-btn" onclick="closeLogoutModal()">Cancel</button>
+                <button class="confirm-btn" onclick="confirmLogout()">Logout</button>
+            </div>
+        </div>
+
+    </div>
+
 </body>
 
 </html>
