@@ -7,6 +7,7 @@
     <title>Street Animal report</title>
 
     <link rel="stylesheet" href="../css/home_screen.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         body {
@@ -93,6 +94,70 @@
         </div>
 
     </nav>
+
+    <section class="hero">
+
+        <div class="hero-content">
+            <h1>Animal Rescue Dashboard</h1>
+            <p>Manage reports, assign volunteers, and save lives faster.</p>
+
+            <div class="hero-actions">
+                <button class="primary-btn">+ Add Report</button>
+                <button class="secondary-btn">Manage Volunteers</button>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="hero-card urgent">
+                🚨 1 Urgent Case
+            </div>
+            <div class="hero-card pending">
+                ⏳ 1 Pending Case
+            </div>
+        </div>
+
+    </section>
+
+<div class="chart-hero">
+
+  <!-- LEFT SIDE -->
+  <div class="chart-left">
+    <div class="chart-header">
+      <h3>📊 Reports Overview</h3>
+      <span>Last 7 Days</span>
+    </div>
+
+    <canvas id="reportsChart"></canvas>
+    
+    <div class="chart-summary">
+    <p id="summaryLine"></p>
+    <p id="performanceLine"></p>
+  </div>
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="chart-right">
+  <h4>Report Insights</h4>
+
+  <div class="insight-box blue">
+    <span>📈 Total This Week</span>
+    <strong id="weeklyTotal">0</strong>
+  </div>
+
+  <div class="insight-box orange">
+    <span>⚡ Avg Per Day</span>
+    <strong id="avgReports">0</strong>
+  </div>
+
+  <div class="insight-box red">
+    <span>🔥 Peak Day</span>
+    <strong id="peakDay">-</strong>
+  </div>
+</div>
+
+</div>
+
     <!-- Notification Sidebar -->
     <div id="notificationSidebar" class="notification-sidebar">
 
@@ -147,7 +212,7 @@
         </div>
 
         <div class="drawer-footer">
-           <a href="#" class="logout-btn" onclick="openLogoutModal()">
+            <a href="#" class="logout-btn" onclick="openLogoutModal()">
                 ⏻ Logout
             </a>
         </div>

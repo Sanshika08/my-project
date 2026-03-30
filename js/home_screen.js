@@ -97,7 +97,179 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+// 📊 GRAPH FUNCTIONS
 
+function getDailyReportData(reports) {
+  const last7Days = {};
+
+  // Create last 7 days structure
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toLocaleDateString();
+
+    last7Days[key] = {
+      pending: 0,
+      resolved: 0
+    };
+  }
+
+  // Fill data
+  reports.forEach(r => {
+    if (!r.createdAt || !r.status) return;
+
+    const date = r.createdAt.toDate().toLocaleDateString();
+
+    if (last7Days[date]) {
+      if (r.status === "Pending") last7Days[date].pending++;
+      if (r.status === "Resolved") last7Days[date].resolved++;
+    }
+  });
+
+  return last7Days;
+}
+
+
+let reportsChart;
+
+function renderReportsChart(data) {
+  const ctx = document.getElementById("reportsChart");
+  if (!ctx) return;
+
+  const labels = Object.keys(data);
+
+  // 🔥 Extract separate data
+  const pendingData = labels.map(d => data[d].pending);
+  const resolvedData = labels.map(d => data[d].resolved);
+
+  if (reportsChart) reportsChart.destroy();
+
+  const canvasCtx = ctx.getContext("2d");
+
+  // 🔥 Gradient for Pending
+  const pendingGradient = canvasCtx.createLinearGradient(0, 0, 0, 200);
+  pendingGradient.addColorStop(0, "rgba(245,158,11,0.4)");
+  pendingGradient.addColorStop(1, "rgba(245,158,11,0)");
+
+  // 🔥 Gradient for Resolved
+  const resolvedGradient = canvasCtx.createLinearGradient(0, 0, 0, 200);
+  resolvedGradient.addColorStop(0, "rgba(34,197,94,0.4)");
+  resolvedGradient.addColorStop(1, "rgba(34,197,94,0)");
+
+  reportsChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Pending",
+          data: pendingData,
+          fill: true,
+          backgroundColor: pendingGradient,
+          borderColor: "#f59e0b",
+          pointBackgroundColor: "#f59e0b",
+          tension: 0.4,
+          borderWidth: 2,
+          pointRadius: 3
+        },
+        {
+          label: "Resolved",
+          data: resolvedData,
+          fill: true,
+          backgroundColor: resolvedGradient,
+          borderColor: "#22c55e",
+          pointBackgroundColor: "#22c55e",
+          tension: 0.4,
+          borderWidth: 2,
+          pointRadius: 3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+
+      plugins: {
+        legend: {
+          display: true, // 🔥 NOW SHOW LEGEND
+          labels: {
+            color: "#cbd5e1",
+            usePointStyle: true
+          }
+        }
+      },
+
+      layout: {
+        padding: {
+          top: 10,
+          bottom: 5
+        }
+      },
+
+      scales: {
+        x: {
+          grid: { color: "rgba(255,255,255,0.05)" },
+          ticks: { color: "#cbd5e1", font: { size: 11 } }
+        },
+        y: {
+          grid: { color: "rgba(255,255,255,0.05)" },
+          ticks: {
+            color: "#cbd5e1",
+            stepSize: 1,
+            font: { size: 11 }
+          }
+        }
+      }
+    }
+  });
+}
+
+function updateInsights(data) {
+  const values = Object.values(data);
+  const labels = Object.keys(data);
+
+  let total = 0;
+  let max = 0;
+  let peakDay = "";
+
+  values.forEach((day, index) => {
+    const dayTotal = day.pending + day.resolved;
+
+    total += dayTotal;
+
+    if (dayTotal > max) {
+      max = dayTotal;
+      peakDay = labels[index];
+    }
+  });
+
+  const avg = values.length ? (total / values.length).toFixed(1) : 0;
+
+  // ✅ Update UI
+  document.getElementById("weeklyTotal").innerText = total;
+  document.getElementById("avgReports").innerText = avg;
+  document.getElementById("peakDay").innerText = peakDay;
+
+  // 🔥 NEW SUMMARY LOGIC
+const totalResolved = values.reduce((sum, d) => sum + d.resolved, 0);
+const totalPending = values.reduce((sum, d) => sum + d.pending, 0);
+
+const totalReports = totalResolved + totalPending;
+
+const percent = totalReports
+  ? Math.round((totalResolved / totalReports) * 100)
+  : 0;
+
+// 📊 Line 1
+document.getElementById("summaryLine").innerHTML =
+  `In the last 7 days, there were <strong>${totalReports}</strong> reports — 
+   <strong>${totalResolved}</strong> resolved and 
+   <strong>${totalPending}</strong> still pending.`;
+
+// 📈 Line 2
+document.getElementById("performanceLine").innerHTML =
+  `<strong>${percent}%</strong> of cases have been successfully resolved.`;
+}
 
 // 🔥 Global state
 let allReports = [];
@@ -140,6 +312,11 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
   document.getElementById("totalReports").innerText = total;
   document.getElementById("pendingReports").innerText = pending;
   document.getElementById("resolvedReports").innerText = resolved;
+
+  // 📊 GRAPH + INSIGHTS (ADD THIS HERE)
+  const dailyData = getDailyReportData(allReports);
+  renderReportsChart(dailyData);
+  updateInsights(dailyData);
 
 });
 
