@@ -118,45 +118,53 @@
 
     </section>
 
-<div class="chart-hero">
+    <div class="chart-hero">
 
-  <!-- LEFT SIDE -->
-  <div class="chart-left">
-    <div class="chart-header">
-      <h3>📊 Reports Overview</h3>
-      <span>Last 7 Days</span>
+        <!-- LEFT SIDE -->
+        <div class="chart-left">
+
+            <div class="chart-header">
+                <h3>📊 Reports Overview</h3>
+
+                <div class="graph-filter">
+                    <select id="graphFilter">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30">Last 30 Days</option>
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+            </div>
+
+            <canvas id="reportsChart"></canvas>
+
+            <div class="chart-summary">
+                <p id="summaryLine"></p>
+                <p id="performanceLine"></p>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="chart-right">
+            <h4>Report Insights</h4>
+
+            <div class="insight-box blue">
+               <span id="totalLabel">📈 Total This Week</span>
+                <strong id="weeklyTotal">0</strong>
+            </div>
+
+            <div class="insight-box orange">
+                <span>⚡ Avg Per Day</span>
+                <strong id="avgReports">0</strong>
+            </div>
+
+            <div class="insight-box red">
+                <span>🔥 Peak Day</span>
+                <strong id="peakDay">-</strong>
+            </div>
+        </div>
+
     </div>
-
-    <canvas id="reportsChart"></canvas>
-    
-    <div class="chart-summary">
-    <p id="summaryLine"></p>
-    <p id="performanceLine"></p>
-  </div>
-
-  </div>
-
-  <!-- RIGHT SIDE -->
-  <div class="chart-right">
-  <h4>Report Insights</h4>
-
-  <div class="insight-box blue">
-    <span>📈 Total This Week</span>
-    <strong id="weeklyTotal">0</strong>
-  </div>
-
-  <div class="insight-box orange">
-    <span>⚡ Avg Per Day</span>
-    <strong id="avgReports">0</strong>
-  </div>
-
-  <div class="insight-box red">
-    <span>🔥 Peak Day</span>
-    <strong id="peakDay">-</strong>
-  </div>
-</div>
-
-</div>
 
     <!-- Notification Sidebar -->
     <div id="notificationSidebar" class="notification-sidebar">

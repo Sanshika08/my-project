@@ -1059,7 +1059,8 @@ body.fade-out {
 .chart-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    align-items: center;
 }
 
 .chart-left {
@@ -1147,4 +1148,33 @@ body.fade-out {
 
 .insight-box:nth-child(4) {
     border-left: 4px solid #ef4444;
+}
+
+.graph-filter {
+  display: flex;
+  justify-content: flex-end; /* 🔥 RIGHT ALIGN */
+  align-items: center;
+}
+
+.graph-filter select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #1e293b;
+  color: #cbd5e1;
+  border: 1px solid rgba(255,255,255,0.1);
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s;
+}
+
+/* hover */
+.graph-filter select:hover {
+  border-color: #3b82f6;
+}
+
+/* focus */
+.graph-filter select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
 }

@@ -7,11 +7,36 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase
 const tableBody = document.getElementById("tableBody");
 const tableLoader = document.getElementById("tableLoader");
 
-
 document.addEventListener("DOMContentLoaded", function () {
-  // Fade in page when loaded
+  // Fade in page
   document.body.classList.add("fade-in");
 
+  const graphFilter = document.getElementById("graphFilter");
+
+  if (graphFilter) {
+    // ✅ Sync dropdown with default value
+    graphFilter.value = graphRange;
+
+    // ✅ Attach change listener (MOVE HERE)
+    graphFilter.addEventListener("change", (e) => {
+      graphRange = e.target.value;
+
+      const dailyData = getDailyReportData(allReports);
+      renderReportsChart(dailyData);
+      updateInsights(dailyData);
+    });
+  }
+
+  // ✅ FIX: Force initial render (IMPORTANT)
+  setTimeout(() => {
+    if (allReports.length > 0) {
+      const dailyData = getDailyReportData(allReports);
+      renderReportsChart(dailyData);
+      updateInsights(dailyData);
+    }
+  }, 300); // small delay to wait for Firestore
+
+  // Logout logic (unchanged)
   const logoutBtn = document.getElementById("logoutBtn");
   const dropdownLogout = document.getElementById("dropdownLogout");
 
@@ -102,39 +127,95 @@ onAuthStateChanged(auth, async (user) => {
 function getDailyReportData(reports) {
   const last7Days = {};
 
-  // Create last 7 days structure
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const key = d.toLocaleDateString();
+  let days = 7;
 
-    last7Days[key] = {
-      pending: 0,
-      assigned: 0,
-      resolved: 0
-    };
-  }
+  if (graphRange === "30") days = 30;
+  const now = new Date();
+  const currentYear = now.getFullYear();
+
+  if (graphRange === "all") {
+    // 🔥 Create months instead of days
+    for (let m = 0; m < 12; m++) {
+      const key = new Date(currentYear, m).toLocaleString("default", { month: "short" });
+
+      last7Days[key] = {
+        pending: 0,
+        assigned: 0,
+        resolved: 0
+      };
+    }
+  } else {
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = d.toLocaleDateString();
+
+      last7Days[key] = {
+        pending: 0,
+        assigned: 0,
+        resolved: 0
+      };
+    }
+  } 
 
   // Fill data
   reports.forEach(r => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const limitDate = new Date();
+    limitDate.setDate(now.getDate() - days);
+
     if (!r.createdAt || !r.status) return;
 
     // Pending → use createdAt
     if (r.status === "Pending" && r.createdAt) {
-      const date = r.createdAt.toDate().toLocaleDateString();
-      if (last7Days[date]) last7Days[date].pending++;
+      const dateObj = r.createdAt.toDate();
+
+      if (graphRange === "all") {
+        if (dateObj.getFullYear() !== currentYear) return;
+
+        const key = dateObj.toLocaleString("default", { month: "short" });
+        last7Days[key].pending++;
+      } else {
+        if (dateObj < limitDate) return;
+
+        const key = dateObj.toLocaleDateString();
+        if (last7Days[key]) last7Days[key].pending++;
+      }
     }
 
     // Assigned → use assignedAt
     if (r.status === "Assigned" && r.assignedAt) {
-      const date = r.assignedAt.toDate().toLocaleDateString();
-      if (last7Days[date]) last7Days[date].assigned++;
+      const dateObj = r.assignedAt.toDate();
+
+      if (graphRange === "all") {
+        if (dateObj.getFullYear() !== currentYear) return;
+
+        const key = dateObj.toLocaleString("default", { month: "short" });
+        last7Days[key].assigned++;
+      } else {
+        if (dateObj < limitDate) return;
+
+        const key = dateObj.toLocaleDateString();
+        if (last7Days[key]) last7Days[key].assigned++;
+      }
     }
 
     // Resolved → use resolvedAt
     if (r.status === "Resolved" && r.resolvedAt) {
-      const date = r.resolvedAt.toDate().toLocaleDateString();
-      if (last7Days[date]) last7Days[date].resolved++;
+      const dateObj = r.resolvedAt.toDate();
+
+      if (graphRange === "all") {
+        if (dateObj.getFullYear() !== currentYear) return;
+
+        const key = dateObj.toLocaleString("default", { month: "short" });
+        last7Days[key].resolved++;
+      } else {
+        if (dateObj < limitDate) return;
+
+        const key = dateObj.toLocaleDateString();
+        if (last7Days[key]) last7Days[key].resolved++;
+      }
     }
   });
 
@@ -217,6 +298,10 @@ function renderReportsChart(data) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: {
+        mode: "index",
+        intersect: false
+      },
 
       plugins: {
         legend: {
@@ -254,12 +339,21 @@ function renderReportsChart(data) {
 }
 
 function updateInsights(data) {
+
+  const labelMap = {
+    "7": "📈 Total This Week",
+    "30": "📈 Total Last Month",
+    "all": "📈 Total This Year"
+  };
+
+  document.getElementById("totalLabel").innerText = labelMap[graphRange];
+
   const values = Object.values(data);
   const labels = Object.keys(data);
 
   let total = 0;
   let max = 0;
-  let peakDay = "";
+  let peakLabel = "";
 
   values.forEach((day, index) => {
     const dayTotal = day.pending + day.assigned + day.resolved;
@@ -268,16 +362,30 @@ function updateInsights(data) {
 
     if (dayTotal > max) {
       max = dayTotal;
-      peakDay = labels[index];
+      peakLabel = labels[index];
     }
   });
 
-  const avg = values.length ? (total / values.length).toFixed(1) : 0;
 
+  let avg;
+
+  if (graphRange === "all") {
+    const activeMonths = values.filter(v => (v.pending + v.assigned + v.resolved) > 0).length;
+    avg = activeMonths ? (total / activeMonths).toFixed(1) : 0;
+  } else {
+    avg = values.length ? (total / values.length).toFixed(1) : 0;
+  }
   // ✅ Update UI
+  if (graphRange === "all") {
+    document.querySelector(".orange span").innerText = "⚡ Avg Per Month";
+    document.querySelector(".red span").innerText = "🔥 Peak Month";
+  } else {
+    document.querySelector(".orange span").innerText = "⚡ Avg Per Day";
+    document.querySelector(".red span").innerText = "🔥 Peak Day";
+  }
   document.getElementById("weeklyTotal").innerText = total;
   document.getElementById("avgReports").innerText = avg;
-  document.getElementById("peakDay").innerText = peakDay;
+  document.getElementById("peakDay").innerText = peakLabel;
 
   // 🔥 NEW SUMMARY LOGIC
   const totalResolved = values.reduce((sum, d) => sum + d.resolved, 0);
@@ -290,9 +398,15 @@ function updateInsights(data) {
     ? Math.round((totalResolved / totalReports) * 100)
     : 0;
 
+
+  const rangeText =
+    graphRange === "7" ? "last 7 days" :
+      graphRange === "30" ? "last 30 days" :
+        "this year";
+
   // 📊 Line 1
   document.getElementById("summaryLine").innerHTML =
-    `In the last 7 days, there were <strong>${totalReports}</strong> reports — 
+    `In the ${rangeText}, there were <strong>${totalReports}</strong> reports — 
    <strong>${totalResolved}</strong> resolved,
    <strong>${totalAssigned}</strong> assigned and 
    <strong>${totalPending}</strong> still pending.`;
@@ -305,6 +419,7 @@ function updateInsights(data) {
 // 🔥 Global state
 let allReports = [];
 let currentFilter = "all";
+let graphRange = "7"; // default range
 
 let total = 0;
 let pending = 0;
@@ -345,10 +460,11 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
   document.getElementById("resolvedReports").innerText = resolved;
 
   // 📊 GRAPH + INSIGHTS (ADD THIS HERE)
+  if (allReports.length > 0) {
   const dailyData = getDailyReportData(allReports);
   renderReportsChart(dailyData);
   updateInsights(dailyData);
-
+}
 });
 
 
@@ -571,3 +687,32 @@ document.addEventListener("click", function (e) {
     menu.style.display = "none";
   }
 });
+
+
+
+const graphFilter = document.getElementById("graphFilter");
+
+if (graphFilter) {
+  graphFilter.addEventListener("change", (e) => {
+
+    // ✅ update selected range
+    graphRange = e.target.value;
+
+    // ✅ re-render graph
+    const dailyData = getDailyReportData(allReports);
+    renderReportsChart(dailyData);
+    updateInsights(dailyData);
+
+  });
+}
+
+
+window.addEventListener("load", () => {
+  if (allReports.length > 0) {
+    const dailyData = getDailyReportData(allReports);
+    renderReportsChart(dailyData);
+    updateInsights(dailyData);
+  }
+});
+
+
