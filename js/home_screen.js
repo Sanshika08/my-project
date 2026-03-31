@@ -110,6 +110,7 @@ function getDailyReportData(reports) {
 
     last7Days[key] = {
       pending: 0,
+      assigned: 0,
       resolved: 0
     };
   }
@@ -118,11 +119,22 @@ function getDailyReportData(reports) {
   reports.forEach(r => {
     if (!r.createdAt || !r.status) return;
 
-    const date = r.createdAt.toDate().toLocaleDateString();
+    // Pending → use createdAt
+    if (r.status === "Pending" && r.createdAt) {
+      const date = r.createdAt.toDate().toLocaleDateString();
+      if (last7Days[date]) last7Days[date].pending++;
+    }
 
-    if (last7Days[date]) {
-      if (r.status === "Pending") last7Days[date].pending++;
-      if (r.status === "Resolved") last7Days[date].resolved++;
+    // Assigned → use assignedAt
+    if (r.status === "Assigned" && r.assignedAt) {
+      const date = r.assignedAt.toDate().toLocaleDateString();
+      if (last7Days[date]) last7Days[date].assigned++;
+    }
+
+    // Resolved → use resolvedAt
+    if (r.status === "Resolved" && r.resolvedAt) {
+      const date = r.resolvedAt.toDate().toLocaleDateString();
+      if (last7Days[date]) last7Days[date].resolved++;
     }
   });
 
@@ -140,6 +152,7 @@ function renderReportsChart(data) {
 
   // 🔥 Extract separate data
   const pendingData = labels.map(d => data[d].pending);
+  const assignedData = labels.map(d => data[d].assigned);
   const resolvedData = labels.map(d => data[d].resolved);
 
   if (reportsChart) reportsChart.destroy();
@@ -150,6 +163,11 @@ function renderReportsChart(data) {
   const pendingGradient = canvasCtx.createLinearGradient(0, 0, 0, 200);
   pendingGradient.addColorStop(0, "rgba(245,158,11,0.4)");
   pendingGradient.addColorStop(1, "rgba(245,158,11,0)");
+
+  // 🔥 Gradient for Assigned
+  const assignedGradient = canvasCtx.createLinearGradient(0, 0, 0, 200);
+  assignedGradient.addColorStop(0, "rgba(59,130,246,0.4)");
+  assignedGradient.addColorStop(1, "rgba(59,130,246,0)");
 
   // 🔥 Gradient for Resolved
   const resolvedGradient = canvasCtx.createLinearGradient(0, 0, 0, 200);
@@ -168,6 +186,17 @@ function renderReportsChart(data) {
           backgroundColor: pendingGradient,
           borderColor: "#f59e0b",
           pointBackgroundColor: "#f59e0b",
+          tension: 0.4,
+          borderWidth: 2,
+          pointRadius: 3
+        },
+        {
+          label: "Assigned",
+          data: assignedData,
+          fill: true,
+          backgroundColor: assignedGradient,
+          borderColor: "#3b82f6",
+          pointBackgroundColor: "#3b82f6",
           tension: 0.4,
           borderWidth: 2,
           pointRadius: 3
@@ -233,7 +262,7 @@ function updateInsights(data) {
   let peakDay = "";
 
   values.forEach((day, index) => {
-    const dayTotal = day.pending + day.resolved;
+    const dayTotal = day.pending + day.assigned + day.resolved;
 
     total += dayTotal;
 
@@ -251,24 +280,26 @@ function updateInsights(data) {
   document.getElementById("peakDay").innerText = peakDay;
 
   // 🔥 NEW SUMMARY LOGIC
-const totalResolved = values.reduce((sum, d) => sum + d.resolved, 0);
-const totalPending = values.reduce((sum, d) => sum + d.pending, 0);
+  const totalResolved = values.reduce((sum, d) => sum + d.resolved, 0);
+  const totalAssigned = values.reduce((sum, d) => sum + d.assigned, 0);
+  const totalPending = values.reduce((sum, d) => sum + d.pending, 0);
 
-const totalReports = totalResolved + totalPending;
+  const totalReports = totalResolved + totalAssigned + totalPending;
 
-const percent = totalReports
-  ? Math.round((totalResolved / totalReports) * 100)
-  : 0;
+  const percent = totalReports
+    ? Math.round((totalResolved / totalReports) * 100)
+    : 0;
 
-// 📊 Line 1
-document.getElementById("summaryLine").innerHTML =
-  `In the last 7 days, there were <strong>${totalReports}</strong> reports — 
-   <strong>${totalResolved}</strong> resolved and 
+  // 📊 Line 1
+  document.getElementById("summaryLine").innerHTML =
+    `In the last 7 days, there were <strong>${totalReports}</strong> reports — 
+   <strong>${totalResolved}</strong> resolved,
+   <strong>${totalAssigned}</strong> assigned and 
    <strong>${totalPending}</strong> still pending.`;
 
-// 📈 Line 2
-document.getElementById("performanceLine").innerHTML =
-  `<strong>${percent}%</strong> of cases have been successfully resolved.`;
+  // 📈 Line 2
+  document.getElementById("performanceLine").innerHTML =
+    `<strong>${percent}%</strong> of cases have been successfully resolved.`;
 }
 
 // 🔥 Global state
