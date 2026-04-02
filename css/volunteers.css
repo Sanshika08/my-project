@@ -5,54 +5,14 @@ body {
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #e0f2fe, #dbeafe, #f1f5f9);
     min-height: 100vh;
+    padding-top: 90px;
 }
 
 
-/* SIDEBAR */
-
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 220px;
-    height: 100%;
-    background: #1e293b;
-    color: white;
-    padding-top: 20px;
-}
-
-.sidebar-logo {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.sidebar-logo img {
-    height: 140px;
-}
-
-.sidebar a {
-    display: block;
-    padding: 12px 20px;
-    color: white;
-    text-decoration: none;
-}
-
-.sidebar a:hover {
-    background: #334155;
-}
-
-.sidebar .active {
-    background: #334155;
-}
-
-
-/* MAIN */
+/* MAIN (adjust for fixed navbar) */
 
 .main {
-    margin-left: 220px;
-    padding: 40px;
+    padding: 20px 40px 30px;
 }
 
 
@@ -61,10 +21,12 @@ body {
 .page-title {
     font-size: 28px;
     font-weight: bold;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
+
 /* LOADER */
+
 .loader-container {
     display: flex;
     justify-content: center;
@@ -72,22 +34,8 @@ body {
     height: 200px;
 }
 
-/* SPINNER */
-.spinner {
-    width: 45px;
-    height: 45px;
-    border: 5px solid #e2e8f0;
-    border-top: 5px solid #2563eb;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-}
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* VOLUNTEER GRID */
+/* GRID */
 
 .vol-container {
     display: grid;
@@ -96,25 +44,25 @@ body {
 }
 
 
-/* VOLUNTEER CARD */
+/* CARD */
 
 .vol-card {
-    background: linear-gradient(145deg, #ffffff, #f1f5f9);
-    border-radius: 14px;
-    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    padding: 18px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+
     display: flex;
     align-items: center;
     gap: 15px;
+
     position: relative;
     transition: all 0.25s ease;
-    backdrop-filter: blur(6px);
-    background: rgba(255, 255, 255, 0.85);
 }
 
 .vol-card:hover {
-    transform: translateY(-5px) scale(1.01);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
 }
 
 
@@ -131,7 +79,6 @@ body {
     font-size: 22px;
     font-weight: bold;
     color: white;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
 }
 
 
@@ -143,10 +90,9 @@ body {
 
 .vol-name {
     font-weight: 700;
-    font-size: 17px;
+    font-size: 16px;
     color: #0f172a;
 }
-
 
 .vol-phone {
     font-size: 13px;
@@ -154,103 +100,17 @@ body {
 }
 
 .vol-role {
-    font-size: 13px;
-    color: #475569;
+    font-size: 12px;
     background: #e2e8f0;
-    display: inline-block;
-    padding: 2px 8px;
+    padding: 3px 8px;
     border-radius: 6px;
     margin-top: 4px;
+    display: inline-block;
 }
 
 
-/* STATUS BADGE */
+/* STATUS */
 
-.status {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    color: white;
-    background: #22c55e;
-}
-
-.active-card {
-    border: 2px solid #2563eb;
-    background: #f0f7ff;
-    transform: scale(1.03);
-    transition: 0.3s;
-}
-
-
-/* ACTION BUTTONS */
-
-.vol-card {
-    position: relative;
-    transition: 0.2s ease;
-}
-
-.vol-card:hover {
-    transform: translateY(-3px);
-}
-
-/* ICON CONTAINER */
-.vol-actions {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    display: flex;
-    gap: 6px;
-}
-
-/* COMMON ICON STYLE */
-.vol-actions i {
-    font-size: 13px;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 50%;
-    /* circle shape */
-    transition: all 0.2s ease;
-}
-
-/* EDIT ICON */
-.edit-btn {
-    color: #2563eb;
-}
-
-.edit-btn:hover {
-    background: rgba(37, 99, 235, 0.15);
-    transform: scale(1.1);
-}
-
-/* DELETE ICON */
-.delete-btn {
-    color: #dc2626;
-}
-
-.delete-btn:hover {
-    background: rgba(220, 38, 38, 0.15);
-    transform: scale(1.1);
-}
-
-.vol-actions {
-    opacity: 0;
-    pointer-events: none;
-    font-size: 14px;
-    padding: 6px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-
-.vol-card:hover .vol-actions {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-
-
-
-/* TOGGLE CONTAINER */
 .status-toggle {
     display: flex;
     align-items: center;
@@ -258,38 +118,32 @@ body {
     margin-left: auto;
 }
 
-/* TEXT */
 .status-text {
     font-size: 13px;
     font-weight: 600;
-    color: #334155;
 }
 
+
 /* SWITCH */
+
 .switch {
     position: relative;
-    display: inline-block;
     width: 44px;
     height: 24px;
 }
 
 .switch input {
     opacity: 0;
-    width: 0;
-    height: 0;
 }
 
-/* TRACK */
 .slider {
     position: absolute;
-    cursor: pointer;
     inset: 0;
     background: #ef4444;
     border-radius: 50px;
-    transition: background 0.35s ease-in-out;
+    transition: 0.3s;
 }
 
-/* KNOB */
 .slider::before {
     content: "";
     position: absolute;
@@ -299,22 +153,128 @@ body {
     top: 3px;
     background: white;
     border-radius: 50%;
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
+    transition: 0.3s;
 }
 
-/* ACTIVE */
-.switch input:checked+.slider {
+.switch input:checked + .slider {
     background: #16a34a;
 }
 
-.switch input:checked+.slider::before {
+.switch input:checked + .slider::before {
     transform: translateX(20px);
 }
 
 
+/* 🔥 ACTION BUTTONS (FIXED PROPERLY) */
 
-.slider,
-.slider::before {
-    transition: all 0.35s ease;
+.vol-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    display: flex;
+    gap: 6px;
+
+    opacity: 0;
+    transform: scale(0.8);
+    transition: 0.2s ease;
+}
+
+/* SHOW ON HOVER */
+.vol-card:hover .vol-actions {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ICON STYLE */
+.vol-actions i {
+    font-size: 14px;
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: 0.2s;
+}
+
+.vol-actions i:hover {
+    transform: scale(1.15);
+}
+
+/* EDIT */
+.edit-btn {
+    color: #2563eb;
+}
+
+/* DELETE */
+.delete-btn {
+    color: #dc2626;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+    height: 70px;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-icon {
+    font-size: 20px;
+    color: white;        /* 🔥 VERY IMPORTANT */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* PROFILE DROPDOWN FIX */
+
+.profile {
+    position: relative;
+}
+
+.profile-menu {
+    position: absolute;
+    top: 45px;
+    right: 0;
+
+    width: 220px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+
+    display: none;
+    z-index: 99999;
+}
+
+.profile-top {
+    text-align: center;
+    padding: 15px;
+}
+
+.profile-top .avatar {
+    width: 50px;
+    height: 50px;
+    margin: auto;
+    margin-bottom: 8px;
+}
+
+.menu-item {
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    background: #f1f5f9;
+}
+
+.logout {
+    color: red;
 }

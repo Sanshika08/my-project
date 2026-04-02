@@ -49,9 +49,9 @@
         <!-- CENTER -->
         <div class="nav-center">
             <a href="home_screen.html" class="nav-link active">Home</a>
-            <a href="volunteers.html" class="nav-link">Volunteers</a>
-            <a href="add_volunteer.html" class="nav-link">Add Volunteer</a>
-            <a href="history_reports.html" class="nav-link">History</a>
+           <a href="#" class="nav-link" onclick="navigatePage('volunteers.html')">Volunteers</a>
+            <a href="#" class="nav-link" onclick="navigatePage('add_volunteer.html')">Add Volunteer</a>
+            <a href="#" class="nav-link" onclick="navigatePage('history_reports.html')">History</a>
         </div>
 
         <!-- RIGHT -->
@@ -91,9 +91,11 @@
             </div>
 
         </div>
-        </div>
+        
 
     </nav>
+
+<div id="pageContainer" class="page-container">
 
     <section class="hero">
 
@@ -320,7 +322,20 @@
         </div>
 
     </div>
+</div>
 
+<script>
+function navigatePage(page) {
+    const container = document.getElementById("pageContainer");
+
+    // slide out
+    container.classList.add("slide-out");
+
+    setTimeout(() => {
+        window.location.href = page;
+    }, 300);
+}
+</script>
 </body>
 
 </html>

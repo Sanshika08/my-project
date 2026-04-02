@@ -1,53 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Volunteers</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteers</title>
 
-<link rel="stylesheet" href="../css/volunteers.css">
-
+    <link rel="stylesheet" href="../css/home_screen.css"> <!-- reuse navbar css -->
+    <link rel="stylesheet" href="../css/volunteers.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
 </head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
 <body>
+    <script>
+        window.addEventListener("load", () => {
+            document.body.classList.add("fade-in");
+        });
+    </script>
 
-<!-- SIDEBAR -->
+    <!-- ✅ SAME NAVBAR AS HOME -->
+    <nav class="navbar">
 
-<div class="sidebar">
+        <div class="nav-left">
+            <img src="../image/SARRS_circle_logo_removebg.png" class="nav-logo">
+            <div class="logo-text">
+                <span class="main-title">SARRS Dashboard</span>
+                <span class="sub-title">Street Animal Rescue System</span>
+            </div>
+        </div>
 
-<div class="sidebar-logo">
-<img src="../image/SARRS_circle_logo_removebg.png">
-</div>
+        <div class="nav-center">
+            <a href="#" class="nav-link" onclick="navigatePage('home_screen.html')">Home</a>
+            <a href="#" class="nav-link active">Volunteers</a>
+            <a href="#" class="nav-link" onclick="navigatePage('add_volunteer.html')">Add Volunteer</a>
+            <a href="#" class="nav-link" onclick="navigatePage('history_reports.html')">History</a>
+        </div>
 
-<a href="home_screen.html">🏠 Home</a>
-<a href="volunteers.html" class="active">👥 Volunteers</a>
-<a href="add_volunteer.html">➕ Add Volunteer</a>
-<a href="history_reports.html">📜 History Reports</a>
+        <div class="nav-right">
 
+            <!-- 🔔 Notification -->
+            <div class="notification">
+                🔔
+                <span class="badge">3</span>
+            </div>
 
-</div>
+            <!-- 👤 Profile -->
+            <div class="profile">
 
+                <div class="profile-icon" onclick="toggleProfileMenu()">
+                    👤
+                </div>
 
-<!-- MAIN -->
+                <!-- Dropdown -->
+                <div class="profile-menu" id="profileMenu">
 
-<div class="main">
+                    <div class="profile-top">
+                        <div class="avatar">A</div>
+                        <h3>Admin</h3>
+                        <p>admin@email.com</p>
+                    </div>
 
-<h2 class="page-title">Volunteers List</h2>
+                    <hr>
 
-<div id="loader" class="loader-container">
-    <div class="spinner"></div>
-</div>
+                    <div class="menu-item">⚙️ Settings</div>
+                    <div class="menu-item logout">⏻ Logout</div>
 
-<div class="vol-container" id="volunteerTable">
+                </div>
 
-<!-- Volunteers will load here -->
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </nav>
 
+    <!-- ✅ PAGE CONTAINER (VERY IMPORTANT) -->
+    <div id="pageContainer" class="page-container">
 
-<script type="module" src="../js/volunteers.js"></script>
+        <div class="main">
+
+            <h2 class="page-title">Volunteers List</h2>
+
+            <div id="loader" class="loader-container">
+                <div class="spinner"></div>
+            </div>
+
+            <div class="vol-container" id="volunteerTable">
+                <!-- Data comes from JS -->
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="module" src="../js/volunteers.js"></script>
+
+    <!-- ✅ SAME NAVIGATION SCRIPT -->
+    <script>
+        function navigatePage(page) {
+            const container = document.getElementById("pageContainer");
+
+            container.classList.add("slide-out");
+
+            setTimeout(() => {
+                window.location.href = page;
+            }, 300);
+        }
+    </script>
+    <script>
+        function toggleProfileMenu() {
+            const menu = document.getElementById("profileMenu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+    </script>
 
 </body>
+
 </html>
