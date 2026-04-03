@@ -637,7 +637,7 @@ body.fade-out {
     left: 0;
     width: 100%;
     z-index: 1000;
-
+     box-sizing: border-box; 
     display: flex;
     justify-content: space-between;
     align-items: center;

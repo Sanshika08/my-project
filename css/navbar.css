@@ -1,0 +1,102 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 30px;
+    background: #1e293b;
+    color: white;
+}
+
+/* LEFT */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.nav-logo {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+}
+
+/* CENTER */
+.nav-center {
+    display: flex;
+    gap: 40px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav-link {
+    color: #cbd5e1;
+    text-decoration: none;
+}
+
+.nav-link.active {
+    color: white;
+}
+
+/* RIGHT */
+.nav-right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.notification {
+    position: relative;
+    cursor: pointer;
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    border-radius: 50%;
+}
+
+/* PROFILE */
+.profile {
+    position: relative;
+}
+
+.profile-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    display: none;
+    background: white;
+    border-radius: 12px;
+}
+
+/* SIDEBAR */
+.notification-sidebar {
+    position: fixed;
+    right: 0;
+    transform: translateX(100%);
+    transition: 0.3s;
+}
+
+/* LOGOUT */
+.logout-modal {
+    display: none;
+}
+
+/* LOADER */
+.logout-loader {
+    display: none;
+}
+
+.logout-loader.active {
+    display: flex;
+}
