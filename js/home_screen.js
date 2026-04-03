@@ -4,6 +4,19 @@ import { auth } from "./firebase_config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
+
+function formatDateTime(date) {
+  return date.toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  });
+}
+
 const tableBody = document.getElementById("tableBody");
 const tableLoader = document.getElementById("tableLoader");
 
@@ -424,6 +437,15 @@ let graphRange = "7"; // default range
 let total = 0;
 let pending = 0;
 let resolved = 0;
+let dateFilter = "all";
+
+
+window.filterByDate = function () {
+  dateFilter = document.getElementById("dateFilter").value;
+
+  applyAllFilters();
+};
+
 
 // 🔥 Firestore Real-time Listener
 // 🔥 Show loader first
@@ -452,7 +474,7 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
   if (tableLoader) tableLoader.style.display = "none";
 
   // 🔥 Render
-  filterReports(currentFilter, document.querySelector(".filter-box button"));
+  applyAllFilters();
 
   // 🔢 Counters
   document.getElementById("totalReports").innerText = total;
@@ -540,9 +562,9 @@ function renderTable(data) {
   <!-- ✅ NEW COLUMN -->
   <td>
     ${data.createdAt
-        ? data.createdAt.toDate().toLocaleString()
-        : "-"
-      }
+    ? formatDateTime(data.createdAt.toDate())
+    : "-"
+}
   </td>
 
   <td>
@@ -561,26 +583,61 @@ function renderTable(data) {
 window.filterReports = function (type, btn) {
   currentFilter = type;
 
-  // ✅ Remove active from all
+  // Remove active from all
   document.querySelectorAll(".filter-box button").forEach(button => {
     button.classList.remove("active");
   });
 
-  // ✅ Add active to clicked button
+  // Add active to clicked button
   if (btn) btn.classList.add("active");
 
-  // ✅ Apply filter
-  if (type === "all") {
-    renderTable(allReports);
-    return;
+  // 🔥 IMPORTANT: Apply combined filters
+  applyAllFilters();
+};
+
+
+function applyAllFilters() {
+  let filtered = allReports;
+
+  const now = new Date();
+
+  // 🔹 DATE FILTER
+  if (dateFilter !== "all") {
+    filtered = filtered.filter(report => {
+      if (!report.createdAt) return false;
+
+      const date = report.createdAt.toDate();
+
+      if (dateFilter === "today") {
+        return date.toDateString() === now.toDateString();
+      }
+
+      if (dateFilter === "yesterday") {
+        const y = new Date();
+        y.setDate(now.getDate() - 1);
+        return date.toDateString() === y.toDateString();
+      }
+
+      if (dateFilter === "month") {
+        return (
+          date.getMonth() === now.getMonth() &&
+          date.getFullYear() === now.getFullYear()
+        );
+      }
+
+      return true;
+    });
   }
 
-  const filtered = allReports.filter((report) => {
-    return report.status?.toLowerCase() === type;
-  });
+  // 🔹 STATUS FILTER
+  if (currentFilter !== "all") {
+    filtered = filtered.filter(report =>
+      report.status?.toLowerCase() === currentFilter
+    );
+  }
 
   renderTable(filtered);
-};
+}
 
 
 // 🔍 Enhanced Search Function
@@ -600,11 +657,11 @@ window.searchTable = function () {
     let resolvedDate = "";
 
     if (report.createdAt) {
-      createdDate = report.createdAt.toDate().toLocaleString().toLowerCase();
+      createdDate = formatDateTime(report.createdAt.toDate()).toLowerCase();
     }
 
     if (report.resolvedAt) {
-      resolvedDate = report.resolvedAt.toDate().toLocaleString().toLowerCase();
+      resolvedDate = formatDateTime(report.resolvedAt.toDate()).toLowerCase();
     }
 
     // 🔍 Match ANY field

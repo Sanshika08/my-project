@@ -528,6 +528,68 @@ tbody tr:hover {
     transform: scale(0.96);
 }
 
+
+
+.content-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+/* Dropdown wrapper */
+.date-filter select {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+
+    background: #334155;
+    color: #e2e8f0;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+    outline: none;
+
+    min-width: 150px;
+
+    transition: all 0.2s ease;
+}
+
+/* Hover */
+.date-filter select:hover {
+    background-color: #475569;
+}
+
+/* Focus (when clicked) */
+.date-filter select:focus {
+     border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+}
+
+/* Dropdown arrow fix (clean look) */
+.date-filter select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5H5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+}
+
+/* Fix spacing for arrow */
+.date-filter select {
+    padding-right: 35px;
+}
+
+
+
+
+
+
 /* Logout Button */
 
 

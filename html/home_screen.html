@@ -49,7 +49,7 @@
         <!-- CENTER -->
         <div class="nav-center">
             <a href="home_screen.html" class="nav-link active">Home</a>
-           <a href="#" class="nav-link" onclick="navigatePage('volunteers.html')">Volunteers</a>
+            <a href="#" class="nav-link" onclick="navigatePage('volunteers.html')">Volunteers</a>
             <a href="#" class="nav-link" onclick="navigatePage('add_volunteer.html')">Add Volunteer</a>
             <a href="#" class="nav-link" onclick="navigatePage('history_reports.html')">History</a>
         </div>
@@ -61,7 +61,7 @@
             <div class="notification" onclick="openSidebar()">
                 🔔
                 <span class="badge">3</span>
-        </div>
+            </div>
 
             <!-- 👤 Profile -->
             <div class="profile">
@@ -89,251 +89,267 @@
             </div>
 
         </div>
-        
+
 
     </nav>
 
-<div id="pageContainer" class="page-container">
+    <div id="pageContainer" class="page-container">
 
-    <section class="hero">
+        <section class="hero">
 
-        <div class="hero-content">
-            <h1>Animal Rescue Dashboard</h1>
-            <p>Manage reports, assign volunteers, and save lives faster.</p>
+            <div class="hero-content">
+                <h1>Animal Rescue Dashboard</h1>
+                <p>Manage reports, assign volunteers, and save lives faster.</p>
 
-            <div class="hero-actions">
-                <button class="primary-btn">+ Add Report</button>
-                <button class="secondary-btn">Manage Volunteers</button>
-            </div>
-        </div>
-
-        <div class="hero-right">
-            <div class="hero-card urgent">
-                🚨 1 Urgent Case
-            </div>
-            <div class="hero-card pending">
-                ⏳ 1 Pending Case
-            </div>
-        </div>
-
-    </section>
-
-    <div class="chart-hero">
-
-        <!-- LEFT SIDE -->
-        <div class="chart-left">
-
-            <div class="chart-header">
-                <h3>📊 Reports Overview</h3>
-
-                <div class="graph-filter">
-                    <select id="graphFilter">
-                        <option value="7">Last 7 Days</option>
-                        <option value="30">Last 30 Days</option>
-                        <option value="all">All Time</option>
-                    </select>
+                <div class="hero-actions">
+                    <button class="primary-btn">+ Add Report</button>
+                    <button class="secondary-btn">Manage Volunteers</button>
                 </div>
             </div>
 
-            <canvas id="reportsChart"></canvas>
+            <div class="hero-right">
+                <div class="hero-card urgent">
+                    🚨 1 Urgent Case
+                </div>
+                <div class="hero-card pending">
+                    ⏳ 1 Pending Case
+                </div>
+            </div>
 
-            <div class="chart-summary">
-                <p id="summaryLine"></p>
-                <p id="performanceLine"></p>
+        </section>
+
+        <div class="chart-hero">
+
+            <!-- LEFT SIDE -->
+            <div class="chart-left">
+
+                <div class="chart-header">
+                    <h3>📊 Reports Overview</h3>
+
+                    <div class="graph-filter">
+                        <select id="graphFilter">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30">Last 30 Days</option>
+                            <option value="all">All Time</option>
+                        </select>
+                    </div>
+                </div>
+
+                <canvas id="reportsChart"></canvas>
+
+                <div class="chart-summary">
+                    <p id="summaryLine"></p>
+                    <p id="performanceLine"></p>
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div class="chart-right">
+                <h4>Report Insights</h4>
+
+                <div class="insight-box blue">
+                    <span id="totalLabel">📈 Total This Week</span>
+                    <strong id="weeklyTotal">0</strong>
+                </div>
+
+                <div class="insight-box orange">
+                    <span>⚡ Avg Per Day</span>
+                    <strong id="avgReports">0</strong>
+                </div>
+
+                <div class="insight-box red">
+                    <span>🔥 Peak Day</span>
+                    <strong id="peakDay">-</strong>
+                </div>
             </div>
 
         </div>
 
-        <!-- RIGHT SIDE -->
-        <div class="chart-right">
-            <h4>Report Insights</h4>
+        <!-- Notification Sidebar -->
+        <div id="notificationSidebar" class="notification-sidebar">
 
-            <div class="insight-box blue">
-               <span id="totalLabel">📈 Total This Week</span>
-                <strong id="weeklyTotal">0</strong>
+            <div class="notification-header">
+                <h3>Notifications</h3>
+                <span class="close-btn" onclick="closeSidebar()">✕</span>
             </div>
 
-            <div class="insight-box orange">
-                <span>⚡ Avg Per Day</span>
-                <strong id="avgReports">0</strong>
+            <ul class="notification-list">
+                <li>🐾 New rescue request received</li>
+                <li>✅ Report approved</li>
+                <li>📍 New report near your area</li>
+            </ul>
+
+        </div>
+
+
+        <!-- Drawer -->
+        <div id="drawer" class="drawer">
+
+            <div class="drawer-header">
+
+                <img src="../image/SARRS_circle_logo_removebg.png" class="drawer-logo">
+
+                <span class="close-drawer" onclick="closeDrawer()">✕</span>
+
             </div>
 
-            <div class="insight-box red">
-                <span>🔥 Peak Day</span>
-                <strong id="peakDay">-</strong>
+            <div class="drawer-menu">
+
+                <a href="home_screen.html" class="drawer-item active">
+                    <span class="icon">🏠</span>
+                    <span>Home</span>
+                </a>
+
+                <a href="volunteers.html" class="drawer-item">
+                    <span class="icon">👥</span>
+                    <span>Volunteers</span>
+                </a>
+
+                <!-- ADD VOLUNTEER PAGE -->
+                <a href="add_volunteer.html" class="drawer-item">
+                    <span class="icon">➕</span>
+                    <span>Add Volunteer</span>
+                </a>
+
+                <a href="history_reports.html" class="drawer-item">
+                    <span class="icon">📜</span>
+                    <span>History Reports</span>
+                </a>
+
             </div>
-        </div>
 
-    </div>
-
-    <!-- Notification Sidebar -->
-    <div id="notificationSidebar" class="notification-sidebar">
-
-        <div class="notification-header">
-            <h3>Notifications</h3>
-            <span class="close-btn" onclick="closeSidebar()">✕</span>
-        </div>
-
-        <ul class="notification-list">
-            <li>🐾 New rescue request received</li>
-            <li>✅ Report approved</li>
-            <li>📍 New report near your area</li>
-        </ul>
-
-    </div>
-
-
-    <!-- Drawer -->
-    <div id="drawer" class="drawer">
-
-        <div class="drawer-header">
-
-            <img src="../image/SARRS_circle_logo_removebg.png" class="drawer-logo">
-
-            <span class="close-drawer" onclick="closeDrawer()">✕</span>
-
-        </div>
-
-        <div class="drawer-menu">
-
-            <a href="home_screen.html" class="drawer-item active">
-                <span class="icon">🏠</span>
-                <span>Home</span>
-            </a>
-
-            <a href="volunteers.html" class="drawer-item">
-                <span class="icon">👥</span>
-                <span>Volunteers</span>
-            </a>
-
-            <!-- ADD VOLUNTEER PAGE -->
-            <a href="add_volunteer.html" class="drawer-item">
-                <span class="icon">➕</span>
-                <span>Add Volunteer</span>
-            </a>
-
-            <a href="history_reports.html" class="drawer-item">
-                <span class="icon">📜</span>
-                <span>History Reports</span>
-            </a>
-
-        </div>
-
-        <div class="drawer-footer">
-            <a href="#" class="logout-btn" onclick="openLogoutModal()">
-                ⏻ Logout
-            </a>
-        </div>
-
-    </div>
-
-
-
-    <div class="stats-container">
-
-        <div class="stat-card total">
-            <h3 id="totalReports">0</h3>
-            <p>Total Reports</p>
-        </div>
-
-        <div class="stat-card pending">
-            <h3 id="pendingReports">0</h3>
-            <p>Pending Cases</p>
-        </div>
-
-        <div class="stat-card resolved">
-            <h3 id="resolvedReports">0</h3>
-            <p>Resolved Cases</p>
-        </div>
-
-        <div class="stat-card critical">
-            <h3 id="criticalReports">0</h3>
-            <p>Critical Cases</p>
-        </div>
-
-    </div>
-
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search Report by ID, animal, location, status, date..."
-            onkeyup="searchTable()">
-    </div>
-
-
-    <div class="content-wrapper">
-
-        <div class="filter-box">
-            <button onclick="filterReports('all', this)">All</button>
-            <button onclick="filterReports('pending', this)">Pending</button>
-            <button onclick="filterReports('resolved', this)">Resolved</button>
-            <button onclick="filterReports('assigned', this)">Assigned</button>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Image</th>
-                    <th>Animal Info</th>
-                    <th>Status</th>
-                    <th>Location</th>
-                    <th>Reported At</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody id="tableBody">
-
-                <tr id="tableLoaderRow">
-                    <td colspan="7">
-                        <div class="table-loader">
-                            <div class="spinner"></div>
-                            <p>Loading reports...</p>
-                        </div>
-                        <!-- rows will come from JS -->
-                    </td>
-                </tr>
-
-            </tbody>
-        </table>
-
-    </div>
-
-    <div id="logoutLoader" class="logout-loader">
-        <div class="spinner"></div>
-        <p>Logging out...</p>
-    </div>
-
-    <script type="module" src="../js/home_screen.js"></script>
-
-
-    <!-- ✅ Confirm Logout Modal -->
-    <div id="confirmLogoutModal" class="logout-modal">
-
-        <div class="logout-modal-box">
-            <h3>Are you sure?</h3>
-            <p>You are about to logout</p>
-
-            <div class="modal-actions">
-                <button class="cancel-btn" onclick="closeLogoutModal()">Cancel</button>
-                <button class="confirm-btn" onclick="confirmLogout()">Logout</button>
+            <div class="drawer-footer">
+                <a href="#" class="logout-btn" onclick="openLogoutModal()">
+                    ⏻ Logout
+                </a>
             </div>
+
         </div>
 
+
+
+        <div class="stats-container">
+
+            <div class="stat-card total">
+                <h3 id="totalReports">0</h3>
+                <p>Total Reports</p>
+            </div>
+
+            <div class="stat-card pending">
+                <h3 id="pendingReports">0</h3>
+                <p>Pending Cases</p>
+            </div>
+
+            <div class="stat-card resolved">
+                <h3 id="resolvedReports">0</h3>
+                <p>Resolved Cases</p>
+            </div>
+
+            <div class="stat-card critical">
+                <h3 id="criticalReports">0</h3>
+                <p>Critical Cases</p>
+            </div>
+
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search Report by ID, animal, location, status, date..."
+                onkeyup="searchTable()">
+        </div>
+
+
+        <div class="content-wrapper">
+
+            <div class="content-top">
+
+                <!-- LEFT: FILTER BUTTONS -->
+                <div class="filter-box">
+                    <button onclick="filterReports('all', this)">All</button>
+                    <button onclick="filterReports('pending', this)">Pending</button>
+                    <button onclick="filterReports('resolved', this)">Resolved</button>
+                    <button onclick="filterReports('assigned', this)">Assigned</button>
+                </div>
+
+                <!-- RIGHT: DATE FILTER -->
+                <div class="date-filter">
+                    <select id="dateFilter" onchange="filterByDate()">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="yesterday">Yesterday</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+
+            </div>
+            
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Animal Info</th>
+                        <th>Status</th>
+                        <th>Location</th>
+                        <th>Reported At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tableBody">
+
+                    <tr id="tableLoaderRow">
+                        <td colspan="7">
+                            <div class="table-loader">
+                                <div class="spinner"></div>
+                                <p>Loading reports...</p>
+                            </div>
+                            <!-- rows will come from JS -->
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+        <div id="logoutLoader" class="logout-loader">
+            <div class="spinner"></div>
+            <p>Logging out...</p>
+        </div>
+
+        <script type="module" src="../js/home_screen.js"></script>
+
+
+        <!-- ✅ Confirm Logout Modal -->
+        <div id="confirmLogoutModal" class="logout-modal">
+
+            <div class="logout-modal-box">
+                <h3>Are you sure?</h3>
+                <p>You are about to logout</p>
+
+                <div class="modal-actions">
+                    <button class="cancel-btn" onclick="closeLogoutModal()">Cancel</button>
+                    <button class="confirm-btn" onclick="confirmLogout()">Logout</button>
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>
 
-<script>
-function navigatePage(page) {
-    const container = document.getElementById("pageContainer");
+    <script>
+        function navigatePage(page) {
+            const container = document.getElementById("pageContainer");
 
-    // slide out
-    container.classList.add("slide-out");
+            // slide out
+            container.classList.add("slide-out");
 
-    setTimeout(() => {
-        window.location.href = page;
-    }, 300);
-}
-</script>
+            setTimeout(() => {
+                window.location.href = page;
+            }, 300);
+        }
+    </script>
 </body>
 
 </html>
