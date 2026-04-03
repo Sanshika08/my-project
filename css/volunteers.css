@@ -211,3 +211,111 @@ body {
     color: #dc2626;
 }
 
+
+
+/* TOP SECTION */
+.vol-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.vol-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* SEARCH */
+#volSearch {
+    padding: 10px 14px;
+    width: 280px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    outline: none;
+}
+
+#volSearch:focus {
+    border-color: #3b82f6;
+}
+
+/* ADD BUTTON */
+.add-vol-btn {
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+/* STATS */
+.vol-stats {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    min-width: 120px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-left: 4px solid #000000;
+}
+
+.stat-box h3 {
+    margin: 0;
+}
+
+.stat-box.green {
+    border-left: 4px solid #22c55e;
+}
+
+.stat-box.gray {
+    border-left: 4px solid #ff1818;
+}
+
+
+/* CASE STATS */
+.case-stats {
+    margin-top: 8px;
+    display: flex;
+    gap: 12px;
+}
+
+/* BOX */
+.case-item {
+    display: flex;
+    flex-direction: column;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: #f8fafc;
+    font-size: 11px;
+    min-width: 70px;
+}
+
+/* LABEL */
+.case-item span {
+    color: #64748b;
+}
+
+/* NUMBER */
+.case-item strong {
+    font-size: 14px;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+/* COLORS */
+.case-item.assigned {
+    border-left: 3px solid #f59e0b;
+}
+
+.case-item.resolved {
+    border-left: 3px solid #22c55e;
+}
+
+

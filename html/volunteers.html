@@ -33,7 +33,43 @@
 
         <div class="main">
 
-            <h2 class="page-title">Volunteers List</h2>
+            <!-- 🔥 TOP SECTION -->
+            <div class="vol-top">
+
+                <div class="vol-left">
+                    <h2 class="page-title">Volunteers List</h2>
+
+                    <input type="text" id="volSearch" placeholder="Search by name or phone..."
+                        onkeyup="searchVolunteers()">
+                </div>
+
+                <div class="vol-right">
+                    <button class="add-vol-btn" onclick="navigatePage('add_volunteer.html')">
+                        + Add Volunteer
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- 🔥 STATS -->
+            <div class="vol-stats">
+
+                <div class="stat-box">
+                    <h3 id="totalVol">0</h3>
+                    <p>Total</p>
+                </div>
+
+                <div class="stat-box green">
+                    <h3 id="activeVol">0</h3>
+                    <p>Active</p>
+                </div>
+
+                <div class="stat-box gray">
+                    <h3 id="inactiveVol">0</h3>
+                    <p>Inactive</p>
+                </div>
+
+            </div>
 
             <div id="loader" class="loader-container">
                 <div class="spinner"></div>
