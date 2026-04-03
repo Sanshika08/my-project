@@ -51,11 +51,12 @@ body {
     border-radius: 16px;
     padding: 18px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    min-height: 140px;
 
     display: flex;
-    align-items: center;
-    gap: 15px;
-
+    flex-direction: column;   /* 🔥 IMPORTANT */
+    justify-content: space-between; /* push bottom content */
+    
     position: relative;
     transition: all 0.25s ease;
 }
@@ -86,6 +87,9 @@ body {
 
 .vol-info {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
 }
 
 .vol-name {
@@ -102,10 +106,11 @@ body {
 .vol-role {
     font-size: 12px;
     background: #e2e8f0;
-    padding: 3px 8px;
-    border-radius: 6px;
-    margin-top: 4px;
-    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+
+    width: fit-content;       /* ✅ key fix */
+    align-self: flex-start;   /* ✅ prevent stretching */
 }
 
 
@@ -318,4 +323,22 @@ body {
     border-left: 3px solid #22c55e;
 }
 
+.vol-top-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
+.vol-report-stats {
+    display: flex;
+    justify-content: space-between;  /* 🔥 one row */
+    font-size: 13px;
+    color: #475569;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #e2e8f0; /* clean separation */
+}
+
+.vol-report-stats b {
+    color: #0f172a;
+}

@@ -9,6 +9,16 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 
+let allReports = [];
+
+onSnapshot(collection(db, "reports"), (snapshot) => {
+    allReports = [];
+
+    snapshot.forEach(doc => {
+        allReports.push(doc.data());
+    });
+});
+
 window.addEventListener("DOMContentLoaded", () => {
 
     const container = document.getElementById("volunteerTable");
@@ -29,76 +39,96 @@ window.addEventListener("DOMContentLoaded", () => {
 
     onSnapshot(collection(db, "volunteers"), (snapshot) => {
 
-    container.innerHTML = "";
+        container.innerHTML = "";
 
-    // ✅ DEFINE FIRST (VERY IMPORTANT)
-    let total = 0;
-    let active = 0;
-    let inactive = 0;
+        // ✅ DEFINE FIRST (VERY IMPORTANT)
+        let total = 0;
+        let active = 0;
+        let inactive = 0;
 
-    snapshot.forEach(docSnap => {
+        snapshot.forEach(docSnap => {
 
-        const data = docSnap.data();
-        const id = docSnap.id;
+            const data = docSnap.data();
+            const id = docSnap.id;
 
-        // ✅ COUNT FIRST
-        total++;
+            // ✅ COUNT FIRST
+            total++;
 
-        if (data.status === "Inactive") {
-            inactive++;
-        } else {
-            active++;
-        }
+            if (data.status === "Inactive") {
+                inactive++;
+            } else {
+                active++;
+            }
 
-        const firstLetter = data.name
-            ? data.name.charAt(0).toUpperCase()
-            : "?";
+            const firstLetter = data.name
+                ? data.name.charAt(0).toUpperCase()
+                : "?";
 
-        const card = `
-        <div class="vol-card">
+            const assignedCount = allReports.filter(r =>
+                r.assignedVolunteer?.name === data.name &&
+                r.status === "Assigned"
+            ).length;
 
-            <div class="vol-actions">
-                <i class="fas fa-edit edit-btn" onclick="editVolunteer('${id}')"></i>
-                <i class="fas fa-trash delete-btn" onclick="deleteVolunteer('${id}')"></i>
-            </div>
+            const resolvedCount = allReports.filter(r =>
+                r.assignedVolunteer?.name === data.name &&
+                r.status === "Resolved"
+            ).length;
 
-            <div class="avatar">${firstLetter}</div>
+            const card = `
+<div class="vol-card">
 
-            <div class="vol-info">
-                <div class="vol-name">${data.name}</div>
-                <div class="vol-phone">📞 ${data.phone}</div>
-                <div class="vol-role">${data.role}</div>
-            </div>
+    <div class="vol-actions">
+        <i class="fas fa-edit edit-btn" onclick="editVolunteer('${id}')"></i>
+        <i class="fas fa-trash delete-btn" onclick="deleteVolunteer('${id}')"></i>
+    </div>
 
-            <div class="status-toggle">
-                <label class="switch">
-                    <input type="checkbox" 
-                        ${data.status !== "Inactive" ? "checked" : ""} 
-                        onchange="toggleStatus('${id}', this.checked)">
-                    <span class="slider"></span>
-                </label>
-                <span class="status-text">
-                    ${data.status || "Active"}
-                </span>
-            </div>
+    <div class="vol-top-row">
 
+        <div class="avatar">${firstLetter}</div>
+
+        <div class="vol-info">
+            <div class="vol-name">${data.name}</div>
+            <div class="vol-phone">📞 ${data.phone}</div>
+            <div class="vol-role">${data.role}</div>
         </div>
-        `;
 
-        container.innerHTML += card;
+        <div class="status-toggle">
+            <label class="switch">
+                <input type="checkbox" 
+                    ${data.status !== "Inactive" ? "checked" : ""} 
+                    onchange="toggleStatus('${id}', this.checked)">
+                <span class="slider"></span>
+            </label>
+            <span class="status-text">
+                ${data.status || "Active"}
+            </span>
+        </div>
+
+    </div>
+
+    <!-- 🔥 BOTTOM STATS -->
+    <div class="vol-report-stats">
+        <div>Total Assigned : <b>${assignedCount}</b></div>
+        <div>Total Resolved : <b>${resolvedCount}</b></div>
+    </div>
+
+</div>
+`;
+
+            container.innerHTML += card;
+        });
+
+        // ✅ UPDATE STATS SAFELY
+        const totalEl = document.getElementById("totalVol");
+        const activeEl = document.getElementById("activeVol");
+        const inactiveEl = document.getElementById("inactiveVol");
+
+        if (totalEl) totalEl.innerText = total;
+        if (activeEl) activeEl.innerText = active;
+        if (inactiveEl) inactiveEl.innerText = inactive;
+
+        loader.style.display = "none";
     });
-
-    // ✅ UPDATE STATS SAFELY
-    const totalEl = document.getElementById("totalVol");
-    const activeEl = document.getElementById("activeVol");
-    const inactiveEl = document.getElementById("inactiveVol");
-
-    if (totalEl) totalEl.innerText = total;
-    if (activeEl) activeEl.innerText = active;
-    if (inactiveEl) inactiveEl.innerText = inactive;
-
-    loader.style.display = "none";
-});
 
 });
 
