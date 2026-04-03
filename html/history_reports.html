@@ -2,72 +2,94 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>History Reports | SARRS</title>
 
-    <link rel="stylesheet" href="../css/history_reports.css">
+    <!-- ✅ Navbar CSS -->
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/home_screen.css">
 
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="../css/history_reports.css">
 
 </head>
 
 <body>
 
-    <div class="container">
+    <!-- 🌅 Fade In -->
+    <script>
+        window.addEventListener("load", () => {
+            document.body.classList.add("fade-in");
+        });
+    </script>
 
-        <h2>📜 Report History</h2>
+    <!-- ✅ REUSABLE NAVBAR -->
+    <div id="navbarContainer"></div>
 
-        <div class="search-box">
+    <!-- ✅ PAGE CONTAINER -->
+    <div id="pageContainer" class="page-container">
 
-            <input type="text" id="searchInput" placeholder="Search reports by animal, location, volunteer..."
-                onkeyup="searchReports()">
+        <div class="container">
 
-        </div>
+            <h2>📜 Report History</h2>
 
-        <div class="table-wrapper">
-
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Image</th>
-                        <th>Animal Info</th>
-                        <th>Location</th>
-                        <th>Reported</th>
-                        <th>Resolved</th>
-                        <th>Volunteer</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-
-                <tbody id="historyTable">
-
-                    <tr id="noDataRow">
-                        <td colspan="9" style="text-align:center;">
-                            No resolved reports found
-                        </td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-            <div id="loader" class="loader-container">
-                <div class="spinner"></div>
-                <p>Loading reports...</p>
+            <div class="search-box">
+                <input type="text" id="searchInput"
+                    placeholder="Search reports by animal, location, volunteer..."
+                    onkeyup="searchReports()">
             </div>
 
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Image</th>
+                            <th>Animal Info</th>
+                            <th>Location</th>
+                            <th>Reported</th>
+                            <th>Resolved</th>
+                            <th>Volunteer</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="historyTable">
+
+                        <tr id="noDataRow">
+                            <td colspan="9" style="text-align:center;">
+                                No resolved reports found
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+                <div id="loader" class="loader-container">
+                    <div class="spinner"></div>
+                    <p>Loading reports...</p>
+                </div>
+
+            </div>
 
         </div>
 
     </div>
 
+    <!-- ✅ NAVBAR LOAD -->
+    <script type="module">
+        import "../js/navbar.js";
+
+        window.addEventListener("DOMContentLoaded", () => {
+            window.loadNavbar();
+        });
+    </script>
+
+    <!-- Page JS -->
     <script type="module" src="../js/history_reports.js"></script>
 
 </body>
