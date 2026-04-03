@@ -2,79 +2,81 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Add Volunteer</title>
 
-    <link rel="stylesheet" href="../css/add_volunteers.css">
+    <!-- ✅ Navbar CSS -->
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/home_screen.css">
 
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="../css/add_volunteers.css">
 </head>
 
 <body>
 
+    <!-- 🌅 Fade In -->
+    <script>
+        window.addEventListener("load", () => {
+            document.body.classList.add("fade-in");
+        });
+    </script>
 
-    <!-- DRAWER / SIDEBAR -->
-    <div class="sidebar">
+    <!-- ✅ REUSABLE NAVBAR -->
+    <div id="navbarContainer"></div>
 
-        <div class="sidebar-logo">
-            <img src="../image/SARRS_circle_logo_removebg.png" alt="SARRS Logo">
-        </div>
+    <!-- ✅ PAGE CONTAINER -->
+    <div id="pageContainer" class="page-container">
 
-        <a href="home_screen.html">🏠 Home</a>
+        <div class="main">
 
-        <a href="volunteers.html">👥 Volunteers</a>
+            <div class="card">
 
-        <a href="add_volunteer.html" class="active">➕ Add Volunteer</a>
-        <a href="history_reports.html">📜 History Reports</a>
+                <h2>Add Volunteer</h2>
 
-    </div>
+                <div class="form-row">
 
+                    <div class="input-group">
+                        <label>Name</label>
+                        <input type="text" id="volName" placeholder="Enter volunteer name">
+                    </div>
 
+                    <div class="input-group">
+                        <label>Phone</label>
+                        <input type="text" id="volPhone" placeholder="Enter phone number">
+                    </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main">
+                    <div class="input-group">
+                        <label>Role</label>
+                        <input type="text" id="volRole" placeholder="Volunteer / Rescue Team">
+                    </div>
 
-        <div class="card">
-
-            <h2>Add Volunteer</h2>
-
-
-            <div class="form-row">
-
-                <div class="input-group">
-                    <label>Name</label>
-                    <input type="text" id="volName" placeholder="Enter volunteer name">
                 </div>
 
-                <div class="input-group">
-                    <label>Phone</label>
-                    <input type="text" id="volPhone" placeholder="Enter phone number">
-                </div>
+                <button class="add-btn" onclick="addVolunteer()">
+                    Add Volunteer
+                </button>
 
-                <div class="input-group">
-                    <label>Role</label>
-                    <input type="text" id="volRole" placeholder="Volunteer / Rescue Team">
-                </div>
+                <p id="successMsg"></p>
 
             </div>
 
-
-            <button class="add-btn" onclick="addVolunteer()">
-                Add Volunteer
-            </button>
-
-
-            <p id="successMsg"></p>
-
         </div>
 
     </div>
 
+    <!-- ✅ NAVBAR LOAD -->
+    <script type="module">
+        import "../js/navbar.js";
 
+        window.addEventListener("DOMContentLoaded", () => {
+            window.loadNavbar();
+        });
+    </script>
+
+    <!-- Page JS -->
     <script type="module" src="../js/add_volunteer.js"></script>
 
 </body>
-
 </html>
