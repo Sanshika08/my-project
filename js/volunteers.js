@@ -45,8 +45,10 @@ window.addEventListener("DOMContentLoaded", () => {
         let total = 0;
         let active = 0;
         let inactive = 0;
+        let leaderboardData = [];
 
         snapshot.forEach(docSnap => {
+
 
             const data = docSnap.data();
             const id = docSnap.id;
@@ -65,14 +67,26 @@ window.addEventListener("DOMContentLoaded", () => {
                 : "?";
 
             const assignedCount = allReports.filter(r =>
-                r.assignedVolunteer?.name === data.name &&
-                r.status === "Assigned"
+                r.assignedVolunteer?.name?.toLowerCase() === data.name?.toLowerCase() &&
+                (r.status === "Assigned" || r.status === "Resolved")
             ).length;
 
             const resolvedCount = allReports.filter(r =>
-                r.assignedVolunteer?.name === data.name &&
+                r.assignedVolunteer?.name?.toLowerCase() === data.name?.toLowerCase() &&
                 r.status === "Resolved"
             ).length;
+
+            const successRate = assignedCount === 0
+                ? 0
+                : Math.round((resolvedCount / assignedCount) * 100);
+
+            leaderboardData.push({
+                name: data.name,
+                assigned: assignedCount,
+                resolved: resolvedCount,
+                rate: successRate
+            });
+
 
             const card = `
 <div class="vol-card">
@@ -117,6 +131,63 @@ window.addEventListener("DOMContentLoaded", () => {
 
             container.innerHTML += card;
         });
+
+        leaderboardData.sort((a, b) => b.rate - a.rate);
+
+        // ================================
+        // 🏆 TOP 3 CARDS (ADD HERE)
+        // ================================
+
+        const topContainer = document.getElementById("topPerformers");
+
+        if (topContainer) {
+            topContainer.innerHTML = "";
+
+            const medals = ["🥇", "🥈", "🥉"];
+
+            leaderboardData.slice(0, 3).forEach((vol, index) => {
+
+                const firstLetter = vol.name.charAt(0).toUpperCase();
+
+                const card = `
+        <div class="top-card ${index === 0 ? 'top-1' : ''}">
+    <div class="rank-badge">${medals[index]}</div>
+    <div class="top-avatar">${firstLetter}</div>
+    <div class="top-name">${vol.name}</div>
+    <div class="top-stats">
+        ${vol.resolved}/${vol.assigned}
+    </div>
+    <div class="top-rate">${vol.rate}% Success</div>
+</div>
+        `;
+
+                topContainer.innerHTML += card;
+            });
+        }
+
+        // ================================
+        // 📊 LEADERBOARD TABLE (ADD HERE)
+        // ================================
+
+        const tableBody = document.getElementById("leaderboardBody");
+
+        if (tableBody) {
+            tableBody.innerHTML = "";
+
+            leaderboardData.forEach(vol => {
+
+                const row = `
+        <div class="leaderboard-row">
+            <span>${vol.name}</span>
+            <span>${vol.assigned}</span>
+            <span>${vol.resolved}</span>
+            <span>${vol.rate}%</span>
+        </div>
+        `;
+
+                tableBody.innerHTML += row;
+            });
+        }
 
         // ✅ UPDATE STATS SAFELY
         const totalEl = document.getElementById("totalVol");

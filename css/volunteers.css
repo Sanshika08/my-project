@@ -342,3 +342,103 @@ body {
 .vol-report-stats b {
     color: #0f172a;
 }
+
+
+/*------------ LEADERBOARD STYLES (NEW) -----------*/
+
+/* LEADERBOARD SECTION */
+.leaderboard-section {
+    margin: 25px 0;
+}
+
+/* LEADERBOARD TITLE */
+.leaderboard-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* TOP PERFORMERS (TOP 3 CARDS) */
+.top-performers {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* INDIVIDUAL CARD */
+.top-card {
+    flex: 1;
+    background: white;
+    border-radius: 14px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    position: relative;
+}
+
+/* AVATAR (BIG CIRCLE) */
+.top-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: white;
+    margin: 0 auto 10px;
+}
+
+/* TOP NAME */
+.top-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+/* TOP STATS */
+.top-stats {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* RANK BADGE */
+.rank-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 18px;
+}
+
+/* LEADERBOARD TABLE */
+.leaderboard-table {
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* HEADER */
+.leaderboard-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    background: #f1f5f9;
+    padding: 12px 15px;
+    font-weight: 600;
+}
+
+/* ROW */
+.leaderboard-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 12px 15px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 14px;
+}
+
+/* HOVER EFFECT */
+.leaderboard-row:hover {
+    background: #f8fafc;
+}
+
+
