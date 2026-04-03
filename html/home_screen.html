@@ -271,22 +271,47 @@
                     <button onclick="filterReports('assigned', this)">Assigned</button>
                 </div>
 
-                <!-- RIGHT: DATE FILTER -->
-                <div class="date-filter">
-                    <select id="dateFilter" onchange="filterByDate()">
-                        <option value="all">All Time</option>
-                        <option value="today">Today</option>
-                        <option value="yesterday">Yesterday</option>
-                        <option value="month">This Month</option>
-                    </select>
+                <!-- RIGHT SIDE (DELETE + DATE FILTER) -->
+                <div class="right-actions">
+
+                    <!-- 🗑 Delete Mode Button -->
+                    <button id="deleteModeBtn" onclick="toggleDeleteMode()">
+                        🗑 Delete Reports
+                    </button>
+
+                    <!-- DATE FILTER -->
+                    <div class="date-filter">
+                        <select id="dateFilter" onchange="filterByDate()">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+
                 </div>
 
             </div>
-            
+
+            <div id="bulkActions" class="bulk-actions" style="display:none;">
+                <span id="selectedCount">0 selected</span>
+
+                <button onclick="deleteSelectedReports()" class="danger-btn">
+                    Delete Selected
+                </button>
+
+                <button onclick="cancelSelection()">
+                    Cancel
+                </button>
+            </div>
+
 
             <table>
                 <thead>
                     <tr>
+                        <th id="selectAllHeader" style="display:none;">
+                            <input type="checkbox" id="selectAllCheckbox" onclick="selectAllReports(this)">
+                        </th>
                         <th>ID</th>
                         <th>Image</th>
                         <th>Animal Info</th>

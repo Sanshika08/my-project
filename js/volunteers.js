@@ -9,8 +9,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 
-
-
 window.addEventListener("DOMContentLoaded", () => {
 
     const container = document.getElementById("volunteerTable");

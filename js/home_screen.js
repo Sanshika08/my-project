@@ -3,6 +3,7 @@ import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10
 import { auth } from "./firebase_config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import {  deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 
 function formatDateTime(date) {
@@ -169,7 +170,7 @@ function getDailyReportData(reports) {
         resolved: 0
       };
     }
-  } 
+  }
 
   // Fill data
   reports.forEach(r => {
@@ -438,7 +439,109 @@ let total = 0;
 let pending = 0;
 let resolved = 0;
 let dateFilter = "all";
+let deleteMode = false;
+let selectedReports = new Set();
 
+
+// 🔥 Toggle Delete Mode (Gmail style)
+window.toggleDeleteMode = function () {
+  deleteMode = !deleteMode;
+
+  const header = document.getElementById("selectAllHeader");
+  const bulkBar = document.getElementById("bulkActions");
+
+  if (deleteMode) {
+    header.style.display = "table-cell";
+    bulkBar.style.display = "flex";
+  } else {
+    header.style.display = "none";
+    bulkBar.style.display = "none";
+    selectedReports.clear();
+  }
+
+  applyAllFilters(); // re-render table
+};
+
+     /*<------ Checkbox Handling */
+
+
+//Handle single checkbox
+window.handleCheckboxChange = function (checkbox) {
+  const id = checkbox.dataset.id;
+
+  if (checkbox.checked) {
+    selectedReports.add(id);
+  } else {
+    selectedReports.delete(id);
+  }
+
+  updateSelectedCount();
+};
+
+//Select All
+window.selectAllReports = function (masterCheckbox) {
+  const checkboxes = document.querySelectorAll(".reportCheckbox");
+
+  checkboxes.forEach(cb => {
+    cb.checked = masterCheckbox.checked;
+
+    if (masterCheckbox.checked) {
+      selectedReports.add(cb.dataset.id);
+    } else {
+      selectedReports.delete(cb.dataset.id);
+    }
+  });
+
+  updateSelectedCount();
+};
+
+//Update Count
+function updateSelectedCount() {
+  document.getElementById("selectedCount").innerText =
+    `${selectedReports.size} selected`;
+}
+
+//DELETE (PERMANENT 🚨)
+window.deleteSelectedReports = async function () {
+  if (selectedReports.size === 0) {
+    alert("No reports selected!");
+    return;
+  }
+
+  const confirmDelete = confirm(
+    `⚠️ This action cannot be undone.\n\nDelete ${selectedReports.size} reports permanently?`
+  );
+
+  if (!confirmDelete) {
+    return;
+  }
+
+  try {
+    const promises = [];
+
+    selectedReports.forEach(id => {
+      promises.push(deleteDoc(doc(db, "reports", id)));
+    });
+
+    await Promise.all(promises);
+
+    alert("Reports deleted permanently!");
+
+    selectedReports.clear();
+    toggleDeleteMode();
+
+  } catch (error) {
+    console.error("Delete error:", error);
+    alert("Error deleting reports");
+  }
+};
+
+
+//Cancel Selection
+window.cancelSelection = function () {
+  selectedReports.clear();
+  toggleDeleteMode();
+};
 
 window.filterByDate = function () {
   dateFilter = document.getElementById("dateFilter").value;
@@ -483,10 +586,10 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
 
   // 📊 GRAPH + INSIGHTS (ADD THIS HERE)
   if (allReports.length > 0) {
-  const dailyData = getDailyReportData(allReports);
-  renderReportsChart(dailyData);
-  updateInsights(dailyData);
-}
+    const dailyData = getDailyReportData(allReports);
+    renderReportsChart(dailyData);
+    updateInsights(dailyData);
+  }
 });
 
 
@@ -508,7 +611,7 @@ function renderTable(data) {
 
     tableBody.innerHTML = `
       <tr>
-        <td colspan="7" style="text-align:center; padding:20px; color:#777;">
+       <td colspan="${deleteMode ? 8 : 7}" style="text-align:center; padding:20px; color:#777;">
           ${message}
         </td>
       </tr>
@@ -530,6 +633,15 @@ function renderTable(data) {
     }
     const row = `
 <tr>
+
+  ${deleteMode ? `
+  <td>
+    <input type="checkbox" class="reportCheckbox"
+      data-id="${data.id}"
+      onchange="handleCheckboxChange(this)">
+  </td>
+  ` : ""}
+
   <td>${data.id.substring(0, 6)}</td>
 
   <td>
@@ -562,9 +674,9 @@ function renderTable(data) {
   <!-- ✅ NEW COLUMN -->
   <td>
     ${data.createdAt
-    ? formatDateTime(data.createdAt.toDate())
-    : "-"
-}
+        ? formatDateTime(data.createdAt.toDate())
+        : "-"
+      }
   </td>
 
   <td>

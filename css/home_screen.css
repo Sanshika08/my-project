@@ -537,11 +537,97 @@ tbody tr:hover {
     margin-bottom: 18px;
 }
 
+/* Right side alignment of Delete Button */
+.right-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Delete Reports Button (top button) */
+#deleteModeBtn {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#deleteModeBtn:hover {
+    background: #e2e8f0;
+}
+
+/* Bulk Actions Bar */
+.bulk-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #334155;
+    border: 1px solid #fed7aa;
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin: 12px 0;
+}
+
+/* Selected count Text */
+#selectedCount {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* Delete Selected Button (danger style) */
+.danger-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.danger-btn:hover {
+    background: #b91c1c;
+}
+
+/* Cancel Button */
+.bulk-actions button:not(.danger-btn) {
+    background: #ffffff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.bulk-actions button:not(.danger-btn):hover {
+    background: #d1d5db;
+}
+
+/* Checkbox Styling (clean spacing) */
+.reportCheckbox {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+th input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+/*Checkbox Column Alignment */
+td:first-child,
+th:first-child {
+    text-align: center;
+    width: 40px;
+}
+
 /* Dropdown wrapper */
 .date-filter select {
     padding: 10px 16px;
     border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 
     background: #334155;
     color: #e2e8f0;
@@ -564,8 +650,8 @@ tbody tr:hover {
 
 /* Focus (when clicked) */
 .date-filter select:focus {
-     border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 /* Dropdown arrow fix (clean look) */
@@ -599,7 +685,8 @@ tbody tr:hover {
 body {
     opacity: 0;
     transition: opacity 0.5s ease;
-    padding-top: 90px; /* adjust if needed */
+    padding-top: 90px;
+    /* adjust if needed */
 }
 
 body.fade-in {
@@ -694,12 +781,13 @@ body.fade-out {
 
 /* NAVBAR LAYOUT */
 .navbar {
-    position: fixed;   /* 🔥 MAIN FIX */
+    position: fixed;
+    /* 🔥 MAIN FIX */
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
-     box-sizing: border-box; 
+    box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     align-items: center;
