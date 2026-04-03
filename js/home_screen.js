@@ -3,7 +3,8 @@ import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10
 import { auth } from "./firebase_config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-import {  deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { query, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 
 function formatDateTime(date) {
@@ -240,6 +241,13 @@ function getDailyReportData(reports) {
 let reportsChart;
 
 function renderReportsChart(data) {
+
+  const loader = document.getElementById("graphLoader");
+  const canvas = document.getElementById("reportsChart");
+
+  if (loader) loader.style.display = "flex";
+  if (canvas) canvas.style.display = "none";
+
   const ctx = document.getElementById("reportsChart");
   if (!ctx) return;
 
@@ -350,6 +358,8 @@ function renderReportsChart(data) {
       }
     }
   });
+  if (loader) loader.style.display = "none";
+  if (canvas) canvas.style.display = "block";
 }
 
 function updateInsights(data) {
@@ -462,7 +472,7 @@ window.toggleDeleteMode = function () {
   applyAllFilters(); // re-render table
 };
 
-     /*<------ Checkbox Handling */
+/*<------ Checkbox Handling */
 
 
 //Handle single checkbox
@@ -554,43 +564,45 @@ window.filterByDate = function () {
 // 🔥 Show loader first
 if (tableLoader) tableLoader.style.display = "flex";
 
-onSnapshot(collection(db, "reports"), (snapshot) => {
+onSnapshot(
+  query(collection(db, "reports"), orderBy("createdAt", "desc")),
+  (snapshot) => {
 
-  allReports = [];
-  total = 0;
-  pending = 0;
-  resolved = 0;
+    allReports = [];
+    total = 0;
+    pending = 0;
+    resolved = 0;
 
-  snapshot.forEach(doc => {
-    const data = doc.data();
-    data.id = doc.id;
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      data.id = doc.id;
 
-    allReports.push(data);
+      allReports.push(data);
 
-    total++;
+      total++;
 
-    if (data.status === "Pending") pending++;
-    if (data.status === "Resolved") resolved++;
+      if (data.status === "Pending") pending++;
+      if (data.status === "Resolved") resolved++;
+    });
+
+    // 🔥 Hide loader
+    if (tableLoader) tableLoader.style.display = "none";
+
+    // 🔥 Render
+    applyAllFilters();
+
+    // 🔢 Counters
+    document.getElementById("totalReports").innerText = total;
+    document.getElementById("pendingReports").innerText = pending;
+    document.getElementById("resolvedReports").innerText = resolved;
+
+    // 📊 GRAPH + INSIGHTS (ADD THIS HERE)
+    if (allReports.length > 0) {
+      const dailyData = getDailyReportData(allReports);
+      renderReportsChart(dailyData);
+      updateInsights(dailyData);
+    }
   });
-
-  // 🔥 Hide loader
-  if (tableLoader) tableLoader.style.display = "none";
-
-  // 🔥 Render
-  applyAllFilters();
-
-  // 🔢 Counters
-  document.getElementById("totalReports").innerText = total;
-  document.getElementById("pendingReports").innerText = pending;
-  document.getElementById("resolvedReports").innerText = resolved;
-
-  // 📊 GRAPH + INSIGHTS (ADD THIS HERE)
-  if (allReports.length > 0) {
-    const dailyData = getDailyReportData(allReports);
-    renderReportsChart(dailyData);
-    updateInsights(dailyData);
-  }
-});
 
 
 // 🔥 Render Table
