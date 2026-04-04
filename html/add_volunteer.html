@@ -33,31 +33,80 @@
 
             <div class="card">
 
-                <h2>Add Volunteer</h2>
+                <!-- HEADER -->
+                <div class="form-header">
+                    <h2>Add Volunteer</h2>
+                    <p>Register a new volunteer or rescue team member</p>
+                </div>
 
-                <div class="form-row">
+                <div class="form-divider"></div>
+                
+                <div class="profile-preview">
 
-                    <div class="input-group">
-                        <label>Name</label>
-                        <input type="text" id="volName" placeholder="Enter volunteer name">
-                    </div>
+                    <div class="avatar-preview" id="avatarPreview">R</div>
 
-                    <div class="input-group">
-                        <label>Phone</label>
-                        <input type="text" id="volPhone" placeholder="Enter phone number">
-                    </div>
-
-                    <div class="input-group">
-                        <label>Role</label>
-                        <input type="text" id="volRole" placeholder="Volunteer / Rescue Team">
+                    <div class="preview-info">
+                        <div class="preview-name" id="previewName">Volunteer Name</div>
+                        <div class="preview-role" id="previewRole">Role</div>
                     </div>
 
                 </div>
 
-                <button class="add-btn" onclick="addVolunteer()">
-                    Add Volunteer
-                </button>
+                <!-- FORM GRID -->
+                <div class="form-grid">
 
+                    <!-- NAME -->
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="volName" placeholder="Enter volunteer name">
+                    </div>
+
+                    <!-- PHONE -->
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" id="volPhone" placeholder="Enter phone number">
+                    </div>
+
+                    <!-- ROLE (UPDATED → SELECT) -->
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="volRole">
+                            <option value="">Select role</option>
+                            <option value="Volunteer">Volunteer</option>
+                            <option value="Rescue Team">Rescue Team</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- STATUS -->
+                <div class="form-group status-group">
+                    <label>Status</label>
+
+                    <div class="status-toggle">
+                        <span>Inactive</span>
+
+                        <label class="switch">
+                            <input type="checkbox" id="volStatus" checked>
+                            <span class="slider"></span>
+                        </label>
+
+                        <span>Active</span>
+                    </div>
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="form-actions">
+                    <button class="vol-add-btn" onclick="addVolunteer()">
+                        + Add Volunteer
+                    </button>
+
+                    <button class="vol-cancel-btn" onclick="history.back()">
+                        Cancel
+                    </button>
+                </div>
+
+                <!-- SUCCESS MESSAGE -->
                 <p id="successMsg"></p>
 
             </div>
@@ -79,4 +128,5 @@
     <script type="module" src="../js/add_volunteer.js"></script>
 
 </body>
+
 </html>

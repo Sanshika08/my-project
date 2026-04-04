@@ -101,3 +101,20 @@ window.addVolunteer = async function () {
 
     }
 };
+
+
+// 🔄 LIVE PREVIEW
+const nameInput = document.getElementById("volName");
+const roleInput = document.getElementById("volRole");
+
+nameInput.addEventListener("input", () => {
+    const name = nameInput.value || "Volunteer Name";
+    document.getElementById("previewName").innerText = name;
+    document.getElementById("avatarPreview").innerText =
+        name.charAt(0).toUpperCase();
+});
+
+roleInput.addEventListener("change", () => {
+    document.getElementById("previewRole").innerText =
+        roleInput.value || "Role";
+});
