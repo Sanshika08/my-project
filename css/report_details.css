@@ -307,10 +307,32 @@ button:hover {
 
 
 .volunteer-dropdown {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    margin-right: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    min-width: 220px;
+    font-size: 14px;
+    background: white;
+    color: #0f172a;
+
+    outline: none;
+    transition: all 0.2s ease;
+
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+     appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%2364748b' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+}
+
+.volunteer-dropdown:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+}
+
+.volunteer-dropdown:hover {
+    border-color: #94a3b8;
 }
 
 .location-actions {
@@ -402,12 +424,12 @@ margin-left:auto;   /* pushes it to right */
 
 /* DROPDOWN */
 
-.volunteer-dropdown {
+/* .volunteer-dropdown {
     padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid #cbd5e1;
     min-width: 220px;
-}
+} */
 
 /* ASSIGN BUTTON */
 
@@ -419,6 +441,7 @@ margin-left:auto;   /* pushes it to right */
     color: white;
     font-weight: 500;
     cursor: pointer;
+    height: 40px;
 }
 
 .assign-btn:hover {

@@ -302,6 +302,9 @@ async function loadVolunteers() {
 
             const data = doc.data();
 
+            // 🔥 FILTER ONLY ACTIVE
+            if (data.status !== "Active") return;
+
             const option = document.createElement("option");
 
             option.value = data.name;
