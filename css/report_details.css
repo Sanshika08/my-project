@@ -4,54 +4,44 @@ body {
     background: #f4f6f9;
 }
 
-
-/* SIDEBAR */
-
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 220px;
-    height: 100%;
-    background: #1e293b;
-    color: white;
-    padding-top: 20px;
-}
-
-.sidebar-logo {
+/* HEADER LAYOUT */
+.header {
     display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+/* BACK BUTTON (INLINE) */
+.back-inline {
+    border: none;
+    background: #e2e8f0;
+    cursor: pointer;
+
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
     justify-content: center;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    transition: 0.2s;
 }
 
-.sidebar-logo img {
-    height: 150px;
+.back-inline:hover {
+    background: #cbd5f5;
 }
 
-.sidebar a {
-    display: block;
-    padding: 12px 20px;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    margin: 4px 10px;
-}
 
-.sidebar a:hover {
-    background: #334155;
-}
-
-.report_active {
-    background: #334155;
-    border-left: 4px solid #38bdf8;
-}
 
 /* MAIN */
 
 .main {
-    margin-left: 220px;
-    padding: 40px;
+   padding: 30px 20px;
 }
 
 
@@ -59,21 +49,15 @@ body {
 
 .card {
     background: white;
-    padding: 30px;
+    padding: 25px;
     border-radius: 12px;
     border: 1px solid #e2e8f0;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    width: 100%;
-    max-width: 1100px;
-    margin: auto;
+
+   width: calc(100% - 40px);  /* FIX */
+    margin: 10px auto;
 }
 
-
-/* HEADER */
-
-.header {
-    margin-bottom: 25px;
-}
 
 /* Title + Status */
 
@@ -85,7 +69,7 @@ body {
 
 .title-section h2 {
     margin: 0;
-    font-size: 28px;
+    font-size: 26px;
 }
 
 
@@ -228,15 +212,6 @@ button:hover {
     margin-bottom: 25px;
 }
 
-/* IMAGE */
-
-.report-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
 
 
 /* LOADING SPINNER */
@@ -262,16 +237,6 @@ button:hover {
 }
 
 
-
-
-/* DETAILS GRID */
-
-.details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-top: 20px;
-}
 
 
 /* DETAIL BOX */

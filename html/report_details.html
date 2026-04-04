@@ -13,26 +13,17 @@
 
 <body>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-
-        <div class="sidebar-logo">
-            <img src="../image/SARRS_circle_logo_removebg.png" alt="SARRS Logo">
-        </div>
-
-        <a href="home_screen.html">🏠 Home</a>
-        <a href="dashboard.html">📊 Dashboard</a>
-        <a href="report_details.html" class="report_active">📄 Report Details</a>
-
-    </div>
-
-
+    
     <!-- MAIN CONTENT -->
     <div class="main">
 
         <div class="card">
 
             <div class="header">
+
+                <!-- 🔙 BACK BUTTON -->
+                <button class="back-inline" onclick="goBack()">←</button>
+
                 <div class="title-section">
                     <h2>Report Details</h2>
                     <span class="status" id="statusBadge">Pending</span>
