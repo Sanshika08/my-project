@@ -201,6 +201,24 @@ header {
     border: 1px solid rgba(59,130,246,0.4);
 }
 
+.notification-card.unread::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #3b82f6;
+    border-radius: 50%;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}
+
+.notification-group-title {
+    font-size: 13px;
+    color: #94a3b8;
+    margin: 12px 6px 6px;
+    font-weight: 500;
+}
+
 .badge {
     position: absolute;
     top: -5px;

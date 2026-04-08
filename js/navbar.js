@@ -67,50 +67,43 @@ function setupNotifications() {
 
         let unreadCount = 0;
 
+        const groups = {
+            today: [],
+            yesterday: [],
+            older: []
+        };
+
         snapshot.forEach((docSnap) => {
             const data = docSnap.data();
+            const createdAt = data.createdAt?.toDate();
 
-            // ✅ Count only unread
-            if (data.isRead !== true) unreadCount++;
+            if (!createdAt) return;
 
-            const li = document.createElement("li");
-            li.classList.add("notification-card");
+            const now = new Date();
 
-            if (data.isRead !== true) {
-                li.classList.add("unread");
+            const isToday = createdAt.toDateString() === now.toDateString();
+
+            const yesterdayDate = new Date();
+            yesterdayDate.setDate(now.getDate() - 1);
+
+            const isYesterday =
+                createdAt.toDateString() === yesterdayDate.toDateString();
+
+            if (isToday) {
+                groups.today.push({ docSnap, data });
+            } else if (isYesterday) {
+                groups.yesterday.push({ docSnap, data });
+            } else {
+                groups.older.push({ docSnap, data });
             }
 
-            const icon = getNotificationIcon(data.body);
-
-            li.innerHTML = `
-             <div class="notif-avatar">${icon}</div>
-
-                <div class="notif-body">
-                        <div class="notif-title">${data.title || "Animal Alert"}</div>
-                        <div class="notif-message">${data.body || "New update"}</div>
-
-                        <div class="notif-footer">
-                            <span class="notif-time">${formatTime(data.createdAt)}</span>
-                        </div>
-                </div>
-                `;
-            li.addEventListener("click", async () => {
-
-                // ✅ mark ONLY this notification as read
-                if (data.isRead !== true) {
-                    await updateDoc(doc(db, "notifications", docSnap.id), {
-                        isRead: true
-                    });
-                }
-
-                // 👉 navigate
-                if (data.reportId) {
-                    window.location.href = `report_details.html?id=${data.reportId}`;
-                }
-            });
-
-            list.appendChild(li);
+            // ✅ COUNT UNREAD
+            if (data.isRead !== true) unreadCount++;
         });
+
+        renderGroup("Today", groups.today, list);
+        renderGroup("Yesterday", groups.yesterday, list);
+        renderGroup("Older", groups.older, list);
 
         // 🔴 Update badge
         if (badge) {
@@ -124,6 +117,53 @@ function setupNotifications() {
         }
     });
 }
+
+function renderGroup(title, items, list) {
+    if (items.length === 0) return;
+
+    // 🔥 Section title
+    const header = document.createElement("div");
+    header.classList.add("notification-group-title");
+    header.innerText = title;
+    list.appendChild(header);
+
+    items.forEach(({ docSnap, data }) => {
+
+        const li = document.createElement("li");
+        li.classList.add("notification-card");
+
+        if (data.isRead !== true) {
+            li.classList.add("unread");
+        }
+
+        const icon = getNotificationIcon(data.body);
+
+        li.innerHTML = `
+            <div class="notif-avatar">${icon}</div>
+            <div class="notif-body">
+                <div class="notif-title">${data.title || "Animal Alert"}</div>
+                <div class="notif-message">${data.body || "New update"}</div>
+                <div class="notif-time">${formatTime(data.createdAt)}</div>
+            </div>
+        `;
+
+        li.addEventListener("click", async () => {
+
+            if (data.isRead !== true) {
+                await updateDoc(doc(db, "notifications", docSnap.id), {
+                    isRead: true
+                });
+            }
+
+            if (data.reportId) {
+                window.location.href = `report_details.html?id=${data.reportId}`;
+            }
+        });
+
+        list.appendChild(li);
+    });
+}
+
 
 
 // ================= NOTIFICATION ICONS =================
