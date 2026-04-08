@@ -1,10 +1,10 @@
 import { auth, db } from "./firebase_config.js";
 
-import { onAuthStateChanged } 
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-import { doc, getDoc, collection, query, orderBy, onSnapshot,getDocs } 
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { doc, getDoc, collection, query, orderBy, onSnapshot, getDocs }
+    from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 import { updateDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
@@ -74,7 +74,22 @@ function setupNotifications() {
             if (!data.isRead) unreadCount++;
 
             const li = document.createElement("li");
-            li.innerText = `🐾 ${data.body || "New notification"}`;
+            li.classList.add("notification-card");
+
+            const icon = getNotificationIcon(data.body);
+
+            li.innerHTML = `
+    <div class="notif-avatar">${icon}</div>
+
+    <div class="notif-body">
+        <div class="notif-title">${data.title || "Animal Alert"}</div>
+        <div class="notif-message">${data.body || "New update"}</div>
+
+        <div class="notif-footer">
+            <span class="notif-time">${formatTime(data.createdAt)}</span>
+        </div>
+    </div>
+`;
 
             list.appendChild(li);
         });
@@ -92,6 +107,34 @@ function setupNotifications() {
     });
 }
 
+
+// ================= NOTIFICATION ICONS =================
+function getNotificationIcon(text) {
+    if (!text) return "🔔";
+
+    if (text.includes("Dead")) return "💀";
+    if (text.includes("Injured")) return "🩺";
+    if (text.includes("Stray")) return "🐕";
+
+    return "🐾";
+}
+
+
+// ================= UTILS =================
+function formatTime(timestamp) {
+    if (!timestamp) return "";
+
+    const now = new Date();
+    const time = timestamp.toDate();
+
+    const diff = Math.floor((now - time) / 1000);
+
+    if (diff < 60) return "Just now";
+    if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} hr ago`;
+
+    return time.toLocaleDateString();
+}
 
 // ================= LOAD NAVBAR =================
 window.loadNavbar = async function () {
