@@ -6,7 +6,7 @@ import { onAuthStateChanged }
 import { doc, getDoc, collection, query, orderBy, onSnapshot, getDocs }
     from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-import { updateDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { updateDoc, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 
 // ================= USER PROFILE =================
@@ -71,10 +71,14 @@ function setupNotifications() {
             const data = docSnap.data();
 
             // ✅ Count only unread
-            if (!data.isRead) unreadCount++;
+            if (data.isRead !== true) unreadCount++;
 
             const li = document.createElement("li");
             li.classList.add("notification-card");
+
+            if (data.isRead !== true) {
+                li.classList.add("unread");
+            }
 
             const icon = getNotificationIcon(data.body);
 
@@ -90,11 +94,20 @@ function setupNotifications() {
                         </div>
                 </div>
                 `;
-            li.onclick = () => {
+            li.addEventListener("click", async () => {
+
+                // ✅ mark ONLY this notification as read
+                if (data.isRead !== true) {
+                    await updateDoc(doc(db, "notifications", docSnap.id), {
+                        isRead: true
+                    });
+                }
+
+                // 👉 navigate
                 if (data.reportId) {
                     window.location.href = `report_details.html?id=${data.reportId}`;
                 }
-            };
+            });
 
             list.appendChild(li);
         });
@@ -158,28 +171,42 @@ window.loadNavbar = async function () {
 
 // ================= 🔔 SIDEBAR =================
 
+let hasOpenedOnce = false; // 🔥 global flag
+
 window.openSidebar = async function () {
     const sidebar = document.getElementById("notificationSidebar");
     if (sidebar) sidebar.style.transform = "translateX(0)";
 
-    const q = query(
-        collection(db, "notifications"),
-        orderBy("createdAt", "desc")
-    );
+    // ✅ ONLY mark read AFTER first open
+    if (hasOpenedOnce) {
+        try {
+            const q = query(
+                collection(db, "notifications"),
+                where("isRead", "==", false)
+            );
 
-    // ✅ FIX: use getDocs (one-time fetch)
-    const snapshot = await getDocs(q);
+            const snapshot = await getDocs(q);
 
-    for (const docSnap of snapshot.docs) {
-        const data = docSnap.data();
+            const updates = [];
 
-        if (!data.isRead) {
-            await updateDoc(doc(db, "notifications", docSnap.id), {
-                isRead: true
+            snapshot.forEach((docSnap) => {
+                updates.push(
+                    updateDoc(doc(db, "notifications", docSnap.id), {
+                        isRead: true
+                    })
+                );
             });
+
+            await Promise.all(updates);
+
+        } catch (error) {
+            console.error("Mark read failed:", error);
         }
     }
+
+    hasOpenedOnce = true;
 };
+
 
 window.closeSidebar = function () {
     const sidebar = document.getElementById("notificationSidebar");

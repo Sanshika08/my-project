@@ -201,3 +201,8 @@
     padding-right: 8px;  /* optional balance */
     overflow-y: auto;
 }
+
+.notification-card.unread {
+    background: rgba(59,130,246,0.15);
+    border: 1px solid rgba(59,130,246,0.4);
+}
