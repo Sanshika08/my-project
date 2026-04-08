@@ -830,16 +830,16 @@ window.closeDrawer = function () {
 
 
 // 🔔 Notification Sidebar
-window.openSidebar = function () {
-  const sidebar = document.getElementById("notificationSidebar");
-  sidebar.style.transform = "translateX(0)";
-};
+// window.openSidebar = function () {
+//   const sidebar = document.getElementById("notificationSidebar");
+//   sidebar.style.transform = "translateX(0)";
+// };
 
-window.closeSidebar = function () {
-  const sidebar = document.getElementById("notificationSidebar");
-  sidebar.style.transform = "translateX(100%)";
-  document.getElementById("overlay").style.display = "none";
-}
+// window.closeSidebar = function () {
+//   const sidebar = document.getElementById("notificationSidebar");
+//   sidebar.style.transform = "translateX(100%)";
+//   document.getElementById("overlay").style.display = "none";
+// }
 
 
 

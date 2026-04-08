@@ -20,7 +20,8 @@
         <!-- 🔔 Notification -->
         <div class="notification" onclick="openSidebar()">
             🔔
-            <span class="badge">3</span>
+            <!-- 🔥 DYNAMIC BADGE -->
+            <span id="notificationBadge" class="badge" style="display:none;">0</span>
         </div>
 
         <!-- 👤 Profile -->
@@ -53,10 +54,9 @@
         <span class="close-btn" onclick="closeSidebar()">✕</span>
     </div>
 
-    <ul class="notification-list">
-        <li>🐾 New rescue request received</li>
-        <li>✅ Report approved</li>
-        <li>📍 New report near your area</li>
+    <!-- 🔥 DYNAMIC LIST -->
+    <ul id="notificationList" class="notification-list">
+        <!-- Notifications will come here from Firebase -->
     </ul>
 </div>
 

@@ -1,8 +1,16 @@
 import { auth, db } from "./firebase_config.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-async function setupUserProfile() {
+import { onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+import { doc, getDoc, collection, query, orderBy, onSnapshot,getDocs } 
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+import { updateDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+
+// ================= USER PROFILE =================
+function setupUserProfile() {
     onAuthStateChanged(auth, async (user) => {
 
         if (!user) {
@@ -10,82 +18,148 @@ async function setupUserProfile() {
             return;
         }
 
-        const uid = user.uid;
-
         try {
-            const userRef = doc(db, "users", uid);
+            const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
 
             let name = "Admin";
 
             if (userSnap.exists()) {
-                const data = userSnap.data();
-                name = data.name || "Admin";
+                name = userSnap.data().name || "Admin";
             }
 
             const email = user.email;
 
-            // 🔥 WAIT for navbar to load
-            setTimeout(() => {
-                const nameEl = document.querySelector(".profile-top h3");
-                const emailEl = document.querySelector(".profile-top p");
-                const avatarEl = document.querySelector(".avatar");
+            // ✅ Navbar already loaded → no need for delay
+            const nameEl = document.querySelector(".profile-top h3");
+            const emailEl = document.querySelector(".profile-top p");
+            const avatarEl = document.querySelector(".avatar");
 
-                if (nameEl) nameEl.innerText = name;
-                if (emailEl) emailEl.innerText = email;
+            if (nameEl) nameEl.innerText = name;
+            if (emailEl) emailEl.innerText = email;
 
-                if (avatarEl && email) {
-                    avatarEl.innerText = email.charAt(0).toUpperCase();
-                }
-            }, 100);
+            if (avatarEl && email) {
+                avatarEl.innerText = email.charAt(0).toUpperCase();
+            }
 
         } catch (error) {
             console.error("User fetch error:", error);
         }
-
     });
 }
 
-// 🔄 Load navbar
+
+// ================= 🔔 NOTIFICATIONS =================
+function setupNotifications() {
+    const list = document.getElementById("notificationList");
+    const badge = document.getElementById("notificationBadge");
+
+    if (!list) return;
+
+    const q = query(
+        collection(db, "notifications"),
+        orderBy("createdAt", "desc")
+    );
+
+    onSnapshot(q, (snapshot) => {
+
+        list.innerHTML = "";
+
+        let unreadCount = 0;
+
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+
+            // ✅ Count only unread
+            if (!data.isRead) unreadCount++;
+
+            const li = document.createElement("li");
+            li.innerText = `🐾 ${data.body || "New notification"}`;
+
+            list.appendChild(li);
+        });
+
+        // 🔴 Update badge
+        if (badge) {
+            badge.innerText = unreadCount;
+
+            if (unreadCount === 0) {
+                badge.style.display = "none";
+            } else {
+                badge.style.display = "inline-block";
+            }
+        }
+    });
+}
+
+
+// ================= LOAD NAVBAR =================
 window.loadNavbar = async function () {
     const res = await fetch("../html/navbar.html");
     const data = await res.text();
 
     document.getElementById("navbarContainer").innerHTML = data;
 
-    // ✅ Set active page
     setActiveNav();
 
-    // ✅ Setup user profile (VERY IMPORTANT)
+    // 🔥 ORDER MATTERS
     setupUserProfile();
+    setupNotifications();   // ✅ VERY IMPORTANT
 };
 
-// 🔔 Sidebar
-window.openSidebar = function () {
-    document.getElementById("notificationSidebar").style.transform = "translateX(0)";
+
+// ================= 🔔 SIDEBAR =================
+
+window.openSidebar = async function () {
+    const sidebar = document.getElementById("notificationSidebar");
+    if (sidebar) sidebar.style.transform = "translateX(0)";
+
+    const q = query(
+        collection(db, "notifications"),
+        orderBy("createdAt", "desc")
+    );
+
+    // ✅ FIX: use getDocs (one-time fetch)
+    const snapshot = await getDocs(q);
+
+    for (const docSnap of snapshot.docs) {
+        const data = docSnap.data();
+
+        if (!data.isRead) {
+            await updateDoc(doc(db, "notifications", docSnap.id), {
+                isRead: true
+            });
+        }
+    }
 };
 
 window.closeSidebar = function () {
-    document.getElementById("notificationSidebar").style.transform = "translateX(100%)";
+    const sidebar = document.getElementById("notificationSidebar");
+    if (sidebar) sidebar.style.transform = "translateX(100%)";
 };
 
-// 👤 Profile
+
+// ================= 👤 PROFILE =================
 window.toggleProfileMenu = function () {
     const menu = document.getElementById("profileMenu");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
+    if (menu) {
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
 };
 
-// Close outside
+
+// Close outside click
 document.addEventListener("click", function (e) {
     const profile = document.querySelector(".profile");
     const menu = document.getElementById("profileMenu");
 
-    if (profile && !profile.contains(e.target)) {
+    if (profile && menu && !profile.contains(e.target)) {
         menu.style.display = "none";
     }
 });
 
-// 🔐 Logout
+
+// ================= 🔐 LOGOUT =================
 window.openLogoutModal = function () {
     document.getElementById("confirmLogoutModal").style.display = "flex";
 };
@@ -110,7 +184,8 @@ window.confirmLogout = function () {
     }, 800);
 };
 
-// 🚀 Navigation
+
+// ================= 🚀 NAVIGATION =================
 window.navigatePage = function (page) {
     const container = document.getElementById("pageContainer");
 
@@ -126,9 +201,9 @@ window.navigatePage = function (page) {
 };
 
 
+// ================= ACTIVE NAV =================
 function setActiveNav() {
     const links = document.querySelectorAll(".nav-link");
-
     const currentPage = window.location.pathname.split("/").pop();
 
     links.forEach(link => {
@@ -136,7 +211,6 @@ function setActiveNav() {
 
         if (!onclick) return;
 
-        // extract page name from onclick
         const match = onclick.match(/'(.*?)'/);
 
         if (match && match[1] === currentPage) {

@@ -32,66 +32,8 @@
 
     </script>
 
-    <nav class="navbar">
-
-        <!-- LEFT -->
-        <div class="nav-left">
-
-            <img src="../image/SARRS_circle_logo_removebg.png" class="nav-logo">
-
-            <div class="logo-text">
-                <span class="main-title">SARRS Dashboard</span>
-                <span class="sub-title">Street Animal Rescue System</span>
-            </div>
-
-        </div>
-
-        <!-- CENTER -->
-        <div class="nav-center">
-            <a href="home_screen.html" class="nav-link active">Home</a>
-            <a href="#" class="nav-link" onclick="navigatePage('volunteers.html')">Volunteers</a>
-            <a href="#" class="nav-link" onclick="navigatePage('add_volunteer.html')">Add Volunteer</a>
-            <a href="#" class="nav-link" onclick="navigatePage('history_reports.html')">History</a>
-        </div>
-
-        <!-- RIGHT -->
-        <div class="nav-right">
-
-            <!-- 🔔 Notification -->
-            <div class="notification" onclick="openSidebar()">
-                🔔
-                <span class="badge">3</span>
-            </div>
-
-            <!-- 👤 Profile -->
-            <div class="profile">
-
-                <div class="profile-icon" onclick="toggleProfileMenu()"> 👤 </div>
-
-                <!-- ✅ Dropdown -->
-                <div class="profile-menu" id="profileMenu">
-
-                    <!-- Profile Top -->
-                    <div class="profile-top">
-                        <div class="avatar">A</div>
-                        <h3>Admin</h3>
-                        <p>admin@email.com</p>
-                    </div>
-
-                    <hr>
-
-                    <!-- Actions -->
-                    <div class="menu-item">⚙️ Settings</div>
-                    <div class="menu-item logout" onclick="openLogoutModal()">⏻ Logout</div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-    </nav>
+    <!-- ✅ REUSABLE NAVBAR -->
+    <div id="navbarContainer"></div>
 
     <div id="pageContainer" class="page-container">
 
@@ -171,21 +113,6 @@
 
         </div>
 
-        <!-- Notification Sidebar -->
-        <div id="notificationSidebar" class="notification-sidebar">
-
-            <div class="notification-header">
-                <h3>Notifications</h3>
-                <span class="close-btn" onclick="closeSidebar()">✕</span>
-            </div>
-
-            <ul class="notification-list">
-                <li>🐾 New rescue request received</li>
-                <li>✅ Report approved</li>
-                <li>📍 New report near your area</li>
-            </ul>
-
-        </div>
 
 
         <!-- Drawer -->
@@ -349,8 +276,6 @@
             <p>Logging out...</p>
         </div>
 
-        <script type="module" src="../js/home_screen.js"></script>
-
 
         <!-- ✅ Confirm Logout Modal -->
         <div id="confirmLogoutModal" class="logout-modal">
@@ -368,18 +293,13 @@
         </div>
     </div>
 
-    <script>
-        function navigatePage(page) {
-            const container = document.getElementById("pageContainer");
+    <script type="module">
+            import "../js/navbar.js";
+            import "../js/home_screen.js";
 
-            // slide out
-            container.classList.add("slide-out");
+            loadNavbar(); // 🔥 MUST CALL
+        </script>
 
-            setTimeout(() => {
-                window.location.href = page;
-            }, 300);
-        }
-    </script>
 </body>
 
 </html>
