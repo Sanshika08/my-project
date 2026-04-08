@@ -79,17 +79,22 @@ function setupNotifications() {
             const icon = getNotificationIcon(data.body);
 
             li.innerHTML = `
-    <div class="notif-avatar">${icon}</div>
+             <div class="notif-avatar">${icon}</div>
 
-    <div class="notif-body">
-        <div class="notif-title">${data.title || "Animal Alert"}</div>
-        <div class="notif-message">${data.body || "New update"}</div>
+                <div class="notif-body">
+                        <div class="notif-title">${data.title || "Animal Alert"}</div>
+                        <div class="notif-message">${data.body || "New update"}</div>
 
-        <div class="notif-footer">
-            <span class="notif-time">${formatTime(data.createdAt)}</span>
-        </div>
-    </div>
-`;
+                        <div class="notif-footer">
+                            <span class="notif-time">${formatTime(data.createdAt)}</span>
+                        </div>
+                </div>
+                `;
+            li.onclick = () => {
+                if (data.reportId) {
+                    window.location.href = `report_details.html?id=${data.reportId}`;
+                }
+            };
 
             list.appendChild(li);
         });

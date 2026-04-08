@@ -18,6 +18,8 @@ import {
 const params = new URLSearchParams(window.location.search);
 const reportId = params.get("id");
 
+console.log("Opened report ID:", reportId);
+
 // GLOBAL
 let reportLat = null;
 let reportLng = null;
