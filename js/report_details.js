@@ -165,7 +165,27 @@ function loadReport() {
 
             // 📸 Image
             const resolvedImage = document.getElementById("resolvedImage");
+            const loader = document.getElementById("resolvedImageLoader");
+
+            // 🔄 show loader first
+            resolvedImage.style.display = "none";
+            loader.style.display = "flex";
+
+            // set image
             resolvedImage.src = data.resolutionImage || "";
+
+            // ✅ when image loads
+            resolvedImage.onload = function () {
+                loader.style.display = "none";
+                resolvedImage.style.display = "block";
+            };
+
+            // ❌ if image fails
+            resolvedImage.onerror = function () {
+                loader.style.display = "none";
+                resolvedImage.src = "../image/no-image.png";
+                resolvedImage.style.display = "block";
+            };
 
             // 📝 Note
             const resolvedNote = document.getElementById("resolvedNote");
