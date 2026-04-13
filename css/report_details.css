@@ -683,3 +683,10 @@ background:#0284c7;
     padding: 10px;
     border-radius: 6px;
 }
+
+.preview-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}

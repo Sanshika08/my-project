@@ -21,6 +21,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
 
 const storage = getStorage();
+let selectedFiles = [];
 
 
 // GET REPORT ID FROM URL
@@ -164,28 +165,41 @@ function loadReport() {
             resolvedDisplay.style.display = "block";
 
             // 📸 Image
-            const resolvedImage = document.getElementById("resolvedImage");
+            const container = document.getElementById("resolvedImageContainer");
             const loader = document.getElementById("resolvedImageLoader");
 
-            // 🔄 show loader first
-            resolvedImage.style.display = "none";
+            // show loader first
             loader.style.display = "flex";
+            container.innerHTML = "";
 
-            // set image
-            resolvedImage.src = data.resolutionImage || "";
+            const images = data.resolutionImages || [];
 
-            // ✅ when image loads
-            resolvedImage.onload = function () {
+            if (images.length === 0) {
                 loader.style.display = "none";
-                resolvedImage.style.display = "block";
-            };
+                container.innerHTML = "<p>No images uploaded</p>";
+            } else {
+                images.forEach((url) => {
 
-            // ❌ if image fails
-            resolvedImage.onerror = function () {
-                loader.style.display = "none";
-                resolvedImage.src = "../image/no-image.png";
-                resolvedImage.style.display = "block";
-            };
+                    const img = document.createElement("img");
+                    img.src = url;
+
+                    img.style.width = "120px";
+                    img.style.height = "120px";
+                    img.style.objectFit = "cover";
+                    img.style.borderRadius = "8px";
+                    img.style.marginRight = "10px";
+
+                    img.onload = () => {
+                        loader.style.display = "none";
+                    };
+
+                    img.onerror = () => {
+                        loader.style.display = "none";
+                    };
+
+                    container.appendChild(img);
+                });
+            }
 
             // 📝 Note
             const resolvedNote = document.getElementById("resolvedNote");
@@ -214,7 +228,8 @@ function loadReport() {
         }
 
     });
-    document.getElementById("resolutionWarning").style.display = "none";
+    const warning = document.getElementById("resolutionWarning");
+    if (warning) warning.style.display = "none";
 }
 
 
@@ -457,26 +472,35 @@ window.toggleStatus = async function () {
         const imageInput = document.getElementById("resolutionImageInput");
         const note = document.getElementById("resolutionNote").value || "";
 
-        const file = imageInput.files[0];
-
         const warning = document.getElementById("resolutionWarning");
 
-        if (!file) {
+        const files = selectedFiles;
+
+        if (files.length === 0) {
             warning.style.display = "block";
             return;
         }
 
-        // ✅ hide when valid
         warning.style.display = "none";
 
-        // 🔥 CREATE STORAGE PATH
-        const storageRef = ref(storage, `resolution_images/${reportId}_${Date.now()}`);
+        // 🔥 upload all images
+        const imageUrls = [];
 
-        // 🔥 UPLOAD FILE
-        const snapshot = await uploadBytes(storageRef, file);
+        for (const file of files) {
 
-        // 🔥 GET DOWNLOAD URL
-        const imageUrl = await getDownloadURL(snapshot.ref);
+            const storageRef = ref(
+                storage,
+                `resolution_images/${reportId}_${Date.now()}_${file.name}`
+            );
+
+            const snapshot = await uploadBytes(storageRef, file);
+            const url = await getDownloadURL(snapshot.ref);
+
+            imageUrls.push(url);
+        }
+
+
+
 
         const updateData = {
             status: newStatus,
@@ -484,7 +508,7 @@ window.toggleStatus = async function () {
             resolvedAt: serverTimestamp(),
 
             // 🔥 NEW FIELDS
-            resolutionImage: imageUrl,
+            resolutionImages: imageUrls,
             resolutionNote: note
         };
 
@@ -640,43 +664,85 @@ window.viewVolunteer = function () {
 
 
 const imageInput = document.getElementById("resolutionImageInput");
-const preview = document.getElementById("resolutionPreview");
-const removeBtn = document.getElementById("removeImageBtn");
+const previewContainer = document.getElementById("previewContainer");
 
 if (imageInput) {
     imageInput.addEventListener("change", function () {
 
-        const file = this.files[0];
+        const newFiles = Array.from(this.files);
 
-        if (file) {
-            const reader = new FileReader();
+        // ✅ ADD instead of replace
+        selectedFiles = [...selectedFiles, ...newFiles];
 
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-                preview.style.display = "block";
-                removeBtn.style.display = "block";
+        renderPreviews();
 
-                // 🔥 ALWAYS hide warning after selecting image
-                const warning = document.getElementById("resolutionWarning");
-                if (warning) warning.style.display = "none";
-            };
+        // 🔥 reset input
+        imageInput.value = "";
 
-            reader.readAsDataURL(file);
-        }
+        // hide warning
+        const warning = document.getElementById("resolutionWarning");
+        if (warning) warning.style.display = "none";
     });
 }
 
-// ❌ REMOVE IMAGE LOGIC
-if (removeBtn) {
-    removeBtn.addEventListener("click", () => {
 
-        imageInput.value = "";              // clear file input
-        preview.src = "";
-        preview.style.display = "none";
-        removeBtn.style.display = "none";
+function renderPreviews() {
 
-        // 🔥 hide warning if previously shown
-        const warning = document.getElementById("resolutionWarning");
-        if (warning) warning.style.display = "none";
+    previewContainer.innerHTML = "";
+
+    selectedFiles.forEach((file, index) => {
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+
+            // 📦 WRAPPER (FIXED CARD)
+            const wrapper = document.createElement("div");
+            wrapper.style.position = "relative";
+            wrapper.style.width = "120px";
+            wrapper.style.height = "120px";
+            wrapper.style.borderRadius = "10px";
+            wrapper.style.overflow = "hidden"; // 🔥 VERY IMPORTANT
+            wrapper.style.boxShadow = "0 2px 6px rgba(0,0,0,0.15)";
+
+            // 🖼 IMAGE
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.style.width = "100%";
+            img.style.height = "100%";
+            img.style.objectFit = "cover";
+            img.style.display = "block";
+
+            // ❌ REMOVE BUTTON
+            const removeBtn = document.createElement("button");
+            removeBtn.innerText = "×";
+
+            removeBtn.style.position = "absolute";
+            removeBtn.style.top = "6px";
+            removeBtn.style.right = "6px";
+            removeBtn.style.background = "rgba(255,0,0,0.9)";
+            removeBtn.style.color = "white";
+            removeBtn.style.border = "none";
+            removeBtn.style.borderRadius = "50%";
+            removeBtn.style.width = "22px";
+            removeBtn.style.height = "22px";
+            removeBtn.style.fontSize = "14px";
+            removeBtn.style.cursor = "pointer";
+            removeBtn.style.display = "flex";
+            removeBtn.style.alignItems = "center";
+            removeBtn.style.justifyContent = "center";
+
+            // 🔥 REMOVE LOGIC
+            removeBtn.onclick = () => {
+                selectedFiles.splice(index, 1);
+                renderPreviews();
+            };
+
+            wrapper.appendChild(img);
+            wrapper.appendChild(removeBtn);
+            previewContainer.appendChild(wrapper);
+        };
+
+        reader.readAsDataURL(file);
     });
 }

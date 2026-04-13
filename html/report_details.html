@@ -136,20 +136,12 @@
 
                     <label><b>Upload Proof (Required)</b></label>
 
-                    <!-- UPLOAD BOX -->
                     <div class="upload-box">
-                        <input type="file" id="resolutionImageInput" accept="image/*">
+                        <input type="file" id="resolutionImageInput" accept="image/*" multiple>
                     </div>
 
-                    <!-- IMAGE PREVIEW + REMOVE -->
-                    <div class="preview-wrapper">
-
-                        <img id="resolutionPreview" class="resolution-preview" />
-
-                        <!-- ❌ REMOVE BUTTON -->
-                        <button id="removeImageBtn" class="remove-btn">✕</button>
-
-                    </div>
+                    <!-- ✅ ONLY THIS -->
+                    <div id="previewContainer" class="preview-grid"></div>
 
                 </div>
 
@@ -180,7 +172,7 @@
                         <div id="resolvedImageLoader" class="image-loader"></div>
 
                         <!-- IMAGE -->
-                        <img id="resolvedImage" />
+                        <div id="resolvedImageContainer" class="preview-grid"></div>
 
                     </div>
 
