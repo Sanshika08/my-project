@@ -169,7 +169,7 @@ function loadReport() {
             const loader = document.getElementById("resolvedImageLoader");
 
             // show loader first
-            loader.style.display = "flex";
+            
             container.innerHTML = "";
 
             const images = data.resolutionImages || [];
@@ -179,43 +179,65 @@ function loadReport() {
                 container.innerHTML = "<p>No images uploaded</p>";
             } else {
 
-                let loadedCount = 0;
+                
 
                 images.forEach((url) => {
 
+                    // 📦 WRAPPER
+                    const wrapper = document.createElement("div");
+                    wrapper.style.position = "relative";
+                    wrapper.style.width = "120px";
+                    wrapper.style.height = "120px";
+                    wrapper.style.borderRadius = "10px";
+                    wrapper.style.overflow = "hidden";
+                    wrapper.style.marginRight = "10px";
+                    wrapper.style.background = "#f5f5f5";
+
+                    // 🔄 LOADER (centered)
+                    const loader = document.createElement("div");
+                    loader.style.position = "absolute";
+                    loader.style.top = "50%";
+                    loader.style.left = "50%";
+                    loader.style.transform = "translate(-50%, -50%)";
+                    loader.style.width = "28px";
+                    loader.style.height = "28px";
+                    loader.style.border = "3px solid #ddd";
+                    loader.style.borderTop = "3px solid #4CAF50";
+                    loader.style.borderRadius = "50%";
+                    loader.style.animation = "spin 1s linear infinite";
+
+                    // 🖼 IMAGE
                     const img = document.createElement("img");
                     img.src = url;
 
-                    img.style.width = "120px";
-                    img.style.height = "120px";
+                    img.style.width = "100%";
+                    img.style.height = "100%";
                     img.style.objectFit = "cover";
-                    img.style.borderRadius = "8px";
-                    img.style.marginRight = "10px";
+                    img.style.display = "none"; // hide until loaded
 
+                    // ✅ LOAD SUCCESS
                     img.onload = () => {
-                        loadedCount++;
-
-                        // ✅ hide loader ONLY after all images loaded
-                        if (loadedCount === images.length) {
-                            loader.style.display = "none";
-                        }
+                        loader.style.display = "none";
+                        img.style.display = "block";
                     };
 
+                    // ❌ LOAD FAIL
                     img.onerror = () => {
-                        loadedCount++;
-                        if (loadedCount === images.length) {
-                            loader.style.display = "none";
-                        }
+                        loader.style.display = "none";
+                        img.style.display = "block";
                     };
 
+                    // 🔍 CLICK TO VIEW
                     img.style.cursor = "pointer";
-
                     img.onclick = () => {
                         window._imageModal.style.display = "block";
                         window._modalImg.src = url;
                     };
 
-                    container.appendChild(img);
+                    // 📌 APPEND
+                    wrapper.appendChild(loader);
+                    wrapper.appendChild(img);
+                    container.appendChild(wrapper);
                 });
             }
 
