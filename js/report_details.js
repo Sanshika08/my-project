@@ -178,6 +178,9 @@ function loadReport() {
                 loader.style.display = "none";
                 container.innerHTML = "<p>No images uploaded</p>";
             } else {
+
+                let loadedCount = 0;
+
                 images.forEach((url) => {
 
                     const img = document.createElement("img");
@@ -190,11 +193,26 @@ function loadReport() {
                     img.style.marginRight = "10px";
 
                     img.onload = () => {
-                        loader.style.display = "none";
+                        loadedCount++;
+
+                        // ✅ hide loader ONLY after all images loaded
+                        if (loadedCount === images.length) {
+                            loader.style.display = "none";
+                        }
                     };
 
                     img.onerror = () => {
-                        loader.style.display = "none";
+                        loadedCount++;
+                        if (loadedCount === images.length) {
+                            loader.style.display = "none";
+                        }
+                    };
+
+                    img.style.cursor = "pointer";
+
+                    img.onclick = () => {
+                        window._imageModal.style.display = "block";
+                        window._modalImg.src = url;
                     };
 
                     container.appendChild(img);
@@ -203,7 +221,7 @@ function loadReport() {
 
             // 📝 Note
             const resolvedNote = document.getElementById("resolvedNote");
-            resolvedNote.innerText = data.resolutionNote || "No details provided.";
+            resolvedNote.innerText = data.resolutionNote || "No resolution note added.";
 
             // 🕒 Time
             const resolvedTime = document.getElementById("resolvedTime");
@@ -746,3 +764,25 @@ function renderPreviews() {
         reader.readAsDataURL(file);
     });
 }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("modalImage");
+    const closeBtn = document.getElementById("closeModal");
+
+    closeBtn.onclick = () => {
+        modal.style.display = "none";
+    };
+
+    window.onclick = (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    // 🔥 MAKE GLOBAL (IMPORTANT)
+    window._imageModal = modal;
+    window._modalImg = modalImg;
+});
