@@ -13,7 +13,7 @@
 
 <body>
 
-    
+
     <!-- MAIN CONTENT -->
     <div class="main">
 
@@ -119,6 +119,74 @@
                         <button class="view-volunteer-btn" onclick="viewVolunteer()">
                             View
                         </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================= RESOLUTION SECTION ================= -->
+            <div id="resolutionContainer" class="assign-container" style="display:none;">
+
+                <h3 class="assign-title">Resolution Details</h3>
+
+                <!-- 📸 IMAGE UPLOAD -->
+                <div class="assign-row resolution-upload">
+
+                    <label><b>Upload Proof (Required)</b></label>
+
+                    <!-- UPLOAD BOX -->
+                    <div class="upload-box">
+                        <input type="file" id="resolutionImageInput" accept="image/*">
+                    </div>
+
+                    <!-- IMAGE PREVIEW + REMOVE -->
+                    <div class="preview-wrapper">
+
+                        <img id="resolutionPreview" class="resolution-preview" />
+
+                        <!-- ❌ REMOVE BUTTON -->
+                        <button id="removeImageBtn" class="remove-btn">✕</button>
+
+                    </div>
+
+                </div>
+
+                <!-- 📝 NOTE -->
+                <div class="resolution-note">
+                    <label><b>Resolution Note (Optional)</b></label>
+
+                    <textarea id="resolutionNote" placeholder="Describe what action was taken..."></textarea>
+                </div>
+
+                <!-- ⚠ WARNING -->
+                <p id="resolutionWarning" class="resolve-warning">
+                    ⚠ Please upload proof before marking as resolved
+                </p>
+
+            </div>
+
+            <!-- ================= SHOW RESOLUTION ================= -->
+            <div id="resolvedDisplay" class="assign-container" style="display:none;">
+
+                <h3 class="assign-title">Resolution Proof</h3>
+
+                <div class="resolved-grid">
+
+                    <!-- LEFT: IMAGE -->
+                    <div class="resolved-image-box">
+                        <img id="resolvedImage" />
+                    </div>
+
+                    <!-- RIGHT: DETAILS -->
+                    <div class="resolved-details">
+
+                        <h4>Resolution Note</h4>
+                        <p id="resolvedNote"></p>
+
+                        <h4 style="margin-top:15px;">Resolved On</h4>
+                        <p id="resolvedTime"></p>
 
                     </div>
 

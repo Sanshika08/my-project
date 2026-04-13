@@ -13,6 +13,15 @@ import {
     where
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
+import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
+
+const storage = getStorage();
+
 
 // GET REPORT ID FROM URL
 const params = new URLSearchParams(window.location.search);
@@ -94,6 +103,14 @@ function loadReport() {
             statusBadge.classList.add("resolved");
         }
 
+        const resolutionContainer = document.getElementById("resolutionContainer");
+
+        if (data.status === "Assigned") {
+            resolutionContainer.style.display = "block";
+        } else {
+            resolutionContainer.style.display = "none";
+        }
+
         // ================= VOLUNTEER =================
         const resolveBtn = document.getElementById("resolveBtn");
         const shareBtn = document.getElementById("shareBtn");
@@ -139,7 +156,45 @@ function loadReport() {
             document.getElementById("reportTimeAgo").innerText = "-";
         }
 
+        // ================= RESOLUTION DETAILS =================
+        const resolvedDisplay = document.getElementById("resolvedDisplay");
+
+        if (data.status === "Resolved") {
+
+            resolvedDisplay.style.display = "block";
+
+            // 📸 Image
+            const resolvedImage = document.getElementById("resolvedImage");
+            resolvedImage.src = data.resolutionImage || "";
+
+            // 📝 Note
+            const resolvedNote = document.getElementById("resolvedNote");
+            resolvedNote.innerText = data.resolutionNote || "No details provided.";
+
+            // 🕒 Time
+            const resolvedTime = document.getElementById("resolvedTime");
+
+            if (data.resolvedAt?.toDate) {
+                const dateObj = data.resolvedAt.toDate();
+
+                const formatted = dateObj.toLocaleString("en-IN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true // 🔥 THIS ADDS AM/PM
+                });
+
+                resolvedTime.innerText = "Resolved on: " + formatted;
+            }
+
+        } else {
+            resolvedDisplay.style.display = "none";
+        }
+
     });
+    document.getElementById("resolutionWarning").style.display = "none";
 }
 
 
@@ -378,10 +433,39 @@ window.toggleStatus = async function () {
 
         const newStatus = "Resolved";
 
+        // 🔥 GET FILE + NOTE
+        const imageInput = document.getElementById("resolutionImageInput");
+        const note = document.getElementById("resolutionNote").value || "";
+
+        const file = imageInput.files[0];
+
+        const warning = document.getElementById("resolutionWarning");
+
+        if (!file) {
+            warning.style.display = "block";
+            return;
+        }
+
+        // ✅ hide when valid
+        warning.style.display = "none";
+
+        // 🔥 CREATE STORAGE PATH
+        const storageRef = ref(storage, `resolution_images/${reportId}_${Date.now()}`);
+
+        // 🔥 UPLOAD FILE
+        const snapshot = await uploadBytes(storageRef, file);
+
+        // 🔥 GET DOWNLOAD URL
+        const imageUrl = await getDownloadURL(snapshot.ref);
+
         const updateData = {
             status: newStatus,
             updatedAt: serverTimestamp(),
-            resolvedAt: serverTimestamp()
+            resolvedAt: serverTimestamp(),
+
+            // 🔥 NEW FIELDS
+            resolutionImage: imageUrl,
+            resolutionNote: note
         };
 
         await updateDoc(reportRef, updateData);
@@ -398,7 +482,7 @@ window.toggleStatus = async function () {
     } catch (error) {
 
         console.error("Status update failed:", error);
-        alert("Failed to update status.");
+        alert(error.message);
 
     }
 
@@ -518,6 +602,8 @@ window.assignVolunteer = async function () {
         alert("Failed to assign volunteer");
     }
 };
+
+
 window.viewVolunteer = function () {
 
     const volunteer = document.getElementById("assignedVolunteer").innerText;
@@ -532,3 +618,45 @@ window.viewVolunteer = function () {
 };
 
 
+
+const imageInput = document.getElementById("resolutionImageInput");
+const preview = document.getElementById("resolutionPreview");
+const removeBtn = document.getElementById("removeImageBtn");
+
+if (imageInput) {
+    imageInput.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = "block";
+                removeBtn.style.display = "block";
+
+                // 🔥 ALWAYS hide warning after selecting image
+                const warning = document.getElementById("resolutionWarning");
+                if (warning) warning.style.display = "none";
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+// ❌ REMOVE IMAGE LOGIC
+if (removeBtn) {
+    removeBtn.addEventListener("click", () => {
+
+        imageInput.value = "";              // clear file input
+        preview.src = "";
+        preview.style.display = "none";
+        removeBtn.style.display = "none";
+
+        // 🔥 hide warning if previously shown
+        const warning = document.getElementById("resolutionWarning");
+        if (warning) warning.style.display = "none";
+    });
+}
