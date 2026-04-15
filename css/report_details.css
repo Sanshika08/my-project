@@ -727,3 +727,59 @@ background:#0284c7;
   0% { transform: translate(-50%, -50%) rotate(0deg); }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
+
+
+/* 🔥 MULTI IMAGE ROW (LIKE GALLERY) */
+
+
+/* 🔥 SMART GRID + SCROLL */
+.image-slider {
+    display: flex;
+    overflow-x: auto;
+    gap: 16px;
+    padding: 16px;
+}
+
+/* scrollbar */
+.image-slider::-webkit-scrollbar {
+    height: 6px;
+}
+.image-slider::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+/* 🔥 BIGGER IMAGES */
+.image-slider div {
+    flex: 0 0 320px;   /* 👈 FIXED BIG SIZE */
+    height: 200px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #eee;
+}
+
+/* 📱 responsive */
+@media (max-width: 768px) {
+    .image-slider div {
+        flex: 0 0 240px;
+        height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .image-slider div {
+        flex: 0 0 85%;
+        height: 180px;
+    }
+}
+
+.image-slider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-slider div:hover img {
+    transform: scale(1.05);
+    transition: 0.3s ease;
+}

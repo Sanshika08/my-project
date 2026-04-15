@@ -72,23 +72,63 @@ function loadReport() {
         reportLat = data.location?.latitude || null;
         reportLng = data.location?.longitude || null;
 
-        // ================= IMAGE =================
-        const image = document.getElementById("animalImage");
+        // ================= IMAGES (MULTIPLE SUPPORT) =================
+        const container = document.getElementById("animalImageContainer");
         const loader = document.getElementById("imageLoader");
 
-        image.src = data.imageUrl || "../image/no-image.png";
+        let images = [];
 
-        image.onload = function () {
-            loader.style.display = "none";
-            image.style.display = "block";
-            image.style.opacity = "1";
-        };
+        // ✅ HANDLE BOTH OLD + NEW DATA
+        if (data.imageUrls && Array.isArray(data.imageUrls)) {
+            images = data.imageUrls;
+        } else if (data.imageUrl) {
+            images = Array.isArray(data.imageUrl)
+                ? data.imageUrl
+                : [data.imageUrl];
+        }
 
-        image.onerror = function () {
+        // ✅ PREVENT RE-RENDER (IMPORTANT)
+        const prevImages = container.dataset.images;
+
+        if (prevImages === JSON.stringify(images)) {
+            return; // 🔥 STOP if same images
+        }
+
+        // ✅ SAVE CURRENT STATE
+        container.dataset.images = JSON.stringify(images);
+
+        // NOW SAFE TO CLEAR
+        container.innerHTML = "";
+
+        // ❌ NO IMAGE
+        if (images.length === 0) {
             loader.style.display = "none";
-            image.src = "../image/no-image.png";
-            image.style.display = "block";
-        };
+            container.innerHTML = `
+        <img src="../image/no-image.png"
+        style="width:100%; height:100%; object-fit:cover;">
+    `;
+        }
+        else {
+            images.forEach((url) => {
+
+                const wrapper = document.createElement("div");
+
+                const img = document.createElement("img");
+                img.src = url;
+
+                img.onload = () => {
+                    loader.style.display = "none";
+                };
+
+                img.onerror = () => {
+                    img.src = "../image/no-image.png";
+                    loader.style.display = "none";
+                };
+
+                wrapper.appendChild(img);
+                container.appendChild(wrapper);
+            });
+        }
 
         // ================= STATUS =================
         const statusBadge = document.getElementById("statusBadge");
@@ -169,7 +209,7 @@ function loadReport() {
             const loader = document.getElementById("resolvedImageLoader");
 
             // show loader first
-            
+
             container.innerHTML = "";
 
             const images = data.resolutionImages || [];
@@ -179,7 +219,7 @@ function loadReport() {
                 container.innerHTML = "<p>No images uploaded</p>";
             } else {
 
-                
+
 
                 images.forEach((url) => {
 

@@ -92,7 +92,21 @@ function setupNotifications() {
 
         list.innerHTML = "";
 
+        // 🔥 HANDLE EMPTY STATE
+        if (snapshot.empty) {
+            list.innerHTML = `
+        <div style="padding:20px;text-align:center;color:#aaa;">
+            📭 No notifications
+        </div>
+    `;
+
+            if (badge) badge.style.display = "none";
+            return;
+        }
+
+        // ✅ ONLY ONE DECLARATION
         let unreadCount = 0;
+
 
         const groups = {
             today: [],
