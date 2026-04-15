@@ -74,7 +74,7 @@ function loadReport() {
 
         // ================= IMAGES (MULTIPLE SUPPORT) =================
         const container = document.getElementById("animalImageContainer");
-        const loader = document.getElementById("imageLoader");
+
 
         let images = [];
 
@@ -102,7 +102,6 @@ function loadReport() {
 
         // ❌ NO IMAGE
         if (images.length === 0) {
-            loader.style.display = "none";
             container.innerHTML = `
         <img src="../image/no-image.png"
         style="width:100%; height:100%; object-fit:cover;">
@@ -112,19 +111,47 @@ function loadReport() {
             images.forEach((url) => {
 
                 const wrapper = document.createElement("div");
+                wrapper.style.position = "relative";
+                wrapper.style.flex = "0 0 320px";
+                wrapper.style.height = "200px";
+                wrapper.style.borderRadius = "14px";
+                wrapper.style.overflow = "hidden";
+                wrapper.style.background = "#eee";
+
+                // 🔄 PER IMAGE LOADER
+                const loader = document.createElement("div");
+                loader.style.position = "absolute";
+                loader.style.top = "50%";
+                loader.style.left = "50%";
+                loader.style.transform = "translate(-50%, -50%)";
+                loader.style.width = "35px";
+                loader.style.height = "35px";
+                loader.style.border = "4px solid #ddd";
+                loader.style.borderTop = "4px solid #4CAF50";
+                loader.style.borderRadius = "50%";
+                loader.style.animation = "spin 1s linear infinite";
 
                 const img = document.createElement("img");
                 img.src = url;
+                img.style.width = "100%";
+                img.style.height = "100%";
+                img.style.objectFit = "cover";
+                img.style.display = "none"; // hide until loaded
 
+                // ✅ SUCCESS
                 img.onload = () => {
-                    loader.style.display = "none";
+                    loader.remove();
+                    img.style.display = "block";
                 };
 
+                // ❌ ERROR
                 img.onerror = () => {
+                    loader.remove();
                     img.src = "../image/no-image.png";
-                    loader.style.display = "none";
+                    img.style.display = "block";
                 };
 
+                wrapper.appendChild(loader);
                 wrapper.appendChild(img);
                 container.appendChild(wrapper);
             });
