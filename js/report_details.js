@@ -151,6 +151,13 @@ function loadReport() {
                     img.style.display = "block";
                 };
 
+                // 🔍 CLICK TO VIEW (ADD THIS)
+                img.style.cursor = "pointer";
+                img.onclick = () => {
+                    window._imageModal.style.display = "block";
+                    window._modalImg.src = url;
+                };
+
                 wrapper.appendChild(loader);
                 wrapper.appendChild(img);
                 container.appendChild(wrapper);
