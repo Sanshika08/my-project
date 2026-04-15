@@ -736,8 +736,9 @@ background:#0284c7;
 .image-slider {
     display: flex;
     overflow-x: auto;
-    gap: 16px;
-    padding: 16px;
+    gap: 12px; /* 🔥 better than margin */
+    scroll-behavior: smooth;
+    padding: 10px;
 }
 
 /* scrollbar */
@@ -782,4 +783,17 @@ background:#0284c7;
 .image-slider div:hover img {
     transform: scale(1.05);
     transition: 0.3s ease;
+}
+
+.tap-hint {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 12px;
+    color: #fffbfb;
+    background: rgba(27, 26, 26, 0.8);
+    padding: 4px 8px;
+    border-radius: 6px;
+    z-index: 5; 
+
 }

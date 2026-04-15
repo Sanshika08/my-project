@@ -113,10 +113,11 @@ function loadReport() {
                 const wrapper = document.createElement("div");
                 wrapper.style.position = "relative";
                 wrapper.style.flex = "0 0 320px";
-                wrapper.style.height = "200px";
+                wrapper.style.height = "280px";
                 wrapper.style.borderRadius = "14px";
                 wrapper.style.overflow = "hidden";
                 wrapper.style.background = "#eee";
+                wrapper.style.marginRight = "12px";
 
                 // 🔄 PER IMAGE LOADER
                 const loader = document.createElement("div");
