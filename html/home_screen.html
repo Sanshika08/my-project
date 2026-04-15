@@ -293,12 +293,16 @@
         </div>
     </div>
 
-    <script type="module">
-            import "../js/navbar.js";
-            import "../js/home_screen.js";
+    <div id="footerContainer"></div>
 
-            loadNavbar(); // 🔥 MUST CALL
-        </script>
+    <script type="module">
+        import "../js/navbar.js";
+        import "../js/home_screen.js";
+        import { loadFooter } from "../js/footer.js";
+
+        loadNavbar(); // 🔥 MUST CALL
+        loadFooter(); 
+    </script>
 
 </body>
 

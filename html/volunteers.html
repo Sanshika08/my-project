@@ -126,13 +126,18 @@
 
     </div>
 
+
+     <div id="footerContainer"></div>
+
     <!-- ✅ NAVBAR SCRIPT -->
     <script type="module" src="../js/navbar.js"></script>
     <script type="module">
         import "../js/navbar.js";
+        import { loadFooter } from "../js/footer.js";
 
         window.addEventListener("DOMContentLoaded", () => {
             window.loadNavbar();
+            loadFooter();
         });
     </script>
 

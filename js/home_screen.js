@@ -23,6 +23,8 @@ const tableBody = document.getElementById("tableBody");
 const tableLoader = document.getElementById("tableLoader");
 
 document.addEventListener("DOMContentLoaded", function () {
+
+  updateServerStatus();
   // Fade in page
   document.body.classList.add("fade-in");
 
@@ -895,5 +897,6 @@ window.addEventListener("load", () => {
     updateInsights(dailyData);
   }
 });
+
 
 
