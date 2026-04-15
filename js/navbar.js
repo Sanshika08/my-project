@@ -7,6 +7,11 @@ import { doc, getDoc, collection, query, orderBy, onSnapshot, getDocs }
     from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 import { updateDoc, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+
+
+let unsubscribeNotifications = null;
 
 
 // ================= USER PROFILE =================
@@ -56,12 +61,34 @@ function setupNotifications() {
 
     if (!list) return;
 
+    // 🔥 STOP OLD LISTENER FIRST
+    if (unsubscribeNotifications) {
+        unsubscribeNotifications();
+        unsubscribeNotifications = null;
+    }
+
+    const enabled = localStorage.getItem("notifications_enabled");
+
+    // 🔕 DISABLED STATE
+    if (enabled !== null && enabled === "false") {
+        list.innerHTML = `
+            <div style="padding:20px;text-align:center;color:#aaa;">
+                🔕 Notifications disabled
+            </div>
+        `;
+
+        if (badge) badge.style.display = "none";
+
+        return;
+    }
+
     const q = query(
         collection(db, "notifications"),
         orderBy("createdAt", "desc")
     );
 
-    onSnapshot(q, (snapshot) => {
+    // 🔥 STORE LISTENER
+    unsubscribeNotifications = onSnapshot(q, (snapshot) => {
 
         list.innerHTML = "";
 
@@ -97,7 +124,6 @@ function setupNotifications() {
                 groups.older.push({ docSnap, data });
             }
 
-            // ✅ COUNT UNREAD
             if (data.isRead !== true) unreadCount++;
         });
 
@@ -105,15 +131,9 @@ function setupNotifications() {
         renderGroup("Yesterday", groups.yesterday, list);
         renderGroup("Older", groups.older, list);
 
-        // 🔴 Update badge
         if (badge) {
             badge.innerText = unreadCount;
-
-            if (unreadCount === 0) {
-                badge.style.display = "none";
-            } else {
-                badge.style.display = "inline-block";
-            }
+            badge.style.display = unreadCount === 0 ? "none" : "inline-block";
         }
     });
 }
@@ -203,10 +223,92 @@ window.loadNavbar = async function () {
 
     setActiveNav();
 
-    // 🔥 ORDER MATTERS
     setupUserProfile();
-    setupNotifications();   // ✅ VERY IMPORTANT
+    setupNotifications();
+
+    // 🔥 ADD THIS LINE (VERY IMPORTANT)
+    setupNotificationControls();
 };
+
+// ================= NOTIFICATION TOGGLE & ALL CLEAR CONTROLS =================
+function setupNotificationControls() {
+    const toggle = document.getElementById("notifToggle");
+    const clearBtn = document.getElementById("clearAllBtn");
+
+    // ❌ If elements not found → stop
+    if (!toggle || !clearBtn) return;
+
+    // 🔔 Load saved state
+    const saved = localStorage.getItem("notifications_enabled");
+    if (saved !== null) {
+        toggle.checked = saved === "true";
+    }
+
+    // 🔔 Toggle logic
+    toggle.addEventListener("change", async (e) => {
+        const isEnabled = e.target.checked;
+
+        // ✅ SAVE FIRST (CRITICAL FIX)
+        localStorage.setItem("notifications_enabled", isEnabled);
+
+        if (!isEnabled) {
+            const confirmDisable = confirm(
+                "If you disable notifications, you will not receive updates. Are you sure?"
+            );
+
+            if (!confirmDisable) {
+                toggle.checked = true;
+                localStorage.setItem("notifications_enabled", true);
+                return;
+            }
+
+            if (unsubscribeNotifications) {
+                unsubscribeNotifications();
+                unsubscribeNotifications = null;
+            }
+
+            const list = document.getElementById("notificationList");
+            const badge = document.getElementById("notificationBadge");
+
+            if (list) {
+                list.innerHTML = `
+                <div style="padding:20px;text-align:center;color:#aaa;">
+                    🔕 Notifications disabled
+                </div>
+            `;
+            }
+
+            if (badge) badge.style.display = "none";
+        }
+
+        // ✅ ENABLE
+        else {
+            setupNotifications(); // now reads correct value ✅
+        }
+    });
+
+    // 🗑 Clear all
+    clearBtn.addEventListener("click", async () => {
+        const confirmDelete = confirm(
+            "Clear all notifications? This cannot be undone."
+        );
+
+        if (!confirmDelete) return;
+
+        const snapshot = await getDocs(collection(db, "notifications"));
+
+        const updates = [];
+
+        snapshot.forEach((docSnap) => {
+            updates.push(deleteDoc(doc(db, "notifications", docSnap.id)));
+        });
+
+        await Promise.all(updates);
+
+        document.getElementById("notificationList").innerHTML =
+            "<p style='padding:16px;color:#aaa;'>No notifications</p>";
+    });
+}
 
 
 // ================= 🔔 SIDEBAR =================
@@ -335,3 +437,7 @@ function setActiveNav() {
         }
     });
 }
+
+
+
+

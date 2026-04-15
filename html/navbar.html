@@ -49,9 +49,29 @@
 
 <!-- 🔔 Notification Sidebar -->
 <div id="notificationSidebar" class="notification-sidebar">
+
     <div class="notification-header">
         <h3>Notifications</h3>
         <span class="close-btn" onclick="closeSidebar()">✕</span>
+    </div>
+
+    <!-- 🔥 NEW: Controls -->
+    <div class="notification-controls">
+
+        <!-- Toggle -->
+        <div class="notif-toggle">
+            <span>Enable</span>
+            <label class="switch">
+                <input type="checkbox" id="notifToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Clear All -->
+        <button id="clearAllBtn" class="clear-btn">
+            🗑 Clear All
+        </button>
+
     </div>
 
     <div class="notification-divider"></div>
