@@ -472,3 +472,19 @@ body {
     50% { box-shadow: 0 0 25px rgba(59,130,246,0.8); }
     100% { box-shadow: 0 0 0px rgba(59,130,246,0.3); }
 }
+
+
+.search-results {
+    margin-top: 20px;
+}
+
+.search-results .vol-card {
+    margin-bottom: 15px;
+}
+
+
+.highlight-text {
+    background: transparent;
+    color: #3b82f6;
+    font-weight: 600;
+}

@@ -263,20 +263,80 @@ window.toggleStatus = async function (id, isChecked) {
 
 
 
-// 🔍 SEARCH
-window.searchVolunteers = function () {
-    const input = document.getElementById("volSearch").value.toLowerCase();
+// 🔍 SEARCH FUNCTION
+function searchVolunteers() {
+    const query = document.getElementById("volSearch").value.toLowerCase();
+    const allCards = document.querySelectorAll(".vol-card");
 
-    const cards = document.querySelectorAll(".vol-card");
+    const resultsContainer = document.getElementById("searchResults");
+    const mainContainer = document.getElementById("volunteerTable");
 
-    cards.forEach(card => {
-        const name = card.querySelector(".vol-name").innerText.toLowerCase();
-        const phone = card.querySelector(".vol-phone").innerText.toLowerCase();
+    const topSection = document.querySelector(".leaderboard-section");
+    const statsSection = document.querySelector(".vol-stats");
 
-        if (name.includes(input) || phone.includes(input)) {
-            card.style.display = "flex";
+    resultsContainer.innerHTML = "";
+
+    if (query === "") {
+        resultsContainer.style.display = "none";
+        mainContainer.style.display = "grid";
+
+        if (topSection) topSection.style.display = "block";
+        if (statsSection) statsSection.style.display = "flex";
+
+        // 🔥 Show all cards again
+        allCards.forEach(card => card.style.display = "block");
+
+        return;
+    }
+
+    let found = false;
+
+    allCards.forEach(card => {
+        const nameEl = card.querySelector(".vol-name");
+        const phoneEl = card.querySelector(".vol-phone");
+
+        const originalName = nameEl?.innerText || "";
+        const originalPhone = phoneEl?.innerText || "";
+
+        const name = originalName.toLowerCase();
+        const phone = originalPhone.toLowerCase();
+
+        // 🔁 Reset before applying highlight
+        if (nameEl) nameEl.innerText = originalName;
+        if (phoneEl) phoneEl.innerText = originalPhone;
+
+        if (name.includes(query) || phone.includes(query)) {
+
+            // 🔥 Highlight Name
+            if (nameEl) {
+                const regex = new RegExp(`(${query})`, "gi");
+                nameEl.innerHTML = originalName.replace(regex, `<span class="highlight-text">$1</span>`);
+            }
+
+            // 🔥 Highlight Phone
+            if (phoneEl) {
+                const regex = new RegExp(`(${query})`, "gi");
+                phoneEl.innerHTML = originalPhone.replace(regex, `<span class="highlight-text">$1</span>`);
+            }
+
+            card.style.display = "block";
+            found = true;
         } else {
             card.style.display = "none";
         }
     });
-};
+
+    // Hide top sections
+    if (topSection) topSection.style.display = "none";
+    if (statsSection) statsSection.style.display = "none";
+
+    mainContainer.style.display = "grid";
+
+    if (!found) {
+        resultsContainer.style.display = "block";
+        resultsContainer.innerHTML = "<p>No volunteer found</p>";
+    } else {
+        resultsContainer.style.display = "none";
+    }
+}
+window.searchVolunteers = searchVolunteers;
