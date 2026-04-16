@@ -89,7 +89,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
             const card = `
-<div class="vol-card">
+<div class="vol-card" data-name="${data.name}">
 
     <div class="vol-actions">
         <i class="fas fa-edit edit-btn" onclick="editVolunteer('${id}')"></i>
@@ -199,6 +199,23 @@ window.addEventListener("DOMContentLoaded", () => {
         if (inactiveEl) inactiveEl.innerText = inactive;
 
         loader.style.display = "none";
+        // 🔥 Highlight selected volunteer
+        if (selectedVolunteer) {
+            const cards = document.querySelectorAll(".vol-card");
+
+            cards.forEach(card => {
+                const name = card.getAttribute("data-name");
+
+                if (name?.toLowerCase() === selectedVolunteer?.toLowerCase()) {
+                    card.classList.add("highlight-vol");
+
+                    card.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+                }
+            });
+        }
     });
 
 });
