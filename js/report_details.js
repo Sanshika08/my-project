@@ -365,32 +365,88 @@ async function getVolunteerPhone(name) {
 
 
 function generateWhatsAppMessage() {
-
     if (!reportData) return null;
 
     const mapLink = reportLat && reportLng
         ? `https://www.google.com/maps?q=${reportLat},${reportLng}`
         : "Location not available";
 
-    return encodeURIComponent(`
-🚨 *SARRS Rescue Alert*
+    // ✅ Normalize images
+    let images = [];
+    if (Array.isArray(reportData.imageUrls)) {
+        images = reportData.imageUrls;
+    } else if (typeof reportData.imageUrls === "string") {
+        images = reportData.imageUrls.split(",");
+    } else if (reportData.imageUrl) {
+        images = Array.isArray(reportData.imageUrl)
+            ? reportData.imageUrl
+            : [reportData.imageUrl];
+    }
 
-🆔 Report ID: ${reportId}
+    const firstImage = images.length > 0 ? images[0] : null;
 
-🐾 Animal: ${reportData.animalType || "-"}
-⚠️ Case: ${reportData.caseType || "-"}
+    // ✅ Extra images — no leading \n
+    let extraImagesText = "";
+    if (images.length > 1) {
+        const remaining = images.slice(1, 3);
+        extraImagesText = remaining.map((url, i) =>
+            `📷 Photo ${i + 2}: ${url}`
+        ).join("\n");
 
-📝 Description:
-${reportData.description || "-"}
+        if (images.length > 3) {
+            extraImagesText += `\n+${images.length - 3} more photos`;
+        }
+    }
 
-📍 Location:
-${mapLink}
+    // ✅ Format date
+    let reportedOn = "-";
+    if (reportData.createdAt?.toDate) {
+        reportedOn = reportData.createdAt.toDate().toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true
+        });
+    }
 
-🖼 Image:
-${reportData.imageUrl || "No image"}
+    const volunteer = reportData.assignedVolunteer?.name || "Volunteer";
 
-👉 Please take action.
-`);
+    // ✅ Build lines array — filter out empty strings cleanly
+    const lines = [
+        `🚨 *SARRS Rescue Alert*`,
+        ``,
+        `Hi ${volunteer},`,
+        `A new rescue case has been assigned to you.`,
+        ``,
+        `📌 *Location:*`,
+        `${mapLink}`,
+        ``,
+        `🔢 *Report ID:* ${reportId}`,
+        ``,
+        `🐕 *Animal:* ${reportData.animalType || "-"}`,
+        `⚠️ *Case:* ${reportData.caseType || "-"}`,   // ✅ fixed emoji
+        `🕒 *Reported:* ${reportedOn}`,
+        ``,
+        `📝 *Details:*`,
+        `${reportData.description || "No description provided."}`,
+        ``,
+        firstImage ? `📸 *Photo 1:*\n${firstImage}` : `📷 No image provided`,
+    ];
+
+    // ✅ Add extra images only if they exist — no double blank lines
+    if (extraImagesText) {
+        lines.push(``);
+        lines.push(extraImagesText);
+    }
+
+    lines.push(``);
+    lines.push(`➡️ Please take action as soon as possible.`);
+    lines.push(``);
+    lines.push(`— *SARRS Team*`);
+
+    return encodeURIComponent(lines.join("\n"));
 }
 
 window.shareWithVolunteer = async function () {
