@@ -871,6 +871,14 @@ body.fade-out {
     transition: opacity 0.4s ease;
 }
 
+button:active {
+    transform: scale(0.98);
+}
+
+body.fade-out button {
+    pointer-events: none;
+}
+
 
 /* 🔥 IMAGE LOADING (HOME TABLE) */
 
@@ -1310,10 +1318,16 @@ body.fade-out {
     font-weight: 600;
     box-shadow: 0 6px 14px rgba(59, 130, 246, 0.4);
     transition: 0.2s;
+    cursor: pointer;
 }
 
 .primary-btn:hover {
+    background: #2563eb; /* slightly darker */
     transform: translateY(-2px);
+}
+
+.primary-btn:active {
+    transform: scale(0.98);
 }
 
 .secondary-btn {
@@ -1322,7 +1336,17 @@ body.fade-out {
     color: white;
     padding: 12px 20px;
     border-radius: 10px;
+     cursor: pointer;
 }
+.secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+}
+.secondary-btn:active {
+    transform: scale(0.98);
+}
+
 
 .hero-right {
     display: flex;

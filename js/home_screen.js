@@ -24,7 +24,7 @@ const tableLoader = document.getElementById("tableLoader");
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  updateServerStatus();
+  function updateServerStatus() {}
   // Fade in page
   document.body.classList.add("fade-in");
 
@@ -898,5 +898,40 @@ window.addEventListener("load", () => {
   }
 });
 
+// 🔥 Navigate to Volunteers Page
+function goToVolunteers() {
+    const btn = event.currentTarget;
+
+    // Remove hover effect instantly
+    btn.style.pointerEvents = "none";
+
+    document.body.classList.add("fade-out");
+
+    document.body.offsetHeight;
+
+    setTimeout(() => {
+        window.location.href = "volunteers.html";
+    }, 450);
+}
+
+window.goToVolunteers = goToVolunteers;
 
 
+
+
+// 🔥 Scroll to Reports Section
+function scrollToReports() {
+    const section = document.getElementById("reportsSection");
+
+    if (!section) return; // safety
+
+    section.scrollIntoView({ behavior: "smooth" });
+
+    section.style.boxShadow = "0 0 20px rgba(0,123,255,0.4)";
+
+    setTimeout(() => {
+        section.style.boxShadow = "none";
+    }, 1500);
+}
+
+window.scrollToReports = scrollToReports;

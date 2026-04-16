@@ -8,14 +8,10 @@
 
     <link rel="stylesheet" href="../css/navbar.css">
     <link rel="stylesheet" href="../css/home_screen.css">
-   
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        body {
-            opacity: 0;
-            transition: opacity 0.6s ease-in-out;
-        }
 
         body.fade-in {
             opacity: 1;
@@ -42,12 +38,16 @@
         <section class="hero">
 
             <div class="hero-content">
-                <h1>Animal Rescue Dashboard</h1>
+                <h1>Animal Rescue Operations Panel</h1>
                 <p>Manage reports, assign volunteers, and save lives faster.</p>
 
                 <div class="hero-actions">
-                    <button class="primary-btn">+ Add Report</button>
-                    <button class="secondary-btn">Manage Volunteers</button>
+                    <button class="primary-btn" onclick="scrollToReports()">
+                        View Active Cases
+                    </button>
+                    <button class="secondary-btn" onclick="goToVolunteers()">
+                        Manage Volunteers
+                    </button>
                 </div>
             </div>
 
@@ -195,7 +195,7 @@
 
         <div class="content-wrapper">
 
-            <div class="content-top">
+            <div class="content-top" id="reportsSection">
 
                 <!-- LEFT: FILTER BUTTONS -->
                 <div class="filter-box">
