@@ -17,16 +17,20 @@
     <div class="form-section">
       <h2>Authority Login</h2>
 
+      <p class="login-note">
+        🔒 Restricted access. Only authorized NGO staff and rescue authorities can log in.
+      </p>
+
       <div class="input-group">
         <label>Email</label>
         <input type="email" id="email" placeholder="Enter your email" required>
       </div>
 
       <div class="input-group password-wrapper">
-  <label>Password</label>
-  <input type="password" id="password" placeholder="Enter your password" required>
-  <span id="togglePassword" class="toggle-password">Show</span>
-</div>
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+        <span id="togglePassword" class="toggle-password">Show</span>
+      </div>
 
       <!-- 🔥 Removed onclick -->
       <button class="login-btn" id="loginBtn">
@@ -34,9 +38,15 @@
         <span id="btnLoader" class="loader" style="display:none;"></span>
       </button>
 
+      <p id="loginError" class="error-msg"></p>
+
     </div>
 
   </div>
+
+  <p class="login-footer">
+    © SARRS • Internal NGO System
+  </p>
 
   <script type="module" src="../js/login.js"></script>
 

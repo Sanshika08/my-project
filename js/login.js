@@ -5,8 +5,11 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase
 const loginBtn = document.getElementById("loginBtn");
 const btnText = document.getElementById("btnText");
 const btnLoader = document.getElementById("btnLoader");
+const errorEl = document.getElementById("loginError");
 
 loginBtn.addEventListener("click", async () => {
+
+   errorEl.innerText = ""; // ✅ clear old error
 
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -57,7 +60,7 @@ loginBtn.addEventListener("click", async () => {
     btnText.style.display = "inline";
     btnLoader.style.display = "none";
 
-    alert("Login failed: " + error.message);
+    errorEl.innerText = "Invalid email or unauthorized access";
   }
 });
 

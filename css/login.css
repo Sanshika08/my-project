@@ -32,7 +32,7 @@ body{
 }
 
 .image-section{
-  width:60%;
+  width:50%;
   background:url('../image/SARRS_circle_logo.png') no-repeat center;
   background-size:cover;
 
@@ -40,8 +40,8 @@ body{
 
 /* Form Side */
 .form-section{
-  width:60%;
-  padding:60px 40px;
+  width:50%;
+  padding:40px 30px;
   color:white;
   display:flex;
   flex-direction:column;
@@ -50,12 +50,12 @@ body{
 
 .form-section h2{
   text-align:center;
-  margin-bottom:70px;
+  margin-bottom:15px;
   font-size:50px;
 }
 
 .input-group{
-  margin-bottom:25px;
+  margin-bottom:18px;
 }
 
 .input-group label{
@@ -161,4 +161,31 @@ body{
 body {
   opacity: 1;
   transition: opacity 0.6s ease-in-out;
+}
+
+.login-note {
+  font-size: 13px;
+  color: #ddd;
+  text-align: center;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.error-msg {
+  color: #ff4d4f;
+  font-size: 13px;
+  margin-top: 12px;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.login-footer {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  pointer-events: none; /* prevents interference */
 }
