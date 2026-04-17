@@ -105,8 +105,14 @@ function formatDate(timestamp) {
 
     const date = timestamp.toDate();
 
-    return date.toLocaleString();
-
+    return date.toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",   // Apr instead of 04
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+    });
 }
 
 

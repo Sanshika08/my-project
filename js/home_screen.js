@@ -10,7 +10,7 @@ import { query, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/fireb
 function formatDateTime(date) {
   return date.toLocaleString("en-IN", {
     day: "2-digit",
-    month: "2-digit",
+    month: "short",   // Apr instead of 04
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
