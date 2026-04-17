@@ -172,3 +172,15 @@ tbody tr:hover {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+
+.vol-link {
+  color: inherit;   /* 🔥 same as normal text */
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.vol-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}

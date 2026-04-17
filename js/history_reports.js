@@ -76,7 +76,15 @@ async function loadHistoryReports() {
 
 <td>${formatDate(data.resolvedAt)}</td>
 
-<td>${data.assignedVolunteer?.name || "Not Assigned"}</td>
+<td>
+  ${data.assignedVolunteer?.name
+                    ? `<span class="vol-link"
+          onclick="openVolunteer('${data.assignedVolunteer.name}')">
+          ${data.assignedVolunteer.name}
+        </span>`
+                    : "Not Assigned"
+                }
+</td>
 
 <td>
 <button class="view-btn"
@@ -124,6 +132,11 @@ window.viewReport = function (id) {
 
 };
 
+// OPEN VOLUNTEER DETAILS
+window.openVolunteer = function (name) {
+    window.location.href = `volunteers.html?name=${encodeURIComponent(name)}`;
+};
+
 // SEARCH FUNCTION
 window.searchReports = function () {
 
@@ -146,3 +159,33 @@ window.searchReports = function () {
 
 // CALL FUNCTION ON PAGE LOAD
 loadHistoryReports();
+
+
+
+function highlightVolunteer() {
+
+    const selectedName = localStorage.getItem("selectedVolunteer");
+
+    if (!selectedName) return;
+
+    const cards = document.querySelectorAll(".vol-card");
+
+    cards.forEach(card => {
+
+        const name = card.querySelector(".vol-name")?.innerText;
+
+        if (name === selectedName) {
+
+            card.style.border = "2px solid #3b82f6";
+            card.style.boxShadow = "0 0 15px rgba(59,130,246,0.4)";
+
+            card.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
+    });
+
+    // 🔥 Clear after use
+    localStorage.removeItem("selectedVolunteer");
+}
