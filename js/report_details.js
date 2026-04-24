@@ -59,6 +59,16 @@ function loadReport() {
         }
 
         const data = reportSnap.data();
+        if (data.status === "Resolved" && window._isResolving) {
+
+            window._isResolving = false;
+
+            const resolveBtn = document.getElementById("resolveBtn");
+            resolveBtn.disabled = true;
+            resolveBtn.innerHTML = "✔ Resolved";
+
+            alert("✅ Case marked as resolved successfully!");
+        }
         reportData = data; // ✅ GLOBAL STORE
 
         // ================= BASIC DATA =================
@@ -75,7 +85,6 @@ function loadReport() {
         // ================= IMAGES (MULTIPLE SUPPORT) =================
         const container = document.getElementById("animalImageContainer");
 
-
         let images = [];
 
         // ✅ HANDLE BOTH OLD + NEW DATA
@@ -87,82 +96,77 @@ function loadReport() {
                 : [data.imageUrl];
         }
 
-        // ✅ PREVENT RE-RENDER (IMPORTANT)
-        const prevImages = container.dataset.images;
+        const currentImages = JSON.stringify(images);
+        const prevImages = container.dataset.images || "";
 
-        if (prevImages === JSON.stringify(images)) {
-            return; // 🔥 STOP if same images
-        }
+        // ✅ Only rerender if images changed
+        if (prevImages !== currentImages) {
 
-        // ✅ SAVE CURRENT STATE
-        container.dataset.images = JSON.stringify(images);
+            container.dataset.images = currentImages;
+            container.innerHTML = "";
 
-        // NOW SAFE TO CLEAR
-        container.innerHTML = "";
+            // ❌ NO IMAGE
+            if (images.length === 0) {
 
-        // ❌ NO IMAGE
-        if (images.length === 0) {
-            container.innerHTML = `
+                container.innerHTML = `
         <img src="../image/no-image.png"
         style="width:100%; height:100%; object-fit:cover;">
-    `;
-        }
-        else {
-            images.forEach((url) => {
+        `;
 
-                const wrapper = document.createElement("div");
-                wrapper.style.position = "relative";
-                wrapper.style.flex = "0 0 320px";
-                wrapper.style.height = "280px";
-                wrapper.style.borderRadius = "14px";
-                wrapper.style.overflow = "hidden";
-                wrapper.style.background = "#eee";
-                wrapper.style.marginRight = "12px";
+            } else {
 
-                // 🔄 PER IMAGE LOADER
-                const loader = document.createElement("div");
-                loader.style.position = "absolute";
-                loader.style.top = "50%";
-                loader.style.left = "50%";
-                loader.style.transform = "translate(-50%, -50%)";
-                loader.style.width = "35px";
-                loader.style.height = "35px";
-                loader.style.border = "4px solid #ddd";
-                loader.style.borderTop = "4px solid #4CAF50";
-                loader.style.borderRadius = "50%";
-                loader.style.animation = "spin 1s linear infinite";
+                images.forEach((url) => {
 
-                const img = document.createElement("img");
-                img.src = url;
-                img.style.width = "100%";
-                img.style.height = "100%";
-                img.style.objectFit = "cover";
-                img.style.display = "none"; // hide until loaded
+                    const wrapper = document.createElement("div");
+                    wrapper.style.position = "relative";
+                    wrapper.style.flex = "0 0 320px";
+                    wrapper.style.height = "280px";
+                    wrapper.style.borderRadius = "14px";
+                    wrapper.style.overflow = "hidden";
+                    wrapper.style.background = "#eee";
+                    wrapper.style.marginRight = "12px";
 
-                // ✅ SUCCESS
-                img.onload = () => {
-                    loader.remove();
-                    img.style.display = "block";
-                };
+                    const loader = document.createElement("div");
+                    loader.style.position = "absolute";
+                    loader.style.top = "50%";
+                    loader.style.left = "50%";
+                    loader.style.transform = "translate(-50%, -50%)";
+                    loader.style.width = "35px";
+                    loader.style.height = "35px";
+                    loader.style.border = "4px solid #ddd";
+                    loader.style.borderTop = "4px solid #4CAF50";
+                    loader.style.borderRadius = "50%";
+                    loader.style.animation = "spin 1s linear infinite";
 
-                // ❌ ERROR
-                img.onerror = () => {
-                    loader.remove();
-                    img.src = "../image/no-image.png";
-                    img.style.display = "block";
-                };
+                    const img = document.createElement("img");
+                    img.src = url;
+                    img.style.width = "100%";
+                    img.style.height = "100%";
+                    img.style.objectFit = "cover";
+                    img.style.display = "none";
 
-                // 🔍 CLICK TO VIEW (ADD THIS)
-                img.style.cursor = "pointer";
-                img.onclick = () => {
-                    window._imageModal.style.display = "block";
-                    window._modalImg.src = url;
-                };
+                    img.onload = () => {
+                        loader.remove();
+                        img.style.display = "block";
+                    };
 
-                wrapper.appendChild(loader);
-                wrapper.appendChild(img);
-                container.appendChild(wrapper);
-            });
+                    img.onerror = () => {
+                        loader.remove();
+                        img.src = "../image/no-image.png";
+                        img.style.display = "block";
+                    };
+
+                    img.style.cursor = "pointer";
+                    img.onclick = () => {
+                        window._imageModal.style.display = "block";
+                        window._modalImg.src = url;
+                    };
+
+                    wrapper.appendChild(loader);
+                    wrapper.appendChild(img);
+                    container.appendChild(wrapper);
+                });
+            }
         }
 
         // ================= STATUS =================
@@ -611,6 +615,17 @@ window.toggleStatus = async function () {
 
     try {
 
+        const resolveBtn = document.getElementById("resolveBtn");
+        const originalText = resolveBtn.innerHTML;
+
+        resolveBtn.disabled = true;
+        resolveBtn.innerHTML = `
+<span style="display:flex;align-items:center;gap:8px;justify-content:center;">
+    <span class="mini-spinner"></span>
+    Resolving...
+</span>
+`;
+
         const reportRef = doc(db, "reports", reportId);
         const snap = await getDoc(reportRef);
         const data = snap.data();
@@ -683,6 +698,8 @@ window.toggleStatus = async function () {
             resolutionNote: note
         };
 
+        window._isResolving = true; // 🔥 FLAG
+
         await updateDoc(reportRef, updateData);
 
         // ✅ UPDATE UI
@@ -696,9 +713,13 @@ window.toggleStatus = async function () {
 
     } catch (error) {
 
+        const resolveBtn = document.getElementById("resolveBtn");
+
+        resolveBtn.disabled = false;
+        resolveBtn.innerHTML = "Mark as Resolved";
+
         console.error("Status update failed:", error);
         alert(error.message);
-
     }
 
 };

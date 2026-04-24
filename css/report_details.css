@@ -797,3 +797,21 @@ background:#0284c7;
     z-index: 5; 
 
 }
+
+
+
+/* MINI SPINNER FOR SMALL LOADERS on mark as resolved (LIKE ASSIGNING VOLUNTEER) */
+.mini-spinner{
+    width:16px;
+    height:16px;
+    border:2px solid rgba(255,255,255,0.4);
+    border-top:2px solid #fff;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    display:inline-block;
+}
+
+@keyframes spin{
+    0%{transform:rotate(0deg);}
+    100%{transform:rotate(360deg);}
+}
