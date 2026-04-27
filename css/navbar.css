@@ -77,6 +77,25 @@
     display: none;
     background: white;
     border-radius: 12px;
+    width: 260px;          /* optional better width */
+    padding: 10px 0;
+}
+
+/* Logout button center */
+.menu-item.logout {
+    display: flex;
+    justify-content: center;   /* horizontal center */
+    align-items: center;       /* vertical center */
+    text-align: center;
+    color: red;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 0;
+    cursor: pointer;
+}
+.menu-item.logout:hover {
+    background: #fff5f5;
+    border-radius: 8px;
 }
 
 /* SIDEBAR */
